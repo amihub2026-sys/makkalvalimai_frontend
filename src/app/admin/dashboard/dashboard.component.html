@@ -1,0 +1,61 @@
+
+<div class="stat-grid">
+
+  <a routerLink="/admin/articles" class="stat glass">
+    <i class="fa-solid fa-newspaper"></i>
+    <b>{{ totalArticles ?? '—' }}</b>
+    <span>News Articles</span>
+  </a>
+
+  <a routerLink="/admin/reports" class="stat glass">
+    <i class="fa-solid fa-clock"></i>
+    <b>{{ pendingCount ?? '—' }}</b>
+    <span>Awaiting Approval</span>
+  </a>
+
+  <a routerLink="/admin/reports" class="stat glass">
+    <i class="fa-solid fa-circle-check"></i>
+    <b>{{ solvedCount ?? '—' }}</b>
+    <span>Resolved Reports</span>
+  </a>
+
+  <a routerLink="/admin/alerts" class="stat glass">
+    <i class="fa-solid fa-bell"></i>
+    <b>{{ alertsCount ?? '—' }}</b>
+    <span>Public Alerts</span>
+  </a>
+
+</div>
+
+<div class="panel glass">
+
+  <h2>Newsroom workflow</h2>
+
+  <p>
+    Public issue → Pending → Admin verification →
+    Approved → Public Issues.
+    Verified resolution → Problems Solved.
+  </p>
+
+  <p>
+    Articles have unique URLs, separate Tamil and
+    English content, optional MP3 files and
+    timestamps for archive filtering.
+  </p>
+
+  <p>
+    <b>Dashboard data:</b>
+    Connected to the authenticated Node.js and
+    MongoDB APIs. Other admin features are
+    being integrated.
+  </p>
+
+  <p *ngIf="loading">
+    Loading dashboard statistics...
+  </p>
+
+  <p *ngIf="error" role="alert">
+    {{ error }}
+  </p>
+
+</div>

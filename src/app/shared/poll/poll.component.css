@@ -1,0 +1,212 @@
+/* ==========================================
+   MAKKAL VALIMAI - PUBLIC OPINION POLL
+   ========================================== */
+
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.poll {
+  width: 100%;
+  min-width: 0;
+  padding: 20px;
+  border-radius: 14px;
+}
+
+.poll,
+.poll * {
+  box-sizing: border-box;
+}
+
+/* HEADING */
+
+.poll .section-eyebrow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+  color: #fb476c;
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: 0.3px;
+  line-height: 1.6;
+}
+
+.poll .section-eyebrow i {
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+/* POLL QUESTION */
+
+.poll h3 {
+  margin: 12px 0;
+  color: #ffffff;
+  font-size: 19px;
+  font-weight: 750;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.poll .muted.micro {
+  margin: 10px 0 14px;
+  color: #a9b5c8;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* ==========================================
+   VOTING OPTIONS
+   ========================================== */
+
+.poll-options {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.poll-option {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  min-height: 50px;
+  padding: 12px 15px;
+  overflow: hidden;
+  border: 1px solid #465168;
+  border-radius: 10px;
+  background: #111725;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.poll-option:hover:not(:disabled) {
+  background: #1b2539;
+  border-color: #fa456d;
+  box-shadow: 0 0 0 1px rgba(250, 69, 109, 0.12);
+}
+
+.poll-option:focus-visible {
+  outline: 2px solid #ff6484;
+  outline-offset: 3px;
+}
+
+.poll-option:active:not(:disabled) {
+  transform: scale(0.995);
+}
+
+.poll-option:disabled {
+  cursor: default;
+}
+
+.poll-option > span:not(.poll-fill) {
+  position: relative;
+  z-index: 1;
+}
+
+.poll-option > span:first-child {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.poll-option > span:nth-child(2):not(.poll-fill) {
+  flex-shrink: 0;
+  padding: 4px 7px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.25);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================
+   RESULT BAR AFTER VOTING
+   ========================================== */
+
+.poll-fill {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  max-width: 100%;
+  border-radius: 8px 0 0 8px;
+  background: linear-gradient(
+    90deg,
+    rgba(173, 19, 58, 0.7),
+    rgba(241, 47, 94, 0.65)
+  );
+  pointer-events: none;
+  transition: width 0.45s ease;
+}
+
+/* ==========================================
+   SUCCESS AND ERROR MESSAGES
+   ========================================== */
+
+.poll .success-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 15px;
+  padding: 11px 12px;
+  border: 1px solid rgba(37, 195, 125, 0.35);
+  border-radius: 9px;
+  background: rgba(37, 195, 125, 0.1);
+  color: #85ebbb;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.poll .form-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 15px;
+  padding: 11px 12px;
+  border: 1px solid rgba(250, 65, 104, 0.35);
+  border-radius: 9px;
+  background: rgba(250, 65, 104, 0.1);
+  color: #ffa5b9;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.poll .success-message i,
+.poll .form-error i {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ==========================================
+   TABLET
+   ========================================== */
+
+
+
+/* ==========================================
+   MOBILE
+   ========================================== */
+
+
+
+/* ACCESSIBILITY */

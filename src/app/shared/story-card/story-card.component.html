@@ -1,0 +1,22 @@
+<article class="story-card glass" *ngIf="article">
+<a [routerLink]="['/news',article.slug]" class="story-photo">
+<img *ngIf="article.image; else noPhoto" [src]="media.url(article.image)" [alt]="prefs.txt(article.title)" loading="lazy" />
+<ng-template #noPhoto><span class="story-no-photo"><i class="fa-regular fa-newspaper" aria-hidden="true"></i></span></ng-template>
+</a>
+<div class="story-info">
+<span class="eyebrow">{{article.kind | uppercase}} · {{article.area}}</span>
+<a class="story-heading" [routerLink]="['/news',article.slug]">{{prefs.txt(article.title)}}</a>
+<small class="date">
+<i class="fa-regular fa-calendar">
+</i> {{article.publishedAt | date:'dd MMM yyyy':'+0530'}}</small>
+<div class="card-actions">
+<a [routerLink]="['/news',article.slug]" class="tiny-link">{{prefs.label('மேலும் படிக்க','Read story')}} <i class="fa-solid fa-arrow-right">
+</i>
+</a>
+<a class="share" [href]="shareUrl" target="_blank" rel="noopener noreferrer" [attr.aria-label]="prefs.label('வாட்ஸ்அப்பில் பகிர்','Share on WhatsApp')">
+<i class="fa-brands fa-whatsapp">
+</i>
+</a>
+</div>
+</div>
+</article>

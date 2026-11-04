@@ -1,0 +1,7 @@
+/* Responsive rules for gallery; isolated from common/desktop CSS. */
+@media (max-width: 600px) {
+  .gallery-page { width: 100%; }
+  .gallery-page .page-intro { margin-bottom: 1rem; }
+}
+
+.load-more-row {display:flex;justify-content:center;margin:22px 0;}

@@ -1,0 +1,308 @@
+
+<!-- MAKKAL VALIMAI - PUBLIC ALERTS ADMIN -->
+<div class="admin-columns">
+
+  <!-- LEFT: ALERTS FROM MONGODB -->
+  <section class="panel glass">
+    <div class="section-title">
+      <h2>Public Notices</h2>
+      <button
+        type="button"
+        class="btn btn-red"
+        (click)="newAlert()"
+        [disabled]="saving || deleting || uploadingAudio"
+      >
+        <i class="fa-solid fa-plus"></i> New Alert
+      </button>
+    </div>
+
+    <p class="muted">Manage public notices saved in MongoDB.</p>
+
+    <div class="moderation-actions">
+      <button
+        type="button"
+        class="btn outline small"
+        (click)="loadAlerts()"
+        [disabled]="loading || saving || deleting || uploadingAudio"
+      >
+        <i class="fa-solid fa-rotate" [class.fa-spin]="loading"></i>
+        {{ loading ? 'Loading...' : 'Refresh Alerts' }}
+      </button>
+      <span class="muted">{{ alerts.length }} saved alerts</span>
+    </div>
+
+    <p class="muted" *ngIf="loading" role="status">
+      <i class="fa-solid fa-spinner fa-spin"></i> Loading alerts from MongoDB...
+    </p>
+
+    <div class="empty-state" *ngIf="!loading && alerts.length === 0">
+      <i class="fa-solid fa-bell"></i>
+      <h3>No public alerts yet</h3>
+      <p class="muted">Select New Alert to create your first public notice.</p>
+    </div>
+
+    <div class="admin-list">
+      <button
+        *ngFor="let a of alerts"
+        type="button"
+        class="admin-list-item"
+        (click)="draft = clone(a)"
+        [disabled]="saving || deleting || uploadingAudio"
+        [class.active]="draft.id === a.id"
+      >
+        <span>
+          <b>{{ a.title.en || a.title.ta || 'Untitled Alert' }}</b>
+          <small>
+            {{ a.area }} · {{ a.published ? 'Published' : 'Draft' }}
+            · {{ a.effectiveDate }}
+          </small>
+          <small *ngIf="a.title.ta">{{ a.title.ta }}</small>
+        </span>
+        <span
+          class="chip"
+          [class.green]="a.published"
+          [class.warning]="!a.published"
+        >
+          {{ a.published ? 'LIVE' : 'DRAFT' }}
+        </span>
+      </button>
+    </div>
+  </section>
+
+  <!-- RIGHT: CREATE / EDIT ALERT -->
+  <form class="panel glass editor-form" (ngSubmit)="save()">
+    <div class="section-title">
+      <h2>Madurai Public Alert</h2>
+      <span
+        class="chip"
+        [class.green]="draft.published"
+        [class.warning]="!draft.published"
+      >
+        {{ draft.published ? 'Publish selected' : 'Draft' }}
+      </span>
+    </div>
+
+    <p class="muted">Enter verified information in Tamil and English.</p>
+
+    <div class="form-grid">
+      <label>
+        Tamil Heading *
+        <input
+          type="text"
+          name="ta"
+          [(ngModel)]="draft.title.ta"
+          required
+          placeholder="தமிழ் அறிவிப்பு தலைப்பு"
+          [disabled]="saving || deleting || uploadingAudio"
+        />
+      </label>
+
+      <label>
+        English Heading *
+        <input
+          type="text"
+          name="en"
+          [(ngModel)]="draft.title.en"
+          required
+          placeholder="Public notice heading"
+          [disabled]="saving || deleting || uploadingAudio"
+        />
+      </label>
+    </div>
+
+    <div class="form-grid">
+      <label>
+        தமிழ் அறிவிப்பு *
+        <textarea
+          name="bodyta"
+          [(ngModel)]="draft.body.ta"
+          rows="5"
+          required
+          placeholder="அறிவிப்பின் முழு விவரங்கள்"
+          [disabled]="saving || deleting || uploadingAudio"
+        ></textarea>
+      </label>
+
+      <label>
+        English Notice *
+        <textarea
+          name="bodyen"
+          [(ngModel)]="draft.body.en"
+          rows="5"
+          required
+          placeholder="Complete details of the public notice"
+          [disabled]="saving || deleting || uploadingAudio"
+        ></textarea>
+      </label>
+    </div>
+
+    <div class="form-grid">
+      <label>
+        Alert Type *
+        <select
+          name="type"
+          [(ngModel)]="draft.type"
+          required
+          [disabled]="saving || deleting || uploadingAudio"
+        >
+          <option value="water">Water Supply</option>
+          <option value="electricity">Electricity</option>
+          <option value="traffic">Traffic</option>
+          <option value="rain">Rain / Weather</option>
+          <option value="other">Other</option>
+        </select>
+      </label>
+
+      <label>
+        Area / Location *
+        <input
+          type="text"
+          name="area"
+          [(ngModel)]="draft.area"
+          required
+          placeholder="Madurai district"
+          [disabled]="saving || deleting || uploadingAudio"
+        />
+      </label>
+
+      <label>
+        Effective Date *
+        <input
+          type="date"
+          name="effective"
+          [(ngModel)]="draft.effectiveDate"
+          required
+          [disabled]="saving || deleting || uploadingAudio"
+        />
+      </label>
+
+      <label>
+        Expires On *
+        <input
+          type="date"
+          name="expiry"
+          [(ngModel)]="draft.expiresAt"
+          required
+          [disabled]="saving || deleting || uploadingAudio"
+        />
+      </label>
+    </div>
+
+    <label>
+      Official Source / Verification *
+      <input
+        type="text"
+        name="source"
+        [(ngModel)]="draft.source"
+        required
+        placeholder="Official notice, department or verified source"
+        [disabled]="saving || deleting || uploadingAudio"
+      />
+    </label>
+    <p class="muted">Check the source and dates before publishing.</p>
+
+    <div class="form-grid">
+      <div>
+        <label>
+          Tamil MP3 (Optional)
+          <input
+            type="file"
+            accept=".mp3,audio/mpeg"
+            (change)="audio($event, 'ta')"
+            [disabled]="saving || deleting || uploadingAudio"
+          />
+        </label>
+        <div *ngIf="draft.audio.ta">
+          <app-audio-player [src]="draft.audio.ta" />
+          <button
+            type="button"
+            class="btn outline small"
+            (click)="draft.audio.ta = ''"
+            [disabled]="saving || deleting || uploadingAudio"
+          >
+            Remove Tamil Audio
+          </button>
+        </div>
+        <p class="muted" *ngIf="!draft.audio.ta">No Tamil MP3 selected.</p>
+      </div>
+
+      <div>
+        <label>
+          English MP3 (Optional)
+          <input
+            type="file"
+            accept=".mp3,audio/mpeg"
+            (change)="audio($event, 'en')"
+            [disabled]="saving || deleting || uploadingAudio"
+          />
+        </label>
+        <div *ngIf="draft.audio.en">
+          <app-audio-player [src]="draft.audio.en" />
+          <button
+            type="button"
+            class="btn outline small"
+            (click)="draft.audio.en = ''"
+            [disabled]="saving || deleting || uploadingAudio"
+          >
+            Remove English Audio
+          </button>
+        </div>
+        <p class="muted" *ngIf="!draft.audio.en">No English MP3 selected.</p>
+      </div>
+    </div>
+
+    <p *ngIf="uploadingAudio" class="muted" role="status">
+      <i class="fa-solid fa-spinner fa-spin"></i> Uploading MP3 to backend...
+    </p>
+
+    <label class="checkbox-label">
+      <input
+        type="checkbox"
+        name="published"
+        [(ngModel)]="draft.published"
+        [disabled]="saving || deleting || uploadingAudio"
+      />
+      Publish Alert
+    </label>
+    <p class="muted">
+      {{ draft.published
+        ? 'This alert is marked for publication. Verify its content and dates before saving.'
+        : 'This alert remains a draft until you choose to publish it.' }}
+    </p>
+
+    <p class="form-error" *ngIf="error" role="alert">
+      <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
+    </p>
+    <p class="success-message" *ngIf="message" role="status">
+      <i class="fa-solid fa-circle-check"></i> {{ message }}
+    </p>
+
+    <div class="moderation-actions">
+      <button
+        type="submit"
+        class="btn btn-red"
+        [disabled]="saving || deleting || uploadingAudio"
+      >
+        <i
+          class="fa-solid"
+          [class.fa-spinner]="saving"
+          [class.fa-spin]="saving"
+          [class.fa-floppy-disk]="!saving"
+        ></i>
+        {{ saving ? 'Saving Alert...' : (draft.published ? 'Save & Publish' : 'Save Draft') }}
+      </button>
+
+      <!-- The remove() method checks whether the selected alert is saved. -->
+      <button
+        *ngIf="alerts.length > 0"
+        type="button"
+        class="btn outline danger"
+        (click)="remove()"
+        [disabled]="saving || deleting || uploadingAudio"
+      >
+        <i class="fa-solid fa-trash"></i>
+        {{ deleting ? 'Deleting...' : 'Delete / Clear' }}
+      </button>
+    </div>
+  </form>
+</div>

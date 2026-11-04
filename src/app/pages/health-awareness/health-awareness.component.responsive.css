@@ -1,0 +1,7 @@
+/* Responsive rules for health-awareness; isolated from common/desktop CSS. */
+@media (max-width: 600px) {
+  .health-awareness-page { width: 100%; }
+  .health-awareness-page .page-intro { margin-bottom: 1rem; }
+}
+
+.load-more-row {display:flex;justify-content:center;margin:22px 0;}

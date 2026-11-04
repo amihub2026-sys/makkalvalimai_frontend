@@ -1,0 +1,15 @@
+<div class="container page-section achievements-page">
+<div class="page-intro glass">
+<div>
+<span class="eyebrow">PEOPLE · COMMUNITY · MADURAI</span>
+<h1>{{p.label('மதுரை சாதனையாளர்கள்','Madurai People’s Achievements')}}</h1>
+<p>{{p.label('மாணவர்கள், ஆசிரியர்கள், சமூக சேவகர்கள் மற்றும் உள்ளூர் சாதனைகள்','Students, teachers, community volunteers and local achievements')}}</p>
+</div>
+<i class="fa-solid fa-award giant-icon">
+</i>
+</div>
+<app-audio-player [src]="p.language()==='ta'?(s.settings().sectionAudio.achievements?.ta||''):(s.settings().sectionAudio.achievements?.en||'')"/>
+<div class="card-grid">
+<app-story-card *ngFor="let a of items" [article]="a"/>
+</div>
+</div>

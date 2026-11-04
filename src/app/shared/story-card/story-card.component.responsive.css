@@ -1,0 +1,22 @@
+/* Responsive rules for story-card; isolated from common/desktop CSS. */
+@media (max-width:600px) {
+.story-card .story-info {
+  padding:.6rem
+}
+.story-heading {
+  font-size:.8rem
+}
+.card-actions .tiny-link {
+  font-size:.7rem
+}
+.story-info .eyebrow {
+  font-size:.58rem
+}
+.story-info .date {
+  font-size:.61rem
+}
+}@media (max-width:380px) {
+.story-info .date {
+  display:none
+}
+}

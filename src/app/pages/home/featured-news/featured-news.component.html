@@ -1,0 +1,85 @@
+<!-- ==========================================
+       FEATURED NEWS
+       ========================================== -->
+
+  <div
+    class="home-hero-grid"
+    [style.grid-template-columns]="sideStories().length ? null : 'minmax(0, 1fr)'"
+  >
+
+    <section
+      class="lead-story glass"
+      *ngIf="hero() as a"
+      [style.background-image]="'linear-gradient(0deg,#050609 2%,transparent 90%),url('+media.url(a.image)+')'"
+    >
+
+      <div class="hero-tag">
+        <span class="red-dot"></span>
+        {{ prefs.label('மதுரை செய்திகள்', 'MADURAI HEADLINES') }}
+      </div>
+
+      <div class="hero-text">
+
+        <span class="eyebrow">
+          {{ a.area }} • {{ a.publishedAt | date:'dd MMM yyyy' }}
+        </span>
+
+        <h1>
+          {{ prefs.txt(a.title) }}
+        </h1>
+
+        <p>
+          {{ prefs.txt(a.body) | slice:0:130 }}...
+        </p>
+
+        <div class="hero-actions">
+
+          <a
+            class="btn btn-red"
+            [routerLink]="['/news', a.slug]"
+          >
+            {{ prefs.label('செய்தியைப் படிக்க', 'Read story') }}
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+
+          <div class="carousel-control">
+
+            <button
+              type="button"
+              (click)="move(-1)"
+              aria-label="Previous story"
+            >
+              ‹
+            </button>
+
+            <button
+              type="button"
+              (click)="move(1)"
+              aria-label="Next story"
+            >
+              ›
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- SIDE NEWS CARDS -->
+
+    <aside
+      class="right-stories"
+      *ngIf="sideStories().length > 0"
+    >
+
+      <app-story-card
+        *ngFor="let item of sideStories()"
+        [article]="item"
+      />
+
+    </aside>
+
+  </div>

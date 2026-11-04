@@ -1,0 +1,43 @@
+/* Responsive overrides specific to quick-access */
+@media (max-width: 1180px) {
+.home-categories {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+.home-categories {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+.category-spot {
+    min-height: 108px;
+    padding: 0.85rem;
+  }
+.category-spot i {
+    font-size: 1.2rem;
+  }
+.category-spot b {
+    font-size: 0.77rem;
+    line-height: 1.45;
+  }
+.category-spot span {
+    font-size: 0.63rem;
+  }
+.home-categories > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 380px) {
+.category-spot b {
+    font-size: 0.72rem;
+  }
+}
+
+@media(max-width:650px){
+.home-categories{grid-template-columns:repeat(2,minmax(0,1fr))}
+.home-categories .category-spot{min-height:96px}
+}

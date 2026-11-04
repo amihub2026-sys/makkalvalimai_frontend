@@ -1,0 +1,7 @@
+/* Responsive rules for kids-corner; isolated from common/desktop CSS. */
+@media (max-width: 600px) {
+  .kids-corner-page { width: 100%; }
+  .kids-corner-page .page-intro { margin-bottom: 1rem; }
+}
+
+.load-more-row {display:flex;justify-content:center;margin:22px 0;}

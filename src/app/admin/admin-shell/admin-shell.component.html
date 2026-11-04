@@ -1,0 +1,107 @@
+
+<div class="admin-layout">
+
+  <!-- ADMIN SIDEBAR -->
+  <aside class="admin-sidebar">
+
+    <!-- LOGO AND BRAND -->
+    <a
+      routerLink="/admin/dashboard"
+      class="admin-brand"
+    >
+      <img
+        src="assets/images/makkal-valimai-logo.png"
+        alt="Makkal Valimai Logo"
+      />
+
+      <b>மக்கள் வலிமை</b>
+
+      <small>NEWSROOM · ADMIN</small>
+    </a>
+
+    <!-- SIDEBAR NAVIGATION -->
+    <nav>
+
+      <ng-container *ngFor="let n of nav">
+
+        <!-- EXISTING MENU ITEMS -->
+        <a
+          [routerLink]="n.url"
+          routerLinkActive="active"
+        >
+          <i [class]="n.icon"></i>
+          {{ n.label }}
+        </a>
+
+        <!-- NEW: NEWS CATEGORY MANAGEMENT -->
+        <a
+          *ngIf="n.url === '/admin/articles'"
+          routerLink="/admin/categories"
+          routerLinkActive="active"
+        >
+          <i class="fa-solid fa-layer-group"></i>
+          News Categories
+        </a>
+
+      </ng-container>
+
+    </nav>
+
+    <!-- SIDEBAR FOOTER -->
+    <div class="sidebar-foot">
+
+      <a
+        routerLink="/"
+        target="_blank"
+      >
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        View Public Site
+      </a>
+
+      <button
+        type="button"
+        (click)="logout()"
+      >
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Logout
+      </button>
+
+    </div>
+
+  </aside>
+
+  <!-- ADMIN MAIN CONTENT -->
+  <main class="admin-main">
+
+    <!-- HEADER -->
+    <header class="admin-topbar">
+
+      <div>
+        <span class="eyebrow">
+          MAKKAL VALIMAI NEWSROOM
+        </span>
+
+        <h2>{{ currentTitle }}</h2>
+      </div>
+
+      <div>
+        <span class="chip warning">
+          ADMIN PANEL
+        </span>
+
+        <a
+          routerLink="/"
+          class="btn outline"
+        >
+          Public Site ↗
+        </a>
+      </div>
+
+    </header>
+
+    <!-- ADMIN PAGE CONTENT -->
+    <router-outlet></router-outlet>
+
+  </main>
+
+</div>

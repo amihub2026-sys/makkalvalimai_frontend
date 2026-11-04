@@ -1,0 +1,503 @@
+
+<!-- ==========================================
+     MAKKAL VALIMAI
+     REPORT A PUBLIC PROBLEM
+     GALLERY + CAMERA + MONGODB
+     ========================================== -->
+
+<div class="container page-section report-problem-page">
+
+  <!-- ======================================
+       PAGE INTRODUCTION
+       ====================================== -->
+
+  <div class="page-intro glass">
+
+    <div>
+
+      <span class="eyebrow">
+        PUBLIC CIVIC REPORTING · MADURAI DISTRICT
+      </span>
+
+      <h1>
+        {{
+          prefs.label(
+            'பிரச்சினையைப் பதிவு செய்யவும்',
+            'Report a Public Problem'
+          )
+        }}
+      </h1>
+
+      <p>
+        {{
+          prefs.label(
+            'மதுரை மாவட்டத்தில் சாலை, குடிநீர், மின்விளக்கு, குப்பை மற்றும் பிற பிரச்சினைகளை தெரிவிக்கவும்.',
+            'Report roads, water, drainage, waste, streetlights and other Madurai district issues.'
+          )
+        }}
+      </p>
+
+    </div>
+
+    <i class="fa-solid fa-bullhorn giant-icon"></i>
+
+  </div>
+
+  <!-- ======================================
+       OPTIONAL AUDIO GUIDE
+       ====================================== -->
+
+  <app-audio-player
+    [src]="
+      prefs.language() === 'ta'
+        ? (store.settings().sectionAudio.report?.ta || '')
+        : (store.settings().sectionAudio.report?.en || '')
+    "
+  />
+
+  <!-- ======================================
+       REPORT SUBMISSION FORM
+       ====================================== -->
+
+  <form
+    class="editor-form report-form glass"
+    (ngSubmit)="submit()"
+  >
+
+    <div class="form-grid">
+
+      <!-- ISSUE TITLE -->
+      <label>
+
+        {{
+          prefs.label(
+            'பிரச்சினையின் தலைப்பு',
+            'Issue title'
+          )
+        }}
+        *
+
+        <input
+          type="text"
+          name="title"
+          [(ngModel)]="title"
+          placeholder="Potholes near the main road"
+          required
+          minlength="5"
+          maxlength="180"
+          [disabled]="submitting"
+        />
+
+      </label>
+
+      <!-- ISSUE CATEGORY -->
+      <label>
+
+        {{
+          prefs.label(
+            'வகை',
+            'Category'
+          )
+        }}
+        *
+
+        <select
+          name="category"
+          [(ngModel)]="category"
+          required
+          [disabled]="submitting"
+        >
+
+          <option
+            *ngFor="let c of categories"
+            [value]="c"
+          >
+            {{ c }}
+          </option>
+
+        </select>
+
+      </label>
+
+      <!-- AREA / LOCALITY -->
+      <label>
+
+        {{
+          prefs.label(
+            'பகுதி / ஊர்',
+            'Area / Town / Village'
+          )
+        }}
+        *
+
+        <input
+          type="text"
+          name="area"
+          [(ngModel)]="area"
+          placeholder="KK Nagar, Melur, Vadipatti..."
+          list="mv-areas"
+          required
+          minlength="2"
+          maxlength="160"
+          [disabled]="submitting"
+        />
+
+      </label>
+
+      <!-- STREET OR LANDMARK -->
+      <label>
+
+        {{
+          prefs.label(
+            'தெரு அல்லது அடையாளம் (விருப்பம்)',
+            'Street / landmark (optional)'
+          )
+        }}
+
+        <input
+          type="text"
+          name="street"
+          [(ngModel)]="street"
+          placeholder="Landmark only; avoid home addresses"
+          maxlength="160"
+          [disabled]="submitting"
+        />
+
+      </label>
+
+    </div>
+
+    <!-- ======================================
+         MADURAI AREA SUGGESTIONS
+         ====================================== -->
+
+    <datalist id="mv-areas">
+
+      <option
+        *ngFor="let locality of areas"
+        [value]="locality"
+      ></option>
+
+    </datalist>
+
+    <!-- ======================================
+         ISSUE DESCRIPTION
+         ====================================== -->
+
+    <label>
+
+      {{
+        prefs.label(
+          'பிரச்சினை விவரங்கள்',
+          'Describe the problem'
+        )
+      }}
+      *
+
+      <textarea
+        name="description"
+        [(ngModel)]="description"
+        rows="5"
+        required
+        minlength="15"
+        maxlength="4000"
+        [disabled]="submitting"
+        placeholder="Explain the issue, location and how residents are affected."
+      ></textarea>
+
+    </label>
+
+    <!-- ======================================
+         PROBLEM PHOTO
+         ====================================== -->
+
+    <div class="report-photo-options">
+
+      <label>
+
+        {{
+          prefs.label(
+            'பிரச்சினைக்கான புகைப்படம்',
+            'Problem Photo'
+          )
+        }}
+
+        (JPEG, PNG, WebP · Max 8MB)
+
+      </label>
+
+      <!-- PHOTO ACTION BUTTONS -->
+      <div
+        class="photo-option-buttons"
+        style="
+          display:flex;
+          flex-wrap:wrap;
+          align-items:center;
+          gap:12px;
+          margin-top:12px;
+          margin-bottom:15px;
+        "
+      >
+
+        <!-- GALLERY BUTTON -->
+        <button
+          type="button"
+          class="btn outline"
+          (click)="galleryInput.click()"
+          [disabled]="submitting || uploadingPhoto"
+        >
+
+          <i class="fa-solid fa-images"></i>
+
+          {{
+            prefs.label(
+              'கேலரியில் தேர்வு செய்க',
+              'Choose from Gallery'
+            )
+          }}
+
+        </button>
+
+        <!-- CAMERA BUTTON -->
+        <button
+          type="button"
+          class="btn btn-red"
+          (click)="cameraInput.click()"
+          [disabled]="submitting || uploadingPhoto"
+        >
+
+          <i class="fa-solid fa-camera"></i>
+
+          {{
+            prefs.label(
+              'கேமராவில் படம் எடுக்க',
+              'Take Photo'
+            )
+          }}
+
+        </button>
+
+      </div>
+
+      <!-- ==================================
+           HIDDEN GALLERY INPUT
+           ================================== -->
+
+      <input
+        #galleryInput
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        (change)="upload($event)"
+        [disabled]="submitting || uploadingPhoto"
+        style="display:none"
+      />
+
+      <!-- ==================================
+           HIDDEN CAMERA INPUT
+           REQUEST REAR CAMERA ON MOBILE
+           ================================== -->
+
+      <input
+        #cameraInput
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        capture="environment"
+        (change)="upload($event)"
+        [disabled]="submitting || uploadingPhoto"
+        style="display:none"
+      />
+
+    </div>
+
+    <!-- ======================================
+         PHOTO LOADING
+         ====================================== -->
+
+    <p
+      *ngIf="uploadingPhoto"
+      class="muted"
+      role="status"
+    >
+
+      <i class="fa-solid fa-spinner fa-spin"></i>
+
+      {{
+        prefs.label(
+          'புகைப்படம் தயாராகிறது...',
+          'Preparing photo preview...'
+        )
+      }}
+
+    </p>
+
+    <!-- ======================================
+         SELECTED PHOTO PREVIEW
+         ====================================== -->
+
+    <div
+      *ngIf="photo"
+      class="report-photo-preview"
+      style="
+        margin-top:10px;
+        margin-bottom:18px;
+      "
+    >
+
+      <p class="muted">
+
+        {{
+          prefs.label(
+            'தேர்ந்தெடுத்த புகைப்படம்',
+            'Selected Photo Preview'
+          )
+        }}
+
+      </p>
+
+      <!-- IMPORTANT:
+           USE photo DIRECTLY.
+           DO NOT USE media.url(photo). -->
+
+      <img
+        class="upload-preview"
+        [src]="photo"
+        alt="Selected complaint photo preview"
+        style="
+          display:block;
+          max-width:100%;
+          max-height:260px;
+          width:auto;
+          height:auto;
+          object-fit:contain;
+          border-radius:12px;
+        "
+      />
+
+      <!-- REMOVE PHOTO BUTTON -->
+      <button
+        type="button"
+        class="btn outline small"
+        (click)="removePhoto()"
+        [disabled]="submitting || uploadingPhoto"
+        style="margin-top:12px"
+      >
+
+        <i class="fa-solid fa-trash-can"></i>
+
+        {{
+          prefs.label(
+            'புகைப்படத்தை நீக்கு',
+            'Remove Photo'
+          )
+        }}
+
+      </button>
+
+      <p
+        class="muted"
+        style="
+          font-size:12px;
+          margin-top:8px;
+        "
+      >
+
+        {{
+          prefs.label(
+            'வேறு புகைப்படம் வேண்டுமெனில் கேலரி அல்லது கேமராவை மீண்டும் தேர்வு செய்யவும்.',
+            'To change the photo, choose Gallery or Camera again.'
+          )
+        }}
+
+      </p>
+
+    </div>
+
+    <!-- ======================================
+         PRIVACY NOTICE
+         ====================================== -->
+
+    <p class="safety-note">
+
+      <i class="fa-solid fa-shield-halved"></i>
+
+      {{
+        prefs.label(
+          'சமர்ப்பித்த புகார் நிர்வாகியின் ஒப்புதல் கிடைக்கும் வரை பொதுவில் காட்டப்படாது. தனிப்பட்ட தகவல் அல்லது ஆதாரமற்ற குற்றச்சாட்டுகளைச் சேர்க்க வேண்டாம்.',
+          'Your report stays private until an administrator approves it. Avoid personal information and unsupported allegations.'
+        )
+      }}
+
+    </p>
+
+    <!-- ======================================
+         VALIDATION OR API ERROR
+         ====================================== -->
+
+    <p
+      *ngIf="error"
+      class="form-error"
+      role="alert"
+    >
+
+      <i class="fa-solid fa-circle-exclamation"></i>
+
+      {{ error }}
+
+    </p>
+
+    <!-- ======================================
+         SUBMIT BUTTON
+         ====================================== -->
+
+    <button
+      class="btn btn-red"
+      type="submit"
+      [disabled]="submitting || uploadingPhoto"
+    >
+
+      <i
+        class="fa-solid"
+        [class.fa-spinner]="submitting"
+        [class.fa-spin]="submitting"
+        [class.fa-paper-plane]="!submitting"
+      ></i>
+
+      {{
+        submitting
+          ? prefs.label(
+              'சமர்ப்பிக்கப்படுகிறது...',
+              'Submitting complaint...'
+            )
+          : prefs.label(
+              'புகாரைச் சமர்ப்பிக்க',
+              'Submit for admin review'
+            )
+      }}
+
+    </button>
+
+    <!-- ======================================
+         SUCCESS MESSAGE
+         ONLY AFTER BACKEND RESPONSE
+         ====================================== -->
+
+    <div
+      *ngIf="complete"
+      class="success-message"
+      role="status"
+    >
+
+      <i class="fa-solid fa-circle-check"></i>
+
+      {{
+        prefs.label(
+          'புகார் பெறப்பட்டது. ஒப்புதல் கிடைத்த பிறகே வெளியிடப்படும்.',
+          'Report saved as Pending. It will not show publicly until approved.'
+        )
+      }}
+
+    </div>
+
+  </form>
+
+</div>

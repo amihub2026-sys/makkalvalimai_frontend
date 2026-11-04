@@ -1,0 +1,19 @@
+{
+  "name": "மக்கள் வலிமை | Makkal Valimai",
+  "short_name": "மக்கள் வலிமை",
+  "description": "Madurai civic news, public issues and alerts",
+  "lang": "ta",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#002e5b",
+  "theme_color": "#075398",
+  "icons": [
+    {
+      "src": "images/makkal-valimai-logo.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

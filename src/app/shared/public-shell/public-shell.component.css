@@ -1,0 +1,20 @@
+:host{display:block;min-width:0}
+.site-shell{min-height:100vh;min-width:0;overflow-x:clip}
+
+.public-main{min-height:60vh}
+
+.popup-overlay{position:fixed;inset:0;display:grid;place-items:center;background:#001528d8;z-index:400;padding:15px}
+
+.ad-popup{position:relative;width:min(460px,95vw);max-height:88vh;overflow-y:auto;border:1px solid #62a6e3;border-radius:16px;background:#064073!important;box-shadow:0 25px 75px #000a22bf}
+
+.ad-popup>.ad-tag{display:block;padding:10px 15px;color:#f4c6cf;font-size:.61rem}
+
+.ad-popup>img{display:block;width:100%;max-height:min(55vh,340px);object-fit:contain;background:#052c55}
+
+.ad-popup>div{padding:15px}
+
+.ad-popup h2{margin:0 0 9px;font-size:1.1rem}
+
+.ad-popup p{font-size:.81rem;color:#d6edff}
+
+.close-popup{position:absolute;z-index:2;top:9px;right:9px;display:grid;place-items:center;background:#001b35d9;color:#fff;border:1px solid #d2f0ff99;border-radius:50%;width:36px;height:36px;font-size:1.4rem}

@@ -1,0 +1,24 @@
+/* MAKKAL VALIMAI — APPROVED MEDIUM-BLUE / RED NEWSPAPER PALETTE
+   Change brand colors HERE; each component owns only its local styles.
+   Reference: desktop homepage + article + mobile news-app visual approved by client.
+*/
+:root {
+  --reader-scale: 1;
+  --red: #ef1735;
+  --red-dark: #b70727;
+  --red-bright: #fc2541;
+  --blue: #075398;
+  --blue-deep: #002e5b;
+  --blue-card: #074478;
+  --base: #002e5b;
+  --surface: #084b85;
+  --surface-alt: #0b588f;
+  --ink: #f5faff;
+  --dim: #c5def5;
+  --line: rgba(144,201,241,.28);
+  --radius: 12px;
+  --mobile-nav-height: 70px;
+  --page-max: 1390px;
+  font-family: "DM Sans", "Noto Sans Tamil", system-ui, sans-serif;
+  color-scheme: dark;
+}

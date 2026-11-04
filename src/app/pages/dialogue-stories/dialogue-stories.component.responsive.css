@@ -1,0 +1,7 @@
+/* Responsive rules for dialogue-stories; isolated from common/desktop CSS. */
+@media (max-width: 600px) {
+  .dialogue-stories-page { width: 100%; }
+  .dialogue-stories-page .page-intro { margin-bottom: 1rem; }
+}
+
+.load-more-row {display:flex;justify-content:center;margin:22px 0;}

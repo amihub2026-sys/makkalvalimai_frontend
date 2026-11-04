@@ -1,0 +1,333 @@
+
+<!-- ==========================================
+     MAKKAL VALIMAI
+     PUBLIC ISSUES - ADMIN MODERATION
+     ========================================== -->
+
+<section class="panel glass">
+
+  <!-- PAGE HEADING -->
+  <div class="section-title">
+    <h2>Resident Issues — Admin Review</h2>
+
+    <span class="chip warning">
+      {{ pendingCount }} Pending
+    </span>
+  </div>
+
+  <p class="muted">
+    No resident report is visible publicly until
+    you approve it. Before marking an issue solved,
+    verify the outcome and include an after-photo
+    and resolution description.
+  </p>
+
+  <!-- REFRESH FROM MONGODB -->
+  <div class="moderation-actions">
+    <button
+      type="button"
+      class="btn outline"
+      (click)="loadIssues()"
+      [disabled]="loading || saving"
+    >
+      <i class="fa-solid fa-rotate"></i>
+      Refresh Issues
+    </button>
+  </div>
+
+  <!-- LOADING -->
+  <p class="muted" *ngIf="loading">
+    <i class="fa-solid fa-spinner fa-spin"></i>
+    Loading resident complaints from MongoDB...
+  </p>
+
+  <!-- SUCCESS -->
+  <p
+    *ngIf="message"
+    class="chip green"
+    role="status"
+  >
+    <i class="fa-solid fa-circle-check"></i>
+    {{ message }}
+  </p>
+
+  <!-- ERROR -->
+  <p
+    *ngIf="error"
+    class="form-error"
+    role="alert"
+  >
+    {{ error }}
+  </p>
+
+  <!-- EMPTY LIST -->
+  <div
+    *ngIf="!loading && issues.length === 0"
+    class="empty-state"
+  >
+    <i class="fa-solid fa-clipboard-check"></i>
+
+    <h3>No resident issues found</h3>
+
+    <p class="muted">
+      Complaints submitted by residents will
+      appear here for admin approval.
+    </p>
+  </div>
+
+  <!-- ======================================
+       ISSUES LOADED FROM MONGODB
+       ====================================== -->
+
+  <div class="moderation-list">
+
+    <article
+      class="moderation-item"
+      *ngFor="let issue of issues"
+    >
+
+      <!-- REPORTED ISSUE IMAGE -->
+      <img
+        *ngIf="issue.photo || issue.privateMediaId"
+        [src]="issuePhoto(issue)"
+        [alt]="'Reported issue: ' + issue.title"
+        loading="lazy"
+      />
+
+      <div class="moderation-body">
+
+        <!-- ISSUE STATUS AND DATE -->
+        <div class="card-actions">
+
+          <span
+            class="chip"
+            [class.green]="
+              issue.status === 'approved' ||
+              issue.status === 'solved'
+            "
+            [class.warning]="issue.status === 'pending'"
+          >
+            {{ issue.status | uppercase }}
+          </span>
+
+          <span class="muted">
+            {{ issue.createdAt | date:'medium':'+0530' }}
+          </span>
+
+        </div>
+
+        <!-- ISSUE INFORMATION -->
+        <h3>{{ issue.title }}</h3>
+
+        <p>{{ issue.description }}</p>
+
+        <small>
+          {{ issue.category }} · {{ issue.area }}
+        </small>
+
+        <!-- ==================================
+             APPROVE / REJECT / SOLVE
+             ================================== -->
+
+        <div class="moderation-actions">
+
+          <!-- APPROVE PENDING ISSUE -->
+          <button
+            type="button"
+            *ngIf="issue.status === 'pending'"
+            class="btn success"
+            (click)="updateStatus(issue, 'approved')"
+            [disabled]="saving || loading"
+          >
+            <i class="fa-solid fa-check"></i>
+            Approve & Publish
+          </button>
+
+          <!-- REJECT PENDING ISSUE -->
+          <button
+            type="button"
+            *ngIf="issue.status === 'pending'"
+            class="btn outline danger"
+            (click)="updateStatus(issue, 'rejected')"
+            [disabled]="saving || loading"
+          >
+            <i class="fa-solid fa-xmark"></i>
+            Reject
+          </button>
+
+          <!-- ADD RESOLUTION EVIDENCE -->
+          <button
+            type="button"
+            *ngIf="issue.status === 'approved'"
+            class="btn outline"
+            (click)="select(issue)"
+            [disabled]="saving || uploadingAfter"
+          >
+            <i class="fa-solid fa-clipboard-check"></i>
+            Mark Solved / Add Evidence
+          </button>
+
+        </div>
+
+        <!-- ==================================
+             RESOLUTION EDITOR
+             ================================== -->
+
+        <div
+          class="issue-editor"
+          *ngIf="
+            issueDraft &&
+            editing === issue.id &&
+            issue.status === 'approved'
+          "
+        >
+
+          <h3>
+            <i class="fa-solid fa-file-circle-check"></i>
+            Resolution Verification
+          </h3>
+
+          <p class="muted">
+            Add details of how this public issue
+            was resolved. A verified after-photo
+            is required.
+          </p>
+
+          <!-- RESOLUTION DESCRIPTION -->
+          <label>
+            Resolution Note *
+
+            <textarea
+              [(ngModel)]="issueDraft.resolution"
+              rows="4"
+              placeholder="Explain how the issue was resolved (minimum 15 characters)"
+              [disabled]="saving || uploadingAfter"
+            ></textarea>
+          </label>
+
+          <!-- AFTER PHOTO UPLOAD -->
+          <label>
+            Upload After-Resolution Photo *
+
+            <input
+              type="file"
+              accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+              (change)="uploadAfter($event)"
+              [disabled]="saving || uploadingAfter"
+            />
+          </label>
+
+          <!-- UPLOAD PROGRESS -->
+          <p
+            class="muted"
+            *ngIf="uploadingAfter"
+          >
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            Uploading after-photo...
+          </p>
+
+          <!-- AFTER PHOTO PREVIEW -->
+          <div *ngIf="afterPreviewUrl">
+
+            <p class="muted">
+              Uploaded after-resolution photo:
+            </p>
+
+            <img
+              [src]="afterPreviewUrl"
+              alt="After-resolution evidence"
+              style="
+                display:block;
+                width:220px;
+                max-width:100%;
+                height:145px;
+                object-fit:cover;
+                border-radius:10px;
+              "
+            />
+
+          </div>
+
+          <!-- EXISTING MEDIA REFERENCE -->
+          <label *ngIf="issueDraft.afterPhoto">
+            Uploaded Media Reference
+
+            <input
+              type="text"
+              [value]="issueDraft.afterPhoto"
+              readonly
+            />
+          </label>
+
+          <!-- ACTION BUTTONS -->
+          <div class="moderation-actions">
+
+            <button
+              type="button"
+              class="btn success"
+              (click)="saveDetails(true)"
+              [disabled]="saving || uploadingAfter"
+            >
+              <i class="fa-solid fa-circle-check"></i>
+              {{ saving
+                ? 'Saving...'
+                : 'Verify & Mark Solved'
+              }}
+            </button>
+
+            <button
+              type="button"
+              class="btn outline"
+              (click)="editing = ''"
+              [disabled]="saving || uploadingAfter"
+            >
+              Cancel
+            </button>
+
+          </div>
+
+        </div>
+
+        <!-- ==================================
+             SOLVED ISSUE DETAILS
+             ================================== -->
+
+        <div
+          class="issue-editor"
+          *ngIf="issue.status === 'solved'"
+        >
+
+          <span class="chip green">
+            <i class="fa-solid fa-circle-check"></i>
+            Issue Resolved
+          </span>
+
+          <p *ngIf="issue.resolution">
+            <strong>Resolution:</strong>
+            {{ issue.resolution }}
+          </p>
+
+          <img
+            *ngIf="issue.afterPhoto"
+            [src]="media.url(issue.afterPhoto)"
+            alt="Verified resolution photo"
+            loading="lazy"
+            style="
+              display:block;
+              width:220px;
+              max-width:100%;
+              height:145px;
+              object-fit:cover;
+              border-radius:10px;
+            "
+          />
+
+        </div>
+
+      </div>
+
+    </article>
+
+  </div>
+
+</section>

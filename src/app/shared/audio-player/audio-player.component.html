@@ -1,0 +1,10 @@
+<section *ngIf="media.url(src) as track" class="audio-player glass" aria-label="Article audio">
+<div class="audio-label">
+<i class="fa-solid fa-headphones">
+</i>
+<b>{{prefs.label('செய்தியைக் கேளுங்கள்','Listen to audio')}}</b>
+<small>Audio • {{prefs.language()==='ta'?'தமிழ்':'English'}}</small>
+</div>
+<audio controls preload="none" [src]="track" aria-label="Play audio narration">
+</audio>
+</section>

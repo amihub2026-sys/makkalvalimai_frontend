@@ -1,0 +1,49 @@
+/* Responsive rules for poll; isolated from common/desktop CSS. */
+@media (max-width: 900px) {
+  .poll {
+    padding: 18px;
+  }
+
+  .poll h3 {
+    font-size: 18px;
+  }
+
+  .poll-option {
+    min-height: 48px;
+  }
+}@media (max-width: 600px) {
+  .poll {
+    padding: 15px;
+    border-radius: 12px;
+  }
+
+  .poll h3 {
+    margin: 10px 0;
+    font-size: 17px;
+  }
+
+  .poll .section-eyebrow {
+    font-size: 11px;
+  }
+
+  .poll-options {
+    gap: 9px;
+    margin-top: 15px;
+  }
+
+  .poll-option {
+    gap: 8px;
+    min-height: 47px;
+    padding: 11px 12px;
+    font-size: 13px;
+  }
+
+  .poll .muted.micro {
+    font-size: 11px;
+  }
+}@media (prefers-reduced-motion: reduce) {
+  .poll-option,
+  .poll-fill {
+    transition: none;
+  }
+}

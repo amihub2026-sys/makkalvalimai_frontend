@@ -1,0 +1,26 @@
+<div class="container page-section public-alerts-page">
+<div class="page-intro glass">
+<div>
+<span class="eyebrow">PUBLIC INFORMATION</span>
+<h1>{{p.label('மதுரை பொது அறிவிப்புகள்','Madurai Public Alerts')}}</h1>
+<p>{{p.label('குடிநீர், மின்தடை, மழை, சாலை மூடல் மற்றும் பிற பொது அறிவிப்புகள்','Water, electricity, rain, traffic and other public notices')}}</p>
+</div>
+<i class="fa-solid fa-bell giant-icon">
+</i>
+</div>
+<app-audio-player [src]="p.language()==='ta'?(s.settings().sectionAudio.alerts?.ta||''):(s.settings().sectionAudio.alerts?.en||'')"/>
+<div class="alert-full glass" *ngFor="let a of s.alerts()">
+<div class="alert-symbol">
+<i class="fa-solid fa-bell">
+</i>
+</div>
+<div>
+<span class="eyebrow">{{a.type|uppercase}} · {{a.area}} · {{a.effectiveDate}}</span>
+<h2>{{p.txt(a.title)}}</h2>
+<p>{{p.txt(a.body)}}</p>
+<small>Source: {{a.source}} · Expires: {{a.expiresAt}}</small>
+<app-audio-player [src]="p.language()==='ta'?a.audio.ta:a.audio.en"/>
+</div>
+</div>
+<div *ngIf="!s.alerts().length" class="empty-state glass">No active notices.</div>
+</div>

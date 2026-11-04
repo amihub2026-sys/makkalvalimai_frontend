@@ -1,0 +1,171 @@
+
+<!-- =========================================
+     MAKKAL VALIMAI - PUBLIC OPINION POLL
+     ========================================= -->
+
+<section class="poll glass" *ngIf="poll">
+
+  <!-- POLL HEADING -->
+
+  <div class="section-eyebrow">
+
+    <i class="fa-solid fa-square-poll-vertical"></i>
+
+    {{
+      prefs.label(
+        'மக்கள் கருத்துக்கணிப்பு',
+        'People’s Opinion Poll'
+      )
+    }}
+
+  </div>
+
+  <!-- POLL QUESTION -->
+
+  <h3>
+    {{ prefs.txt(poll.question) }}
+  </h3>
+
+  <!-- POLL INFORMATION -->
+
+  <p class="muted micro">
+
+    {{
+      prefs.label(
+        'இது தள வாசகர்களின் கருத்து; அறிவியல் கருத்துக்கணிப்பு அல்ல.',
+        'Voluntary visitor poll, not a representative survey.'
+      )
+    }}
+
+  </p>
+
+  <!-- POLL OPTIONS -->
+
+  <div class="poll-options">
+
+    <button
+      *ngFor="let opt of poll.options; let i = index"
+      type="button"
+      class="poll-option"
+      [disabled]="voting || hasVoted() || !poll.active"
+      (click)="vote(i)"
+    >
+
+      <!-- OPTION NAME -->
+
+      <span>
+        {{ prefs.txt(opt) }}
+      </span>
+
+      <!-- VOTE PERCENTAGE -->
+
+      <span *ngIf="hasVoted()">
+        {{ percentage(i) }}%
+      </span>
+
+      <!-- RESULT PROGRESS BAR -->
+
+      <span
+        *ngIf="hasVoted()"
+        class="poll-fill"
+        [style.width.%]="percentage(i)"
+      ></span>
+
+    </button>
+
+  </div>
+
+  <!-- VOTING LOADING -->
+
+  <p
+    class="muted micro"
+    *ngIf="voting"
+    role="status"
+  >
+
+    <i class="fa-solid fa-spinner fa-spin"></i>
+
+    {{
+      prefs.label(
+        'உங்கள் வாக்கு பதிவு செய்யப்படுகிறது...',
+        'Recording your vote...'
+      )
+    }}
+
+  </p>
+
+  <!-- VOTING SUCCESS -->
+
+  <p
+    class="success-message"
+    *ngIf="success"
+    role="status"
+  >
+
+    <i class="fa-solid fa-circle-check"></i>
+
+    {{
+      prefs.label(
+        'உங்கள் வாக்கு வெற்றிகரமாக பதிவு செய்யப்பட்டது.',
+        'Your vote was recorded successfully.'
+      )
+    }}
+
+  </p>
+
+  <!-- VOTING ERROR -->
+
+  <p
+    class="form-error"
+    *ngIf="error"
+    role="alert"
+  >
+
+    <i class="fa-solid fa-circle-exclamation"></i>
+
+    {{ error }}
+
+  </p>
+
+  <!-- POLL STATUS -->
+
+  <p class="muted micro">
+
+    {{
+      !poll.active
+        ? prefs.label(
+            'இந்த கருத்துக்கணிப்பு தற்போது முடக்கப்பட்டுள்ளது.',
+            'This poll is currently closed.'
+          )
+        : hasVoted()
+          ? prefs.label(
+              'வாக்களித்ததற்கு நன்றி',
+              'Thanks for voting'
+            )
+          : prefs.label(
+              'வாக்களிக்க ஒரு விருப்பத்தைத் தேர்வு செய்யவும்',
+              'Tap one option to vote'
+            )
+    }}
+
+  </p>
+
+  <!-- TOTAL VOTES AFTER VOTING -->
+
+  <p
+    class="muted micro"
+    *ngIf="hasVoted()"
+  >
+
+    {{
+      prefs.label(
+        'மொத்த வாக்குகள்',
+        'Total Votes'
+      )
+    }}:
+
+    {{ totalVotes }}
+
+  </p>
+
+</section>

@@ -1,0 +1,39 @@
+<div class="container page-section kids-corner-page">
+<div class="page-intro glass">
+<div>
+<span class="eyebrow">MAKKAL VALIMAI · MADURAI</span>
+<h1>{{prefs.txt(title)}}</h1>
+<p>{{prefs.label('மதுரை மாவட்ட செய்திகள் மற்றும் தேர்ந்தெடுத்த தேதி, பகுதியின் பதிவுகள்','Madurai district news filtered by publication date and area')}}</p>
+</div>
+<i class="fa-solid fa-newspaper giant-icon">
+</i>
+</div>
+<div class="filter-panel glass">
+<label>{{prefs.label('செய்தி வெளியான தேதி','Published date')}}<input type="date" [(ngModel)]="selectedDate" [max]="today" (ngModelChange)="refresh()"/>
+</label>
+<label>{{prefs.label('பகுதி / வட்டாரம்','Area or locality')}}<input [(ngModel)]="area" list="mv-areas" (ngModelChange)="refresh()" [placeholder]="prefs.label('பகுதியை எழுதுக','Enter locality')"/>
+</label>
+<button class="btn outline" (click)="selectedDate='';area='';refresh()">{{prefs.label('அழிக்க','Reset')}}</button>
+</div>
+<datalist id="mv-areas">
+<option *ngFor="let locality of areas" [value]="locality">
+</option>
+</datalist>
+<app-audio-player [src]="prefs.language()==='ta'?(store.settings().sectionAudio[section]?.ta||''):(store.settings().sectionAudio[section]?.en||'')"/>
+<div class="section-title">
+<h2>{{prefs.txt(title)}}</h2>
+<span class="muted">{{filtered.length}} {{prefs.label('பதிவுகள்','stories')}}</span>
+</div>
+<div class="card-grid">
+<app-story-card *ngFor="let a of filtered" [article]="a"/>
+</div>
+<div *ngIf="loading" class="empty-state glass" role="status">Loading published articles…</div>
+<div *ngIf="error" class="empty-state glass" role="alert">{{error}} <button type="button" class="btn outline" (click)="refresh()">Retry</button></div>
+<div *ngIf="!loading && !error && !filtered.length" class="empty-state glass">
+<i class="fa-regular fa-calendar-xmark">
+</i>
+<h3>{{prefs.label('இந்த தேதியில் செய்திகள் இல்லை','No news found for this date or area')}}</h3>
+<p>{{prefs.label('வேறு தேதியைத் தேர்ந்தெடுக்கவும்.','Please choose another date or reset the filters.')}}</p>
+</div>
+<div class="load-more-row" *ngIf="hasMore"><button class="btn btn-red" type="button" (click)="loadMore()" [disabled]="loading">{{loading ? 'Loading…' : prefs.label('மேலும் செய்திகள்','Load more stories')}}</button></div>
+</div>

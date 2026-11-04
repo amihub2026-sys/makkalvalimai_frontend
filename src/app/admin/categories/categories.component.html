@@ -1,0 +1,14 @@
+<div class="categories-page">
+  <div class="page-heading"><div><span class="eyebrow">MAKKAL VALIMAI NEWSROOM</span>
+  <h1>News categories</h1><p>Article types currently accepted by the existing Node.js API.</p></div></div>
+  <section class="panel">
+    <h2>Backend-supported article types</h2>
+    <p class="muted">These names classify articles in MongoDB; article titles, images, descriptions and publication status are always read from the API. Category creation/editing is unavailable because the current backend has no category-management endpoints. No fake save button is provided.</p>
+    <div class="category-list">
+      <div class="category-item" *ngFor="let category of categories">
+        <div class="category-info"><strong>{{ category.name.ta }}</strong><span>{{ category.name.en }}</span><small>{{ category.slug }}</small></div>
+        <span class="status">Supported</span>
+      </div>
+    </div>
+  </section>
+</div>

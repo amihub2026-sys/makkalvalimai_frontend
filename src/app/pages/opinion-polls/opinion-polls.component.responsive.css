@@ -1,0 +1,5 @@
+/* Responsive rules for opinion-polls; isolated from common/desktop CSS. */
+@media (max-width: 600px) {
+  .opinion-polls-page { width: 100%; }
+  .opinion-polls-page .page-intro { margin-bottom: 1rem; }
+}

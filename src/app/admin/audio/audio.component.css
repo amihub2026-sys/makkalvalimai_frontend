@@ -1,0 +1,449 @@
+/* ==========================================
+   MAKKAL VALIMAI - ADMIN SECTION MP3 AUDIO
+   ========================================== */
+
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.audio-admin-page,
+.audio-admin-page *,
+.audio-admin-page *::before,
+.audio-admin-page *::after {
+  box-sizing: border-box;
+}
+
+/* ==========================================
+   MAIN CONTAINER
+   ========================================== */
+
+.audio-admin-page {
+  width: 100%;
+  min-width: 0;
+  color: #f5f6fa;
+}
+
+/* ==========================================
+   PAGE HEADING
+   ========================================== */
+
+.audio-admin-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.audio-admin-heading h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(19px, 2vw, 24px);
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.audio-admin-heading h2 i {
+  flex-shrink: 0;
+  color: #ff4f77;
+}
+
+.audio-admin-heading .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 39px;
+}
+
+.audio-admin-page > p.muted {
+  color: #b1bdce;
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+/* ==========================================
+   LOADING MESSAGE
+   ========================================== */
+
+.audio-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 15px;
+  margin: 15px 0;
+  border: 1px solid #35425a;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.035);
+  color: #c5d1e1;
+  font-size: 13px;
+}
+
+.audio-loading i {
+  color: #ff5279;
+}
+
+/* ==========================================
+   WEBSITE SECTION SELECTOR
+   ========================================== */
+
+.audio-section-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  width: 100%;
+  min-width: 0;
+  margin: 25px 0 21px;
+  padding: 20px;
+  border: 1px solid #3c4860;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.audio-section-picker label {
+  color: #e7edf7;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.audio-section-picker select {
+  width: 100%;
+  min-width: 0;
+  min-height: 47px;
+  padding: 11px 14px;
+  border: 1px solid #45536b;
+  border-radius: 9px;
+  background: #0c1525;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.audio-section-picker select:hover:not(:disabled) {
+  border-color: #6d7c95;
+}
+
+.audio-section-picker select:focus {
+  border-color: #f64b74;
+  box-shadow: 0 0 0 3px rgba(246, 75, 116, 0.13);
+}
+
+.audio-section-picker select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.audio-section-picker select option {
+  background: #111b2c;
+  color: #ffffff;
+}
+
+/* ==========================================
+   TAMIL AND ENGLISH AUDIO GRID
+   ========================================== */
+
+.audio-admin-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 20px;
+  width: 100%;
+  min-width: 0;
+  margin: 1.3rem 0;
+}
+
+.audio-admin-grid > * {
+  min-width: 0;
+}
+
+/* ==========================================
+   AUDIO UPLOAD CARDS
+   ========================================== */
+
+.audio-upload-box {
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+  min-width: 0;
+  width: 100%;
+  padding: 22px;
+  border: 1px solid #3b475e;
+  border-radius: 15px;
+  background: linear-gradient(
+    145deg,
+    rgba(27, 37, 54, 0.96),
+    rgba(12, 19, 32, 0.98)
+  );
+}
+
+.audio-upload-box h3 {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin: 0;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 750;
+  line-height: 1.5;
+}
+
+.audio-upload-box h3 i {
+  flex-shrink: 0;
+  color: #fa4e75;
+  font-size: 19px;
+}
+
+/* ==========================================
+   FILE UPLOAD FIELD
+   ========================================== */
+
+.audio-upload-box > label {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  min-width: 0;
+  color: #dce5f2;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.audio-upload-box input[type="file"] {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 1px dashed #596780;
+  border-radius: 10px;
+  background: #0b1423;
+  color: #c4cede;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.audio-upload-box input[type="file"]::file-selector-button {
+  margin-right: 12px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 7px;
+  background: #d51140;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.audio-upload-box input[type="file"]:hover:not(:disabled) {
+  border-color: #ff5079;
+  background: #101c30;
+}
+
+.audio-upload-box input[type="file"]:focus-visible {
+  outline: 2px solid #ff7192;
+  outline-offset: 3px;
+}
+
+.audio-upload-box input[type="file"]:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ==========================================
+   AUDIO UPLOAD PROGRESS
+   ========================================== */
+
+.audio-upload-box > p.muted {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  color: #aebcd0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.audio-upload-box > p.muted i {
+  color: #fa4e75;
+}
+
+/* ==========================================
+   SAVED AUDIO PREVIEW
+   ========================================== */
+
+.audio-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  padding: 17px;
+  border: 1px solid #36445b;
+  border-radius: 12px;
+  background: #0c1423;
+}
+
+.audio-preview h4 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.audio-preview app-audio-player {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.audio-preview p.muted {
+  margin: 0;
+  color: #9eacc2;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+/* ==========================================
+   REMOVE AUDIO BUTTONS
+   ========================================== */
+
+.audio-upload-box > .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 15px;
+  font-size: 13px;
+  font-weight: 700;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.audio-upload-box > .btn.danger {
+  border-color: rgba(245, 69, 106, 0.35);
+  color: #ff8ba5;
+}
+
+.audio-upload-box > .btn.danger:hover:not(:disabled) {
+  border-color: #fa4e75;
+  background: rgba(245, 69, 106, 0.09);
+}
+
+.audio-upload-box > .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ==========================================
+   SUCCESS MESSAGE
+   ========================================== */
+
+.audio-admin-page .success-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 18px 0 0;
+  padding: 14px 16px;
+  border: 1px solid rgba(40, 199, 130, 0.35);
+  border-radius: 10px;
+  background: rgba(40, 199, 130, 0.09);
+  color: #88edbd;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.audio-admin-page .success-message i {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+/* ==========================================
+   ERROR MESSAGE
+   ========================================== */
+
+.audio-admin-page .form-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 18px 0 0;
+  padding: 14px 16px;
+  border: 1px solid rgba(246, 64, 105, 0.4);
+  border-radius: 10px;
+  background: rgba(246, 64, 105, 0.09);
+  color: #ff9caf;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.audio-admin-page .form-error i {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+/* ==========================================
+   AUDIO INFORMATION NOTE
+   ========================================== */
+
+.audio-admin-note {
+  margin-top: 24px;
+  padding: 15px 17px;
+  border: 1px solid #35445d;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.025);
+  color: #a7b5c9;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+/* ==========================================
+   TABLET
+   ========================================== */
+
+
+
+/* ==========================================
+   MOBILE
+   ========================================== */
+
+
+
+/* ==========================================
+   SMALL MOBILE
+   ========================================== */
+
+
+
+/* ==========================================
+   REDUCED MOTION
+   ========================================== */
+
+
+.audio-record-tools{display:flex;align-items:center;flex-wrap:wrap;gap:9px}
+.audio-record-tools .btn{width:auto;min-height:38px}
+.audio-record-preview{display:grid;gap:9px;padding:12px;border:1px solid #699ed27a;border-radius:10px;background:#053767}
+.audio-record-preview audio{width:100%;max-width:100%}
+.audio-record-preview p{margin:0}

@@ -1,0 +1,5 @@
+/* Responsive rules for public-alerts; isolated from common/desktop CSS. */
+@media (max-width: 600px) {
+  .public-alerts-page { width: 100%; }
+  .public-alerts-page .page-intro { margin-bottom: 1rem; }
+}

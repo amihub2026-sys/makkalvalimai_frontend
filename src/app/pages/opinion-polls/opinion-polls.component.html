@@ -1,0 +1,15 @@
+<div class="container page-section opinion-polls-page">
+<div class="page-intro glass">
+<div>
+<span class="eyebrow">PEOPLE'S VOICE</span>
+<h1>{{p.label('மக்கள் கருத்துக்கணிப்பு','People’s Opinion Polls')}}</h1>
+<p>{{p.label('உள்ளூர் மக்களின் கருத்துகளை கேட்போம்','Voluntary community opinion polls')}}</p>
+</div>
+<i class="fa-solid fa-square-poll-vertical giant-icon">
+</i>
+</div>
+<app-audio-player [src]="p.language()==='ta'?(s.settings().sectionAudio.polls?.ta||''):(s.settings().sectionAudio.polls?.en||'')"/>
+<div class="card-grid">
+<app-poll *ngFor="let item of s.polls()" [poll]="item"/>
+</div>
+</div>

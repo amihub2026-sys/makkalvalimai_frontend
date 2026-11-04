@@ -1,0 +1,11 @@
+/* Mobile/tablet for breaking-ticker */
+@media(max-width:650px){
+.ticker{min-height:34px;margin-bottom:0;border-radius:0}
+.ticker>b{padding:8px;font-size:.58rem}
+.ticker-roll{font-size:.63rem}
+.ticker-action{display:none}
+}
+
+@media(prefers-reduced-motion:reduce){
+.ticker-roll{animation:none}
+}

@@ -1,0 +1,45 @@
+:host{display:block;min-width:0}
+.side-ad-slider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  min-width: 0;
+  min-height: 115px;
+  padding: 0.65rem 1rem;
+  border-color: #d0a14c;
+  overflow: hidden;
+}
+
+.side-ad-slider > img {
+  width: 180px;
+  height: 99px;
+  max-width: 100%;
+  flex-shrink: 0;
+  object-fit: cover;
+  border-radius: 9px;
+}
+
+.side-ad-slider > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.side-ad-slider h3 {
+  margin: 0.2rem 0;
+  font-size: 1.2rem;
+  overflow-wrap: anywhere;
+}
+
+.side-ad-slider p {
+  font-size: 0.77rem;
+  color: #cbd4e2;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.side-ad-slider .btn {
+  flex-shrink: 0;
+}
+
+.side-ad-slider{background:linear-gradient(120deg,#0b5d9c,#07417a);border-radius:10px}

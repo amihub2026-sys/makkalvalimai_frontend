@@ -1,0 +1,85 @@
+<!-- ==========================================
+       HOME QUICK ACCESS CATEGORIES
+       ========================================== -->
+
+  <div class="home-categories">
+
+    <a
+      routerLink="/public-issues"
+      class="category-spot glass"
+    >
+      <i class="fa-solid fa-road"></i>
+
+      <b>
+        {{ prefs.label('மக்கள் பிரச்சினைகள்', 'Public Issues') }}
+      </b>
+
+      <span>
+        {{ store.approvedIssues().length }}
+        {{ prefs.label('பதிவுகள்', 'reports') }}
+      </span>
+    </a>
+
+    <a
+      routerLink="/report-problem"
+      class="category-spot glass"
+    >
+      <i class="fa-solid fa-bullhorn"></i>
+
+      <b>
+        {{ prefs.label('புகார் தெரிவிக்க', 'Report a Problem') }}
+      </b>
+
+      <span>
+        {{ prefs.label('புகைப்படத்துடன்', 'With photo') }}
+      </span>
+    </a>
+
+    <a
+      routerLink="/problems-solved"
+      class="category-spot glass"
+    >
+      <i class="fa-solid fa-circle-check"></i>
+
+      <b>
+        {{ prefs.label('தீர்வு கண்டவை', 'Problems Solved') }}
+      </b>
+
+      <span>
+        {{ store.solvedIssues().length }}
+        {{ prefs.label('பதிவுகள்', 'cases') }}
+      </span>
+    </a>
+
+    <a
+      routerLink="/public-alerts"
+      class="category-spot glass"
+    >
+      <i class="fa-solid fa-bell"></i>
+
+      <b>
+        {{ prefs.label('பொது அறிவிப்புகள்', 'Public Alerts') }}
+      </b>
+
+      <span>
+        {{ store.alerts().length }}
+        {{ prefs.label('அறிவிப்புகள்', 'notices') }}
+      </span>
+    </a>
+
+    <a
+      routerLink="/achievements"
+      class="category-spot glass"
+    >
+      <i class="fa-solid fa-award"></i>
+
+      <b>
+        {{ prefs.label('சாதனையாளர்கள்', 'Achievements') }}
+      </b>
+
+      <span>
+        {{ prefs.label('மதுரை மக்கள்', 'Madurai people') }}
+      </span>
+    </a>
+
+  </div>

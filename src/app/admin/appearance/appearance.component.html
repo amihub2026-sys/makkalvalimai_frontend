@@ -1,0 +1,442 @@
+
+<!-- ==========================================
+     MAKKAL VALIMAI - ADMIN APPEARANCE
+     HEADER, FOOTER AND BREAKING HEADLINES
+     ========================================== -->
+
+<div class="panel glass editor-form appearance-page" *ngIf="draft">
+
+  <!-- ======================================
+       PAGE HEADER
+       ====================================== -->
+
+  <div class="appearance-heading">
+
+    <h2>Masthead, Footer & TV Headlines</h2>
+
+    <p class="muted">
+      Manage your website header, footer backgrounds
+      and breaking-news headlines from the newsroom dashboard.
+    </p>
+
+  </div>
+
+  <!-- LOADING STATUS -->
+
+  <p
+    class="appearance-loading"
+    *ngIf="loading"
+    role="status"
+  >
+    <i class="fa-solid fa-spinner fa-spin"></i>
+    Loading website settings from MongoDB...
+  </p>
+
+  <!-- ======================================
+       HEADER AND FOOTER IMAGES
+       ====================================== -->
+
+  <div class="form-grid appearance-image-grid">
+
+    <!-- HEADER BACKGROUND -->
+
+    <section class="appearance-image-card">
+
+      <div class="appearance-card-heading">
+
+        <h3>
+          <i class="fa-solid fa-image"></i>
+          Header Background
+        </h3>
+
+      </div>
+
+      <label>
+        Header Background URL
+
+        <input
+          type="text"
+          name="headerImage"
+          [(ngModel)]="draft.headerImage"
+          placeholder="Enter image URL or upload below"
+          [disabled]="loading || saving || uploadingHeader || uploadingFooter"
+        />
+      </label>
+
+      <label class="appearance-file-label">
+
+        Or upload image
+
+        <input
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          (change)="upload($event, 'headerImage')"
+          [disabled]="loading || saving || uploadingHeader || uploadingFooter"
+        />
+
+      </label>
+
+      <p
+        class="muted appearance-upload-status"
+        *ngIf="uploadingHeader"
+        role="status"
+      >
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        Uploading header image...
+      </p>
+
+      <!-- HEADER IMAGE PREVIEW -->
+
+      <div
+        class="appearance-preview"
+        *ngIf="draft.headerImage"
+      >
+
+        <h4>Header Preview</h4>
+
+        <img
+          class="upload-preview"
+          [src]="media.url(draft.headerImage)"
+          alt="Header background preview"
+        />
+
+        <button
+          type="button"
+          class="btn outline danger small"
+          (click)="clearImage('headerImage')"
+          [disabled]="loading || saving || uploadingHeader || uploadingFooter"
+        >
+          <i class="fa-solid fa-trash"></i>
+          Remove Header Image
+        </button>
+
+      </div>
+
+      <p
+        class="muted appearance-empty-preview"
+        *ngIf="!draft.headerImage"
+      >
+        <i class="fa-regular fa-image"></i>
+        No header background image selected.
+      </p>
+
+    </section>
+
+    <!-- FOOTER BACKGROUND -->
+
+    <section class="appearance-image-card">
+
+      <div class="appearance-card-heading">
+
+        <h3>
+          <i class="fa-solid fa-image"></i>
+          Footer Background
+        </h3>
+
+      </div>
+
+      <label>
+        Footer Background URL
+
+        <input
+          type="text"
+          name="footerImage"
+          [(ngModel)]="draft.footerImage"
+          placeholder="Enter image URL or upload below"
+          [disabled]="loading || saving || uploadingHeader || uploadingFooter"
+        />
+      </label>
+
+      <label class="appearance-file-label">
+
+        Or upload image
+
+        <input
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          (change)="upload($event, 'footerImage')"
+          [disabled]="loading || saving || uploadingHeader || uploadingFooter"
+        />
+
+      </label>
+
+      <p
+        class="muted appearance-upload-status"
+        *ngIf="uploadingFooter"
+        role="status"
+      >
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        Uploading footer image...
+      </p>
+
+      <!-- FOOTER IMAGE PREVIEW -->
+
+      <div
+        class="appearance-preview"
+        *ngIf="draft.footerImage"
+      >
+
+        <h4>Footer Preview</h4>
+
+        <img
+          class="upload-preview"
+          [src]="media.url(draft.footerImage)"
+          alt="Footer background preview"
+        />
+
+        <button
+          type="button"
+          class="btn outline danger small"
+          (click)="clearImage('footerImage')"
+          [disabled]="loading || saving || uploadingHeader || uploadingFooter"
+        >
+          <i class="fa-solid fa-trash"></i>
+          Remove Footer Image
+        </button>
+
+      </div>
+
+      <p
+        class="muted appearance-empty-preview"
+        *ngIf="!draft.footerImage"
+      >
+        <i class="fa-regular fa-image"></i>
+        No footer background image selected.
+      </p>
+
+    </section>
+
+  </div>
+
+  <!-- ======================================
+       BREAKING NEWS HEADLINES
+       ====================================== -->
+
+  <section class="appearance-headlines-section">
+
+    <div class="appearance-section-heading">
+
+      <div>
+
+        <h3>
+          <i class="fa-solid fa-bolt"></i>
+          Scrolling Breaking-News Headlines
+        </h3>
+
+        <p class="muted">
+          Enter each headline in Tamil and English.
+          These headlines are saved in MongoDB.
+        </p>
+
+      </div>
+
+      <span class="appearance-headline-count">
+        {{ draft.headlines.length }}
+        {{
+          draft.headlines.length === 1
+            ? 'Headline'
+            : 'Headlines'
+        }}
+      </span>
+
+    </div>
+
+    <!-- NO HEADLINES -->
+
+    <div
+      class="appearance-empty-headlines"
+      *ngIf="draft.headlines.length === 0"
+    >
+
+      <i class="fa-solid fa-newspaper"></i>
+
+      <p class="muted">
+        No breaking-news headlines added yet.
+      </p>
+
+    </div>
+
+    <!-- HEADLINE EDITORS -->
+
+    <div class="appearance-headlines-list">
+
+      <div
+        class="appearance-headline-card"
+        *ngFor="let h of draft.headlines; let i = index"
+      >
+
+        <div class="appearance-headline-card-heading">
+
+          <h4>
+            Headline {{ i + 1 }}
+          </h4>
+
+          <button
+            type="button"
+            class="btn outline danger small"
+            (click)="removeHeadline(i)"
+            [disabled]="loading || saving || uploadingHeader || uploadingFooter"
+          >
+            <i class="fa-solid fa-xmark"></i>
+            Remove
+          </button>
+
+        </div>
+
+        <div class="form-grid">
+
+          <label>
+            தமிழ் தலைப்பு *
+
+            <input
+              type="text"
+              [name]="'headlineTa' + i"
+              [(ngModel)]="h.ta"
+              placeholder="தமிழில் தலைப்பை உள்ளிடவும்"
+              [disabled]="loading || saving || uploadingHeader || uploadingFooter"
+            />
+          </label>
+
+          <label>
+            English Headline *
+
+            <input
+              type="text"
+              [name]="'headlineEn' + i"
+              [(ngModel)]="h.en"
+              placeholder="Enter headline in English"
+              [disabled]="loading || saving || uploadingHeader || uploadingFooter"
+            />
+          </label>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ADD HEADLINE -->
+
+    <button
+      type="button"
+      class="btn outline appearance-add-headline"
+      (click)="addHeadline()"
+      [disabled]="loading || saving || uploadingHeader || uploadingFooter"
+    >
+      <i class="fa-solid fa-plus"></i>
+      Add Marquee Headline
+    </button>
+
+  </section>
+
+  <!-- ======================================
+       POPUP ADVERTISEMENT SETTING
+       ====================================== -->
+
+  <section class="appearance-popup-section">
+
+    <h3>
+      <i class="fa-solid fa-rectangle-ad"></i>
+      Advertisement Popup Setting
+    </h3>
+
+    <label class="checkbox-label">
+
+      <input
+        type="checkbox"
+        name="showPopup"
+        [(ngModel)]="draft.showPopup"
+        [disabled]="loading || saving || uploadingHeader || uploadingFooter"
+      />
+
+      Enable advertising popup (if a popup ad exists)
+
+    </label>
+
+    <p class="muted">
+      This setting controls the saved popup preference.
+      The public homepage popup display will be verified separately.
+    </p>
+
+  </section>
+
+  <!-- ======================================
+       ERROR AND SUCCESS MESSAGES
+       ====================================== -->
+
+  <p
+    class="form-error appearance-error"
+    *ngIf="error"
+    role="alert"
+  >
+
+    <i class="fa-solid fa-circle-exclamation"></i>
+
+    {{ error }}
+
+  </p>
+
+  <p
+    class="success-message appearance-success"
+    *ngIf="message"
+    role="status"
+  >
+
+    <i class="fa-solid fa-circle-check"></i>
+
+    {{ message }}
+
+  </p>
+
+  <!-- ======================================
+       SAVE AND REFRESH CONTROLS
+       ====================================== -->
+
+  <div class="appearance-actions">
+
+    <button
+      type="button"
+      class="btn btn-red"
+      (click)="save()"
+      [disabled]="loading || saving || uploadingHeader || uploadingFooter"
+    >
+
+      <i
+        class="fa-solid"
+        [class.fa-spinner]="saving"
+        [class.fa-spin]="saving"
+        [class.fa-floppy-disk]="!saving"
+      ></i>
+
+      {{
+        saving
+          ? 'Saving Appearance...'
+          : 'Save Appearance'
+      }}
+
+    </button>
+
+    <button
+      type="button"
+      class="btn outline"
+      (click)="loadSettings()"
+      [disabled]="loading || saving || uploadingHeader || uploadingFooter"
+    >
+
+      <i class="fa-solid fa-rotate"></i>
+
+      Reload Saved Settings
+
+    </button>
+
+    <span
+      class="appearance-saved-indicator"
+      *ngIf="saved"
+    >
+      <i class="fa-solid fa-circle-check"></i>
+      Saved to MongoDB
+    </span>
+
+  </div>
+
+</div>

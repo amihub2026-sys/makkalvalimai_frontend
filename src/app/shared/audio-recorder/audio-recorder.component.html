@@ -1,0 +1,449 @@
+
+<!-- ==========================================
+     MAKKAL VALIMAI
+     REUSABLE AUDIO RECORDER
+     TAMIL + ENGLISH
+     RECORD / DRAG & DROP / UPLOAD
+========================================== -->
+
+<div class="mv-audio-recorder">
+
+  <!-- =====================================
+       MODE SELECTION
+  ====================================== -->
+
+  <div
+    class="audio-mode-switch"
+    role="group"
+    [attr.aria-label]="label + ' audio input mode'"
+  >
+
+    <!-- RECORD MODE -->
+
+    <button
+      type="button"
+      class="audio-mode-btn"
+      [class.active]="mode === 'record'"
+      [attr.aria-pressed]="mode === 'record'"
+      [disabled]="busy || recording"
+      (click)="setMode('record')"
+    >
+      <i class="fa-solid fa-microphone"></i>
+      <span>Record New Audio</span>
+    </button>
+
+    <!-- FILE UPLOAD MODE -->
+
+    <button
+      type="button"
+      class="audio-mode-btn"
+      [class.active]="mode === 'upload'"
+      [attr.aria-pressed]="mode === 'upload'"
+      [disabled]="busy || recording"
+      (click)="setMode('upload')"
+    >
+      <i class="fa-solid fa-cloud-arrow-up"></i>
+      <span>Select Audio File</span>
+    </button>
+
+  </div>
+
+
+  <!-- =====================================
+       RECORD NEW AUDIO
+  ====================================== -->
+
+  <section
+    *ngIf="mode === 'record'"
+    class="audio-record-panel"
+  >
+
+    <div class="audio-panel-heading">
+
+      <div class="audio-panel-icon">
+        <i class="fa-solid fa-microphone-lines"></i>
+      </div>
+
+      <div>
+        <h4>Record {{ label }} Voice</h4>
+
+        <p class="muted">
+          Record directly using your microphone.
+        </p>
+      </div>
+
+    </div>
+
+
+    <!-- RECORDING INDICATOR -->
+
+    <div
+      *ngIf="recording"
+      class="recording-indicator"
+      role="status"
+    >
+      <span class="recording-dot"></span>
+
+      <span>
+        Recording in progress...
+      </span>
+    </div>
+
+
+    <!-- RECORDING BUTTONS -->
+
+    <div class="audio-record-actions">
+
+      <!-- START -->
+
+      <button
+        *ngIf="!recording"
+        type="button"
+        class="audio-action-btn record-btn"
+        [disabled]="busy"
+        (click)="start()"
+      >
+        <i class="fa-solid fa-circle"></i>
+        Start Recording
+      </button>
+
+
+      <!-- STOP -->
+
+      <button
+        *ngIf="recording"
+        type="button"
+        class="audio-action-btn stop-btn"
+        (click)="stop()"
+      >
+        <i class="fa-solid fa-stop"></i>
+        Stop Recording
+      </button>
+
+    </div>
+
+
+    <!-- RECORDING PREVIEW -->
+
+    <div
+      *ngIf="previewUrl && !recording"
+      class="audio-selected-preview"
+    >
+
+      <div class="audio-preview-heading">
+
+        <i class="fa-solid fa-circle-play"></i>
+
+        <h4>Recording Preview</h4>
+
+      </div>
+
+      <p class="muted">
+        Listen to your recording before saving.
+      </p>
+
+      <audio
+        controls
+        preload="metadata"
+        [src]="previewUrl"
+        [attr.aria-label]="label + ' recording preview'"
+      >
+        Your browser does not support audio playback.
+      </audio>
+
+
+      <!-- SAVE / DISCARD -->
+
+      <div class="audio-preview-actions">
+
+        <button
+          type="button"
+          class="audio-action-btn save-btn"
+          [disabled]="busy"
+          (click)="save()"
+        >
+          <i
+            class="fa-solid"
+            [class.fa-spinner]="converting || uploading"
+            [class.fa-spin]="converting || uploading"
+            [class.fa-floppy-disk]="!converting && !uploading"
+          ></i>
+
+          {{
+            converting
+              ? 'Converting to MP3...'
+              : uploading
+                ? 'Uploading...'
+                : 'Save Recording'
+          }}
+        </button>
+
+        <button
+          type="button"
+          class="audio-action-btn discard-btn"
+          [disabled]="busy"
+          (click)="discard()"
+        >
+          <i class="fa-solid fa-trash"></i>
+          Discard
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- RECORDING INSTRUCTIONS -->
+
+    <p
+      *ngIf="!recording && !previewUrl"
+      class="audio-help-text"
+    >
+      <i class="fa-solid fa-circle-info"></i>
+      Click Start Recording, speak into your
+      microphone, then Stop and Preview.
+    </p>
+
+  </section>
+
+
+  <!-- =====================================
+       SELECT EXISTING AUDIO FILE
+  ====================================== -->
+
+  <section
+    *ngIf="mode === 'upload'"
+    class="audio-file-panel"
+  >
+
+    <div class="audio-panel-heading">
+
+      <div class="audio-panel-icon">
+        <i class="fa-solid fa-file-audio"></i>
+      </div>
+
+      <div>
+
+        <h4>Upload {{ label }} Audio</h4>
+
+        <p class="muted">
+          Select a saved audio file or drag and drop.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- DRAG AND DROP AREA -->
+
+    <div
+      class="audio-drop-zone"
+      [class.drag-active]="dragging"
+      [class.has-file]="selectedFile"
+      [class.is-disabled]="busy"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+    >
+
+      <div class="drop-zone-icon">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+      </div>
+
+      <h4>Drag & Drop Audio Here</h4>
+
+      <p class="muted">
+        Or browse your device to select a file.
+      </p>
+
+      <p class="audio-supported-formats">
+        MP3 / OGG / OGA / Opus
+      </p>
+
+
+      <!-- FILE BROWSE BUTTON -->
+
+      <button
+        type="button"
+        class="audio-action-btn browse-btn"
+        [disabled]="busy"
+        (click)="browse()"
+      >
+        <i class="fa-solid fa-folder-open"></i>
+        Browse Audio File
+      </button>
+
+
+      <!-- HIDDEN FILE INPUT -->
+
+      <input
+        #fileInput
+        type="file"
+        hidden
+        accept=".mp3,.ogg,.oga,.opus,audio/mpeg,audio/ogg,audio/opus"
+        [disabled]="busy"
+        (change)="onFileInput($event)"
+      />
+
+      <p class="audio-file-limit">
+        Maximum file size: {{ maxSizeMb }} MB
+      </p>
+
+    </div>
+
+
+    <!-- SELECTED FILE DETAILS -->
+
+    <div
+      *ngIf="selectedFile"
+      class="audio-selected-file"
+    >
+
+      <div class="selected-file-heading">
+
+        <i class="fa-solid fa-file-audio"></i>
+
+        <div class="selected-file-info">
+
+          <strong>
+            {{ selectedFile.name }}
+          </strong>
+
+          <span>
+            {{ (selectedFile.size / 1024 / 1024)
+                | number:'1.2-2' }} MB
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- AUDIO FILE PREVIEW -->
+
+    <div
+      *ngIf="previewUrl && selectedFile"
+      class="audio-selected-preview"
+    >
+
+      <div class="audio-preview-heading">
+
+        <i class="fa-solid fa-headphones"></i>
+
+        <h4>Audio Preview</h4>
+
+      </div>
+
+      <p class="muted">
+        Check the selected voice before uploading.
+      </p>
+
+      <audio
+        controls
+        preload="metadata"
+        [src]="previewUrl"
+        [attr.aria-label]="label + ' selected audio preview'"
+      >
+        Your browser does not support audio playback.
+      </audio>
+
+
+      <!-- UPLOAD / REMOVE -->
+
+      <div class="audio-preview-actions">
+
+        <button
+          type="button"
+          class="audio-action-btn save-btn"
+          [disabled]="busy"
+          (click)="save()"
+        >
+
+          <i
+            class="fa-solid"
+            [class.fa-spinner]="converting || uploading"
+            [class.fa-spin]="converting || uploading"
+            [class.fa-cloud-arrow-up]="!converting && !uploading"
+          ></i>
+
+          {{
+            converting
+              ? 'Converting to MP3...'
+              : uploading
+                ? 'Uploading...'
+                : 'Upload Audio'
+          }}
+
+        </button>
+
+        <button
+          type="button"
+          class="audio-action-btn discard-btn"
+          [disabled]="busy"
+          (click)="discard()"
+        >
+          <i class="fa-solid fa-xmark"></i>
+          Remove File
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================
+       PROCESSING STATUS
+  ====================================== -->
+
+  <div
+    *ngIf="converting || uploading"
+    class="audio-processing-status"
+    role="status"
+  >
+
+    <i class="fa-solid fa-spinner fa-spin"></i>
+
+    <span>
+      {{
+        converting
+          ? 'Processing audio to MP3...'
+          : 'Uploading audio to the server...'
+      }}
+    </span>
+
+  </div>
+
+
+  <!-- =====================================
+       SUCCESS / INFORMATION
+  ====================================== -->
+
+  <p
+    *ngIf="status && !error"
+    class="audio-status-message"
+    role="status"
+  >
+    <i class="fa-solid fa-circle-check"></i>
+    {{ status }}
+  </p>
+
+
+  <!-- =====================================
+       ERROR MESSAGE
+  ====================================== -->
+
+  <p
+    *ngIf="error"
+    class="audio-error-message"
+    role="alert"
+  >
+    <i class="fa-solid fa-circle-exclamation"></i>
+    {{ error }}
+  </p>
+
+</div>

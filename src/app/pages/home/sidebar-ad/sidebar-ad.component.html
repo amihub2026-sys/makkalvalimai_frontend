@@ -1,0 +1,46 @@
+<!-- ==========================================
+       SIDEBAR ADVERTISEMENT
+       ========================================== -->
+
+  <div
+    class="side-ad-slider glass"
+    *ngIf="sideAd() as ad"
+  >
+
+    <img
+      [src]="media.url(ad.image)"
+      [alt]="ad.brand"
+      loading="lazy"
+    />
+
+    <div>
+      <span class="ad-tag">
+        SPONSORED •
+        {{ prefs.label('விளம்பரம்', 'ADVERTISEMENT') }}
+      </span>
+
+      <h3>{{ ad.brand }}</h3>
+      <p>{{ ad.caption }}</p>
+    </div>
+
+    <a
+      *ngIf="ad.link"
+      class="btn outline"
+      [href]="ad.link"
+      rel="sponsored noopener noreferrer"
+      target="_blank"
+    >
+      Learn More ↗
+    </a>
+
+    <button
+      *ngIf="sidebarAds().length > 1"
+      type="button"
+      class="btn outline small"
+      (click)="nextAd()"
+      aria-label="Next advertisement"
+    >
+      ›
+    </button>
+
+  </div>

@@ -1,0 +1,85 @@
+<!-- ==========================================
+       PUBLIC ISSUES AND OPINION POLL
+       ========================================== -->
+
+  <div class="home-mid">
+
+    <!-- PUBLIC ISSUES -->
+
+    <section class="panel glass">
+
+      <div class="section-title">
+
+        <h2>
+          <i class="fa-solid fa-road"></i>
+          {{ prefs.label('மக்கள் பிரச்சினைகள்', 'Public Issues') }}
+        </h2>
+
+        <a routerLink="/public-issues">
+          {{ prefs.label('அனைத்தும்', 'View all') }} →
+        </a>
+
+      </div>
+
+      <div
+        class="issue-preview"
+        *ngFor="let issue of store.approvedIssues().slice(0,3)"
+      >
+
+        <img
+          [src]="media.url(issue.photo)"
+          alt="Submitted public issue photo"
+          loading="lazy"
+        />
+
+        <div>
+
+          <b>{{ issue.title }}</b>
+
+          <small>
+            <i class="fa-solid fa-location-dot"></i>
+            {{ issue.area }}
+          </small>
+
+        </div>
+
+      </div>
+
+      <a
+        class="btn btn-red wide"
+        routerLink="/report-problem"
+      >
+        {{
+          prefs.label(
+            'பிரச்சினையைப் பதிவு செய்க',
+            'Report a public issue'
+          )
+        }}
+      </a>
+
+    </section>
+
+    <!-- PUBLIC OPINION POLL -->
+
+ 
+<!-- SMALL POLL SPOTLIGHT: VOTING OPENS ON DEMAND -->
+<div class="home-polls" *ngIf="store.polls().length">
+  <div class="poll-spotlight glass">
+    <div class="section-title"><h2><i class="fa-solid fa-square-poll-vertical"></i> {{prefs.label('மக்கள் கருத்துக்கணிப்பு','People’s Opinion Poll')}}</h2><a routerLink="/opinion-polls">{{prefs.label('அனைத்தும்','View all')}} →</a></div>
+    <p class="poll-question" *ngIf="currentPoll() as poll">{{prefs.txt(poll.question)}}</p>
+    <p class="muted micro">{{prefs.label('உங்கள் கருத்தும் முக்கியம். வாக்களிக்க கீழே தொடவும்.','Your voice matters. Tap below to participate.')}}</p>
+    <button class="btn btn-red wide" type="button" (click)="openPoll()"><i class="fa-solid fa-check-to-slot"></i> {{prefs.label('வாக்களிக்கவும்','Vote in the poll')}}</button>
+    <div class="poll-spotlight-dots" *ngIf="store.polls().length > 1"><button *ngFor="let poll of store.polls(); let i=index" type="button" (click)="openPoll(i)">{{i+1}}</button></div>
+  </div>
+</div>
+
+  </div>
+
+<!-- COMPACT POLL MODAL — live MongoDB voting through app-poll -->
+<div class="poll-modal-backdrop" *ngIf="pollPopupOpen()" (click)="closePoll()">
+  <section class="poll-modal-dialog" role="dialog" aria-modal="true" aria-label="People's Opinion Poll" (click)="$event.stopPropagation()">
+    <div class="poll-modal-head"><strong><i class="fa-solid fa-square-poll-vertical"></i> {{prefs.label('மக்கள் கருத்துக்கணிப்பு','Opinion Poll')}}</strong><button type="button" (click)="closePoll()" aria-label="Close poll">×</button></div>
+    <app-poll *ngIf="currentPoll() as poll" [poll]="poll" />
+    <div class="poll-modal-foot"><a routerLink="/opinion-polls" (click)="closePoll()">{{prefs.label('மேலும் கருத்துக்கணிப்புகள்','All polls')}} →</a><button type="button" *ngIf="store.polls().length > 1" (click)="pollIndex.set((pollIndex()+1)%store.polls().length)">{{prefs.label('அடுத்தது','Next poll')}} →</button></div>
+  </section>
+</div>

@@ -1,0 +1,35 @@
+:host{display:block;min-width:0}
+.ad-banner {
+  min-height: 105px;
+  padding: 1rem 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  background-size: cover;
+  background-position: center;
+  border-color: #ab172d;
+}
+
+.ad-banner > div {
+  min-width: 0;
+  flex: 1;
+}
+
+.ad-banner h3 {
+  font-size: 1.55rem;
+  margin: 0.2rem 0;
+  overflow-wrap: anywhere;
+}
+
+.ad-banner p {
+  margin: 0;
+  font-size: 0.76rem;
+  line-height: 1.6;
+}
+
+.ad-banner .btn {
+  flex-shrink: 0;
+}
+
+.ad-banner{border-radius:9px;overflow:hidden}

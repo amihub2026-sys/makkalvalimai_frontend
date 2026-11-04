@@ -1,0 +1,49 @@
+/* Responsive rules for admin-shell; isolated from common/desktop CSS. */
+@media (max-width:850px) {
+.admin-layout {
+  grid-template-columns:190px minmax(0,1fr)
+}
+.admin-main {
+  padding:.8rem
+}
+.admin-topbar .chip {
+  display:none
+}
+}@media (max-width:600px) {
+.admin-layout {
+  grid-template-columns:1fr
+}
+.admin-sidebar {
+  position:relative;top:auto;height:auto;display:block
+}
+.admin-brand {
+  flex-direction:row;padding:.6rem
+}
+.admin-brand img {
+  width:42px;height:42px
+}
+.admin-brand small {
+  display:none
+}
+.admin-sidebar nav {
+  display:flex;overflow-x:auto;padding:.4rem;white-space:nowrap;gap:.25rem
+}
+.admin-sidebar nav a {
+  font-size:.7rem;padding:.55rem .6rem
+}
+.admin-sidebar nav i {
+  width:auto
+}
+.sidebar-foot {
+  display:none
+}
+.admin-main {
+  padding:.75rem
+}
+.admin-topbar h2 {
+  font-size:1rem
+}
+.admin-topbar .btn {
+  font-size:.7rem;padding:.4rem
+}
+}

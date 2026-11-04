@@ -1,0 +1,140 @@
+/* Responsive rules for polls; isolated from common/desktop CSS. */
+@media (min-width: 1400px) {
+  .admin-columns.admin-polls-page {
+    grid-template-columns:
+      minmax(0, 1.1fr)
+      minmax(0, 1fr);
+  }
+}@media (max-width: 1050px) {
+  .poll-editor-panel .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .saved-poll-card {
+    padding: 18px;
+  }
+}@media (max-width: 700px) {
+  .admin-columns.admin-polls-page {
+    gap: 16px;
+  }
+
+  .polls-panel-heading h2,
+  .poll-editor-panel > .section-title h2 {
+    font-size: 19px;
+  }
+
+  .polls-toolbar {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .saved-polls {
+    gap: 15px;
+  }
+
+  .saved-poll-card {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .saved-poll-header {
+    gap: 10px;
+    padding-bottom: 14px;
+  }
+
+  .poll-question-ta {
+    font-size: 16px;
+  }
+
+  .poll-question-en {
+    font-size: 12px;
+  }
+
+  .saved-poll-options {
+    gap: 9px;
+    margin-top: 14px;
+  }
+
+  .saved-poll-option {
+    gap: 9px;
+    min-height: 70px;
+    padding: 10px;
+  }
+
+  .poll-option-number {
+    width: 29px;
+    height: 29px;
+    font-size: 12px;
+  }
+
+  .option-title-ta {
+    font-size: 13px;
+  }
+
+  .option-title-en {
+    font-size: 11px;
+  }
+
+  .saved-poll-votes {
+    min-width: 54px;
+    padding: 7px;
+  }
+
+  .vote-count {
+    font-size: 19px;
+  }
+
+  .saved-poll-footer {
+    gap: 12px;
+  }
+
+  .poll-editor-panel .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .poll-editor-option {
+    padding: 13px;
+  }
+
+  .poll-editor-actions .btn {
+    flex: 1;
+  }
+}@media (max-width: 400px) {
+  .saved-poll-header {
+    flex-direction: column;
+  }
+
+  .poll-status {
+    align-self: flex-start;
+  }
+
+  .saved-poll-option {
+    gap: 7px;
+  }
+
+  .saved-poll-votes {
+    min-width: 48px;
+  }
+
+  .vote-count {
+    font-size: 18px;
+  }
+
+  .edit-poll-btn {
+    width: 100%;
+  }
+
+  .poll-editor-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .poll-editor-actions .btn {
+    width: 100%;
+  }
+}@media (prefers-reduced-motion: reduce) {
+  .saved-poll-card,
+  .saved-poll-option {
+    transition: none;
+  }
+}

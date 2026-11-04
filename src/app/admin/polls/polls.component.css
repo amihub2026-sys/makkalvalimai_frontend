@@ -1,0 +1,658 @@
+/* ==========================================
+   MAKKAL VALIMAI - ADMIN OPINION POLLS
+   ========================================== */
+
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.admin-polls-page,
+.admin-polls-page *,
+.admin-polls-page *::before,
+.admin-polls-page *::after {
+  box-sizing: border-box;
+}
+
+/* ==========================================
+   MAIN LAYOUT
+   ========================================== */
+
+.admin-columns.admin-polls-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 22px;
+  width: 100%;
+  min-width: 0;
+}
+
+.admin-polls-page .panel {
+  min-width: 0;
+  width: 100%;
+}
+
+.polls-list-panel,
+.poll-editor-panel {
+  min-width: 0;
+}
+
+/* ==========================================
+   PAGE HEADING
+   ========================================== */
+
+.polls-panel-heading,
+.poll-editor-panel > .section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.polls-panel-heading h2,
+.poll-editor-panel > .section-title h2 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.4;
+}
+
+.admin-polls-page .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.admin-polls-page .btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ==========================================
+   POLL LIST TOOLBAR
+   ========================================== */
+
+.polls-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.polls-count {
+  color: #aab6c9;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+/* ==========================================
+   LOADING AND EMPTY STATES
+   ========================================== */
+
+.polls-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 110px;
+  color: #b7c2d4;
+  font-size: 14px;
+}
+
+.polls-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 28px 18px;
+  border: 1px dashed #46516a;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.025);
+  text-align: center;
+}
+
+.polls-empty-state i {
+  margin-bottom: 12px;
+  color: #f5476c;
+  font-size: 30px;
+}
+
+.polls-empty-state h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.polls-empty-state p {
+  margin: 0;
+}
+
+/* ==========================================
+   SAVED POLLS
+   ========================================== */
+
+.saved-polls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  width: 100%;
+  margin-top: 18px;
+}
+
+.saved-poll-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;
+  padding: 20px;
+  border: 1px solid #354058;
+  border-radius: 15px;
+  background: linear-gradient(
+    145deg,
+    #1b2436,
+    #101827
+  );
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.saved-poll-card:hover {
+  border-color: rgba(245, 71, 108, 0.55);
+}
+
+.saved-poll-card.is-selected {
+  border-color: #f5476c;
+  box-shadow: 0 0 0 1px rgba(245, 71, 108, 0.15);
+}
+
+/* ==========================================
+   QUESTION HEADER
+   ========================================== */
+
+.saved-poll-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
+  padding-bottom: 17px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.saved-poll-question {
+  flex: 1;
+  min-width: 0;
+}
+
+.poll-question-ta {
+  margin: 0 0 8px;
+  color: #fff;
+  font-size: 19px;
+  font-weight: 750;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.poll-question-en {
+  margin: 0;
+  color: #acb8cc;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+/* ACTIVE / CLOSED STATUS */
+
+.poll-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.3px;
+}
+
+.poll-status.green {
+  border: 1px solid rgba(44, 201, 132, 0.35);
+  background: rgba(44, 201, 132, 0.1);
+  color: #80ebba;
+}
+
+.poll-status.warning {
+  border: 1px solid rgba(255, 184, 74, 0.35);
+  background: rgba(255, 184, 74, 0.1);
+  color: #ffd088;
+}
+
+/* ==========================================
+   ALL ANSWER OPTIONS
+   ========================================== */
+
+.saved-poll-options {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 11px;
+  margin-top: 18px;
+  width: 100%;
+}
+
+.saved-poll-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  min-height: 75px;
+  padding: 12px 14px;
+  border: 1px solid #39455d;
+  border-radius: 11px;
+  background: #111a2a;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.saved-poll-option:hover {
+  border-color: #576581;
+  background: #192338;
+}
+
+/* OPTION NUMBER */
+
+.poll-option-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 33px;
+  height: 33px;
+  border: 1px solid rgba(248, 68, 111, 0.3);
+  border-radius: 9px;
+  background: rgba(248, 68, 111, 0.1);
+  color: #fa5a7f;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* TAMIL AND ENGLISH OPTION TEXT */
+
+.saved-poll-option-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 4px;
+  min-width: 0;
+}
+
+.option-title-ta {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.option-title-en {
+  color: #a9b5c9;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+/* ==========================================
+   VOTES BESIDE EACH OPTION
+   ========================================== */
+
+.saved-poll-votes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 65px;
+  padding: 9px 11px;
+  border: 1px solid rgba(248, 68, 111, 0.25);
+  border-radius: 10px;
+  background: rgba(248, 68, 111, 0.09);
+  text-align: center;
+}
+
+.vote-count {
+  color: #ff5d81;
+  font-size: 23px;
+  font-weight: 800;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+.vote-label {
+  margin-top: 4px;
+  color: #b6c1d3;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* ==========================================
+   TOTAL VOTES AND EDIT BUTTON
+   ========================================== */
+
+.saved-poll-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 18px;
+  padding-top: 17px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.saved-poll-total {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+  color: #c5cddd;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.saved-poll-total i {
+  color: #fb4f74;
+}
+
+.saved-poll-total strong {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 35px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #29344a;
+  color: #fff;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+.edit-poll-btn {
+  min-height: 38px;
+  white-space: nowrap;
+}
+
+/* ==========================================
+   ADMIN POLL EDITOR
+   ========================================== */
+
+.poll-editor-panel .editor-form {
+  display: block;
+  margin-top: 22px;
+}
+
+.poll-editor-panel .form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.poll-editor-panel .form-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  color: #d9e1ef;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.poll-editor-panel .form-grid input {
+  width: 100%;
+  min-width: 0;
+  min-height: 45px;
+  padding: 11px 12px;
+  border: 1px solid #404c64;
+  border-radius: 9px;
+  background: #0e1727;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.poll-editor-panel .form-grid input::placeholder {
+  color: #8391a9;
+}
+
+.poll-editor-panel .form-grid input:focus {
+  border-color: #f5476c;
+  box-shadow: 0 0 0 3px rgba(245, 71, 108, 0.12);
+}
+
+.poll-editor-panel .form-grid input:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* ==========================================
+   EDITOR OPTIONS
+   ========================================== */
+
+.poll-editor-options-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.poll-editor-options-heading h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 18px;
+}
+
+.poll-editor-options {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.poll-editor-option {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #354159;
+  border-radius: 12px;
+  background: rgba(11, 19, 32, 0.45);
+}
+
+.poll-option-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 13px;
+}
+
+.option-votes-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #b1bdd0;
+  font-size: 13px;
+}
+
+.option-votes-info i {
+  color: #f54d75;
+}
+
+.option-votes-info strong {
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ADD OPTION */
+
+.add-poll-option-btn {
+  width: 100%;
+  min-height: 43px;
+  margin-top: 14px;
+  padding: 11px 14px;
+  border: 1px dashed #56627a;
+  border-radius: 9px;
+}
+
+.add-poll-option-btn:hover:not(:disabled) {
+  border-color: #f5476c;
+  color: #ff6588;
+}
+
+/* ==========================================
+   TOTAL VOTE SUMMARY
+   ========================================== */
+
+.poll-voting-summary {
+  margin-top: 24px;
+  padding: 17px;
+  border: 1px solid #3c4860;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.poll-summary-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.poll-summary-heading h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 17px;
+}
+
+.poll-summary-heading strong {
+  color: #ff5d81;
+  font-size: 24px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.poll-voting-summary p {
+  margin-bottom: 0;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* ==========================================
+   ACTIVE POLL CONTROL
+   ========================================== */
+
+.poll-active-control {
+  margin-top: 22px;
+  padding: 17px;
+  border: 1px solid #3c4860;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.poll-active-control .checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.poll-active-control input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  accent-color: #f5476c;
+}
+
+.poll-active-control p {
+  margin: 10px 0 0;
+  color: #aab6c9;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* ==========================================
+   FORM FEEDBACK
+   ========================================== */
+
+.poll-editor-panel .form-error {
+  margin-top: 17px;
+  padding: 12px 14px;
+  border: 1px solid rgba(245, 71, 108, 0.35);
+  border-radius: 9px;
+  background: rgba(245, 71, 108, 0.1);
+  color: #ff9caf;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.poll-editor-panel .success-message {
+  margin-top: 17px;
+  padding: 12px 14px;
+  border: 1px solid rgba(39, 197, 127, 0.35);
+  border-radius: 9px;
+  background: rgba(39, 197, 127, 0.1);
+  color: #7beab6;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* ==========================================
+   SAVE AND DELETE BUTTONS
+   ========================================== */
+
+.poll-editor-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 23px;
+}
+
+.poll-editor-actions .btn {
+  min-height: 43px;
+}
+
+/* ==========================================
+   LARGE DESKTOP LAYOUT
+   ========================================== */
+
+
+
+/* ==========================================
+   TABLET
+   ========================================== */
+
+
+
+/* ==========================================
+   MOBILE
+   ========================================== */
+
+
+
+/* ==========================================
+   SMALL MOBILE
+   ========================================== */
+
+
+
+/* ACCESSIBILITY */

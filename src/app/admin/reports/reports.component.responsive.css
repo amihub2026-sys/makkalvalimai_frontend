@@ -1,0 +1,15 @@
+/* Responsive rules for reports; isolated from common/desktop CSS. */
+@media (max-width:600px) {
+.moderation-item {
+  grid-template-columns:90px minmax(0,1fr);padding:.65rem;gap:.55rem
+}
+.moderation-body h3 {
+  font-size:.8rem
+}
+.moderation-body p {
+  font-size:.71rem
+}
+.moderation-actions .btn {
+  font-size:.7rem;padding:.45rem
+}
+}

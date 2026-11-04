@@ -1,0 +1,19 @@
+<div class="container page-section about-contact-page">
+<div class="page-intro glass">
+<div>
+<span class="eyebrow">ABOUT MAKKAL VALIMAI</span>
+<h1>{{p.label('எங்களைப் பற்றி / தொடர்பு','About & Contact')}}</h1>
+<p>மக்கள் வலிமை · Madurai District Civic News</p>
+</div>
+<i class="fa-solid fa-circle-info giant-icon">
+</i>
+</div>
+<div class="panel glass">
+<h2>{{p.label('எங்கள் நோக்கம்','Our Mission')}}</h2>
+<p>{{p.label('மதுரை மாவட்ட மக்களின் பிரச்சினைகளை பொறுப்புடன் பதிவு செய்து, சரிபார்க்கப்பட்ட செய்திகள் மற்றும் தீர்வுகளை பகிர்வதே நோக்கம்.','Our mission is to document Madurai district issues responsibly and share verified local information and solutions.')}}</p>
+<p>{{p.label('புகார் அளிக்க','To report an issue:')}} <a routerLink="/report-problem">{{p.label('புகார் படிவம்','Report a Problem')}}</a>
+</p>
+<p class="muted">Contact information will be added after the publisher confirms official details.</p>
+</div>
+<app-audio-player [src]="p.language()==='ta'?(s.settings().sectionAudio.about?.ta||''):(s.settings().sectionAudio.about?.en||'')"/>
+</div>

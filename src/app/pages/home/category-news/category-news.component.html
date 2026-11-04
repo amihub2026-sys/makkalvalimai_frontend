@@ -1,0 +1,98 @@
+<!-- ==========================================
+       MADURAI NEWS
+       ========================================== -->
+
+  <section class="home-section">
+
+    <div class="section-title">
+
+      <h2>
+        <i class="fa-solid fa-newspaper"></i>
+        {{ prefs.label('மதுரை செய்திகள்', 'Madurai News') }}
+      </h2>
+
+      <a routerLink="/madurai-news">
+        {{ prefs.label('அனைத்தும்', 'View all') }} →
+      </a>
+
+    </div>
+
+    <div class="card-grid">
+
+      <app-story-card
+        *ngFor="let a of madurai()"
+        [article]="a"
+      />
+
+    </div>
+
+  </section>
+
+<!-- ==========================================
+       CRIME NEWS AND ACHIEVEMENTS
+       ========================================== -->
+
+  <div class="home-two">
+
+    <!-- CRIME NEWS -->
+
+    <section class="home-section">
+
+      <div class="section-title">
+
+        <h2>
+          <i class="fa-solid fa-shield-halved"></i>
+          {{ prefs.label('குற்றச் செய்திகள்', 'Crime News') }}
+        </h2>
+
+        <a routerLink="/crime-news">
+          {{ prefs.label('அனைத்தும்', 'View all') }} →
+        </a>
+
+      </div>
+
+      <div class="card-grid">
+
+        <app-story-card
+          *ngFor="let a of crime()"
+          [article]="a"
+        />
+
+      </div>
+
+    </section>
+
+    <!-- ACHIEVEMENTS -->
+
+    <section class="home-section">
+
+      <div class="section-title">
+
+        <h2>
+          <i class="fa-solid fa-award"></i>
+          {{
+            prefs.label(
+              'மதுரை சாதனையாளர்கள்',
+              'Madurai Achievements'
+            )
+          }}
+        </h2>
+
+        <a routerLink="/achievements">
+          {{ prefs.label('அனைத்தும்', 'View all') }} →
+        </a>
+
+      </div>
+
+      <div class="card-grid">
+
+        <app-story-card
+          *ngFor="let a of achievements()"
+          [article]="a"
+        />
+
+      </div>
+
+    </section>
+
+  </div>

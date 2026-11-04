@@ -1,0 +1,5 @@
+/* Responsive rules for achievements; isolated from common/desktop CSS. */
+@media (max-width: 600px) {
+  .achievements-page { width: 100%; }
+  .achievements-page .page-intro { margin-bottom: 1rem; }
+}

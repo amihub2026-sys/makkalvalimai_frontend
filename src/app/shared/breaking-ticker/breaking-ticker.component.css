@@ -1,0 +1,12 @@
+:host{display:block;min-width:0}
+.ticker{display:flex;align-items:stretch;min-height:37px;background:#eaf4ff;color:#1b3857;max-width:1460px;margin:0 auto 5px;overflow:hidden;border:1px solid #88c0e8;border-top:0;border-radius:0 0 8px 8px}
+
+.ticker>b{display:inline-flex;align-items:center;gap:8px;flex-shrink:0;padding:8px 15px;background:#e71535;color:#fff;font-size:.69rem;white-space:nowrap}
+
+.ticker-window{overflow:hidden;display:flex;align-items:center;flex:1;min-width:0}
+
+.ticker-roll{display:flex;align-items:center;width:max-content;white-space:nowrap;animation:news-ticker 44s linear infinite;font-size:.73rem;font-weight:700}
+
+.ticker-roll span{margin-right:1rem}
+
+.ticker-action{align-self:center;flex-shrink:0;padding:9px;color:#085c96;font-weight:800;font-size:.7rem}

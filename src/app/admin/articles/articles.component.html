@@ -1,0 +1,857 @@
+
+<section class="admin-articles">
+
+  <!-- STATUS MESSAGES -->
+  <div *ngIf="error" class="error-message" role="alert">
+    {{ error }}
+  </div>
+
+  <div *ngIf="message" class="success-message" role="status">
+    {{ message }}
+  </div>
+
+  <div class="admin-columns">
+
+    <!-- ======================================
+         LEFT SIDE — SAVED ARTICLES
+    ======================================= -->
+
+    <aside class="panel articles-list-panel">
+
+      <div class="panel-heading">
+        <div>
+          <h2>Published & Draft Articles</h2>
+          <p>{{ articles.length }} saved articles</p>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-red"
+          (click)="newArticle()"
+          [disabled]="saving || uploadingMedia"
+        >
+          + New Article
+        </button>
+      </div>
+
+      <p *ngIf="loading" class="helper-text">
+        Loading news articles...
+      </p>
+
+      <p
+        *ngIf="!loading && articles.length === 0"
+        class="helper-text"
+      >
+        No articles found. Create your first news article.
+      </p>
+
+      <div class="admin-list">
+
+        <button
+          type="button"
+          class="admin-list-item"
+          *ngFor="let article of articles"
+          [class.selected]="editing && draft.id === article.id"
+          [disabled]="saving || uploadingMedia"
+          (click)="edit(article)"
+        >
+
+          <img
+            *ngIf="article.image"
+            [src]="media.url(article.image)"
+            [alt]="article.title.en || 'News article'"
+            loading="lazy"
+          />
+
+          <span>
+            <b>
+              {{ article.title.en || article.title.ta }}
+            </b>
+
+            <small>
+              <ng-container *ngFor="let category of categories">
+                <ng-container *ngIf="category.slug === article.kind">
+                  {{ category.name.en }}
+                </ng-container>
+              </ng-container>
+
+              · {{ article.published ? 'Published' : 'Draft' }}
+            </small>
+
+            <small>{{ article.area }}</small>
+
+            <small>
+              {{ article.publishedAt | date:'dd MMM yyyy' }}
+
+              <ng-container *ngIf="article.featured">
+                · Featured
+              </ng-container>
+            </small>
+          </span>
+
+        </button>
+
+      </div>
+    </aside>
+
+    <!-- ======================================
+         RIGHT SIDE — NEWS EDITOR
+    ======================================= -->
+
+    <section class="panel editor-panel">
+
+      <div class="panel-heading">
+
+        <div>
+          <h2>
+            {{ editing ? 'Edit Story' : 'Create Story' }}
+          </h2>
+
+          <p>
+            Create, edit, and publish news articles easily.
+          </p>
+        </div>
+
+        <span class="helper-text">
+          Independent News URL
+        </span>
+
+      </div>
+
+      <form
+        #articleForm="ngForm"
+        (ngSubmit)="save()"
+        class="article-editor-form"
+      >
+
+        <!-- ======================================
+             NEWS CATEGORY AND LOCATION
+        ======================================= -->
+
+        <div class="form-grid">
+
+          <label class="field">
+
+            <span>News Section *</span>
+
+            <select
+              name="kind"
+              [(ngModel)]="draft.kind"
+              [disabled]="categoryLoading || saving"
+              required
+            >
+              <option value="" disabled>
+                Select News Category
+              </option>
+
+              <option
+                *ngFor="let category of categories"
+                [value]="category.slug"
+                [disabled]="!category.active"
+              >
+                {{ category.name.ta }} /
+                {{ category.name.en }}
+                {{ category.active ? '' : '(Disabled)' }}
+              </option>
+            </select>
+
+            <small *ngIf="categoryLoading">
+              Loading categories...
+            </small>
+
+          </label>
+
+          <label class="field">
+
+            <span>Location *</span>
+
+            <input
+              type="text"
+              name="area"
+              [(ngModel)]="draft.area"
+              placeholder="Madurai district"
+              maxlength="160"
+              required
+            />
+
+          </label>
+
+        </div>
+
+        <!-- ======================================
+             ENGLISH NEWS CONTENT
+        ======================================= -->
+
+        <div class="form-section">
+
+          <h3>English News Content</h3>
+
+          <label class="field">
+            <span>English Title *</span>
+
+            <input
+              type="text"
+              name="titleEn"
+              [(ngModel)]="draft.title.en"
+              placeholder="Enter English headline"
+              required
+            />
+          </label>
+
+          <label class="field">
+            <span>English Article *</span>
+
+            <textarea
+              name="bodyEn"
+              [(ngModel)]="draft.body.en"
+              rows="7"
+              placeholder="Write complete news article in English"
+              required
+            ></textarea>
+          </label>
+
+        </div>
+
+        <!-- ======================================
+             TAMIL NEWS CONTENT
+        ======================================= -->
+
+        <div class="form-section">
+
+          <h3>Tamil News Content</h3>
+
+          <label class="field">
+            <span>தமிழ் செய்தித் தலைப்பு *</span>
+
+            <input
+              type="text"
+              name="titleTa"
+              [(ngModel)]="draft.title.ta"
+              placeholder="தமிழ் செய்தித் தலைப்பு"
+              required
+            />
+          </label>
+
+          <label class="field">
+            <span>தமிழ் செய்தி விவரம் *</span>
+
+            <textarea
+              name="bodyTa"
+              [(ngModel)]="draft.body.ta"
+              rows="7"
+              placeholder="தமிழில் முழு செய்தியை எழுதவும்"
+              required
+            ></textarea>
+          </label>
+
+        </div>
+
+        <!-- ======================================
+             NEWSPAPER ARTICLE FORMATTING
+        ======================================= -->
+
+        <section
+          class="editorial-toolkit form-section"
+          aria-label="Newspaper article formatting"
+        >
+
+          <h3>
+            <i class="fa-solid fa-newspaper"></i>
+            Newspaper Article Formatting
+          </h3>
+
+          <p class="helper-text">
+            Build long articles with bold subheadings,
+            highlighted words, and photographs beside
+            paragraphs. Content is saved in the existing
+            Tamil and English article fields.
+          </p>
+
+          <div class="editorial-tool-grid">
+
+            <div>
+              <b>தமிழ் · Tamil</b>
+
+              <div class="editorial-tool-buttons">
+
+                <button
+                  type="button"
+                  class="btn outline small"
+                  (click)="insertEditorial('ta', 'heading')"
+                >
+                  + Bold subheading
+                </button>
+
+                <button
+                  type="button"
+                  class="btn outline small"
+                  (click)="insertEditorial('ta', 'bold')"
+                >
+                  ** Bold text
+                </button>
+
+              </div>
+            </div>
+
+            <div>
+              <b>English</b>
+
+              <div class="editorial-tool-buttons">
+
+                <button
+                  type="button"
+                  class="btn outline small"
+                  (click)="insertEditorial('en', 'heading')"
+                >
+                  + Bold subheading
+                </button>
+
+                <button
+                  type="button"
+                  class="btn outline small"
+                  (click)="insertEditorial('en', 'bold')"
+                >
+                  ** Bold text
+                </button>
+
+              </div>
+            </div>
+
+          </div>
+
+          <div class="editorial-image-upload">
+
+            <label for="editorial-image-position">
+              Photo and paragraph arrangement
+            </label>
+
+            <select
+              id="editorial-image-position"
+              name="inlineImageSide"
+              [(ngModel)]="inlineImageSide"
+            >
+              <option value="left">
+                Image on left · Text on right
+              </option>
+
+              <option value="right">
+                Text on left · Image on right
+              </option>
+
+              <option value="full">
+                Full-width image
+              </option>
+            </select>
+
+            <label for="editorial-image-file">
+              Insert additional photograph into both language articles
+            </label>
+
+            <input
+              id="editorial-image-file"
+              type="file"
+              accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+              (change)="uploadEditorialImage($event)"
+              [disabled]="saving || uploadingMedia"
+            />
+
+          </div>
+
+          <p class="helper-text">
+            Start a heading with
+            <strong>## Heading</strong>
+            on its own line. Use
+            <strong>**bold words**</strong>
+            inside paragraphs. Keep a blank line between
+            sections. Images stack naturally on mobile.
+          </p>
+
+        </section>
+
+        <!-- ======================================
+             PUBLICATION DETAILS
+        ======================================= -->
+
+        <div class="form-section">
+
+          <h3>Publication Details</h3>
+
+          <div class="form-grid">
+
+            <label class="field">
+
+              <span>Publish Date / Time (local)</span>
+
+              <input
+                type="datetime-local"
+                name="publishedAt"
+                [(ngModel)]="dateInput"
+                required
+              />
+
+            </label>
+
+            <label class="field">
+
+              <span>URL Slug</span>
+
+              <input
+                type="text"
+                name="slug"
+                [(ngModel)]="draft.slug"
+                placeholder="generated-from-English-title"
+              />
+
+              <small>
+                Leave empty to generate from the English title.
+              </small>
+
+            </label>
+
+          </div>
+        </div>
+
+        <!-- ======================================
+             NEWS VERIFICATION
+        ======================================= -->
+
+        <div
+          class="form-section"
+          *ngIf="selectedCategory?.requiresVerifiedSource"
+        >
+
+          <h3>News Verification</h3>
+
+          <label class="field">
+
+            <span>
+              Verified News Source
+              {{ draft.published ? '*' : '' }}
+            </span>
+
+            <input
+              type="text"
+              name="verifiedSource"
+              [(ngModel)]="verifiedSource"
+              placeholder="Official source or verification reference"
+              maxlength="500"
+              [required]="draft.published"
+            />
+
+          </label>
+
+        </div>
+
+        <!-- ======================================
+             NEWS MEDIA
+        ======================================= -->
+
+        <div class="form-section">
+
+          <h3>News Media</h3>
+
+          <!-- FEATURED IMAGE -->
+
+          <label class="field">
+
+            <span>Featured News Image</span>
+
+            <input
+              type="file"
+              accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+              (change)="uploadImage($event)"
+              [disabled]="saving || uploadingMedia"
+            />
+
+            <small>
+              JPG, PNG, WebP. Maximum 10 MB.
+              The file uploads automatically when selected.
+            </small>
+
+          </label>
+
+          <p
+            *ngIf="uploadingImage"
+            class="helper-text"
+            role="status"
+          >
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            Uploading image... Please wait.
+          </p>
+
+          <div
+            class="image-preview"
+            *ngIf="draft.image"
+          >
+            <img
+              [src]="media.url(draft.image)"
+              alt="Uploaded news image preview"
+              loading="lazy"
+            />
+          </div>
+
+          <!-- NEWS VIDEO -->
+
+          <label class="field">
+
+            <span>News Video</span>
+
+            <input
+              type="file"
+              accept=".mp4,.webm,video/mp4,video/webm"
+              (change)="uploadVideo($event)"
+              [disabled]="saving || uploadingMedia"
+            />
+
+            <small>
+              MP4 or WebM. Maximum 60 MB.
+              The file uploads automatically when selected.
+            </small>
+
+          </label>
+
+          <p
+            *ngIf="uploadingVideo"
+            class="helper-text"
+            role="status"
+          >
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            Uploading video... Please wait.
+          </p>
+
+          <div
+            class="audio-preview"
+            *ngIf="draft.video"
+          >
+
+            <p>Uploaded Video Preview</p>
+
+            <video
+              class="article-video-preview"
+              controls
+              preload="metadata"
+              [src]="media.url(draft.video)"
+            ></video>
+
+          </div>
+
+        </div>
+
+        <!-- ======================================
+             INDIVIDUAL NEWS AUDIO
+        ======================================= -->
+
+        <div class="form-section article-story-audio">
+
+          <h3>
+            <i class="fa-solid fa-headphones"></i>
+            Audio for this Individual Story
+          </h3>
+
+          <p class="helper-text">
+            Add separate Tamil and English audio.
+            Record a new voice or select an existing
+            audio file. Drag-and-drop is also supported.
+          </p>
+
+          <div class="form-grid">
+
+            <!-- ==============================
+                 TAMIL AUDIO
+            =============================== -->
+
+            <div class="article-audio-card">
+
+              <h4>
+                <i class="fa-solid fa-volume-high"></i>
+                தமிழ் ஒலி · Tamil Audio
+              </h4>
+
+              <app-audio-recorder
+                language="ta"
+                [disabled]="
+                  saving ||
+                  uploadingImage ||
+                  uploadingVideo ||
+                  uploadingAudioEn
+                "
+                [maxSizeMb]="20"
+                (workingChange)="uploadingAudioTa = $event"
+                (uploaded)="setRecordedArticleAudio('ta', $event)"
+              >
+              </app-audio-recorder>
+
+              <!-- TAMIL UPLOAD STATUS -->
+
+              <p
+                *ngIf="uploadingAudioTa"
+                class="helper-text"
+                role="status"
+              >
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                Processing / Uploading Tamil audio...
+              </p>
+
+              <!-- TAMIL AUDIO PREVIEW -->
+
+              <div
+                class="audio-preview"
+                *ngIf="audioSource('ta'); else noTamilAudio"
+              >
+
+                <p>
+                  <i class="fa-solid fa-circle-check"></i>
+                  Tamil Audio Assigned
+                </p>
+
+                <audio
+                  controls
+                  preload="metadata"
+                  [src]="media.url(audioSource('ta'))"
+                >
+                  Your browser does not support audio playback.
+                </audio>
+
+                <p class="helper-text">
+                  Tamil audio has been uploaded and
+                  assigned to this article form.
+                  Click Save & Publish or Save Draft
+                  to save the assignment.
+                </p>
+
+              </div>
+
+              <ng-template #noTamilAudio>
+
+                <p class="helper-text">
+                  No Tamil audio assigned to this article.
+                </p>
+
+              </ng-template>
+
+              <!-- REMOVE TAMIL AUDIO -->
+
+              <button
+                type="button"
+                class="btn outline danger article-remove-audio"
+                (click)="removeAudio('ta')"
+                [disabled]="
+                  saving ||
+                  uploadingMedia ||
+                  !audioSource('ta')
+                "
+              >
+                <i class="fa-solid fa-trash"></i>
+                Remove Tamil Audio
+              </button>
+
+            </div>
+
+            <!-- ==============================
+                 ENGLISH AUDIO
+            =============================== -->
+
+            <div class="article-audio-card">
+
+              <h4>
+                <i class="fa-solid fa-volume-high"></i>
+                English Audio
+              </h4>
+
+              <app-audio-recorder
+                language="en"
+                [disabled]="
+                  saving ||
+                  uploadingImage ||
+                  uploadingVideo ||
+                  uploadingAudioTa
+                "
+                [maxSizeMb]="20"
+                (workingChange)="uploadingAudioEn = $event"
+                (uploaded)="setRecordedArticleAudio('en', $event)"
+              >
+              </app-audio-recorder>
+
+              <!-- ENGLISH UPLOAD STATUS -->
+
+              <p
+                *ngIf="uploadingAudioEn"
+                class="helper-text"
+                role="status"
+              >
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                Processing / Uploading English audio...
+              </p>
+
+              <!-- ENGLISH AUDIO PREVIEW -->
+
+              <div
+                class="audio-preview"
+                *ngIf="audioSource('en'); else noEnglishAudio"
+              >
+
+                <p>
+                  <i class="fa-solid fa-circle-check"></i>
+                  English Audio Assigned
+                </p>
+
+                <audio
+                  controls
+                  preload="metadata"
+                  [src]="media.url(audioSource('en'))"
+                >
+                  Your browser does not support audio playback.
+                </audio>
+
+                <p class="helper-text">
+                  English audio has been uploaded and
+                  assigned to this article form.
+                  Click Save & Publish or Save Draft
+                  to save the assignment.
+                </p>
+
+              </div>
+
+              <ng-template #noEnglishAudio>
+
+                <p class="helper-text">
+                  No English audio assigned to this article.
+                </p>
+
+              </ng-template>
+
+              <!-- REMOVE ENGLISH AUDIO -->
+
+              <button
+                type="button"
+                class="btn outline danger article-remove-audio"
+                (click)="removeAudio('en')"
+                [disabled]="
+                  saving ||
+                  uploadingMedia ||
+                  !audioSource('en')
+                "
+              >
+                <i class="fa-solid fa-trash"></i>
+                Remove English Audio
+              </button>
+
+            </div>
+
+          </div>
+
+          <p class="helper-text">
+            <i class="fa-solid fa-circle-info"></i>
+
+            Record or select audio, preview it, and
+            upload it first.
+
+            The audio reference is saved to this
+            article when you click Save & Publish
+            or Save Draft.
+
+            Removing assigned audio does not
+            delete the original media file.
+          </p>
+
+        </div>
+
+        <!-- ======================================
+             PUBLISHING OPTIONS
+        ======================================= -->
+
+        <div class="form-section">
+
+          <h3>Publishing Options</h3>
+
+          <div class="checkbox-group">
+
+            <label class="checkbox-label">
+
+              <input
+                type="checkbox"
+                name="published"
+                [(ngModel)]="draft.published"
+              />
+
+              <span>Publish this article</span>
+
+            </label>
+
+            <label class="checkbox-label">
+
+              <input
+                type="checkbox"
+                name="featured"
+                [(ngModel)]="draft.featured"
+              />
+
+              <span>Mark as Featured News</span>
+
+            </label>
+
+          </div>
+
+          <p class="helper-text">
+            Draft articles remain private.
+            Published articles become public after
+            their scheduled publication time.
+          </p>
+
+        </div>
+
+        <!-- ======================================
+             SAVE / CLEAR / DELETE
+        ======================================= -->
+
+        <div class="form-actions">
+
+          <button
+            type="submit"
+            class="btn btn-red"
+            [disabled]="
+              saving ||
+              uploadingMedia ||
+              categoryLoading ||
+              !selectedCategory?.active
+            "
+          >
+            {{
+              saving
+                ? 'Saving...'
+                : (
+                    draft.published
+                      ? 'Save & Publish'
+                      : 'Save Draft'
+                  )
+            }}
+          </button>
+
+          <button
+            type="button"
+            class="btn"
+            (click)="newArticle()"
+            [disabled]="saving || uploadingMedia"
+          >
+            Clear / New
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-danger"
+            *ngIf="editing"
+            (click)="remove()"
+            [disabled]="saving || uploadingMedia"
+          >
+            Delete Article
+          </button>
+
+        </div>
+
+      </form>
+
+    </section>
+
+  </div>
+
+</section>

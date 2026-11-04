@@ -1,0 +1,51 @@
+<header class="masthead" [style.background-image]="store.settings().headerImage ? 'linear-gradient(105deg,rgba(2,32,68,.96),rgba(6,72,133,.82)),url('+media.url(store.settings().headerImage)+')' : null">
+    <div class="mast-inner">
+      <a routerLink="/" class="brand" aria-label="Makkal Valimai Home" (click)="mobileOpen=false">
+        <img src="assets/images/makkal-valimai-logo.png" alt="மக்கள் வலிமை" />
+        <span class="brand-copy"><b>மக்கள் <em>வலிமை</em></b><small>{{prefs.label('மதுரை மாவட்ட மக்களின் குரல்','Madurai district people’s voice')}}</small></span>
+      </a>
+      <form class="top-search" (ngSubmit)="search()" role="search">
+        <input name="search" [(ngModel)]="searchTerm" [placeholder]="prefs.label('செய்திகளைத் தேடுங்கள்...','Search Madurai news...')" aria-label="Search news" />
+        <button type="submit" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </form>
+      <div class="mast-right">
+        <div class="live-clock"><span class="live-pill"><i class="fa-solid fa-circle"></i> MADURAI • IST</span><b>{{clock}}</b><small>{{dateLine}}</small></div>
+        <div class="reader-controls">
+          <div class="lang-group" aria-label="Language">
+            <button type="button" [class.active]="prefs.language()==='ta'" (click)="prefs.language.set('ta')">தமிழ்</button>
+            <button type="button" [class.active]="prefs.language()==='en'" (click)="prefs.language.set('en')">English</button>
+          </div>
+          <div class="font-group"><button type="button" (click)="prefs.changeFont(-.125)" aria-label="Reduce text size">A−</button><button type="button" (click)="prefs.changeFont(.125)" aria-label="Increase text size">A+</button></div>
+        </div>
+      </div>
+      <button class="mobile-search-button" type="button" aria-label="Search news" (click)="searchMobileOpen=!searchMobileOpen"><i class="fa-solid fa-magnifying-glass"></i></button>
+      <div class="notification-anchor">
+        <button class="notification-bell" type="button" aria-label="Public notifications" [attr.aria-expanded]="notificationOpen" (click)="toggleNotifications()">
+          <i class="fa-regular fa-bell"></i><span class="notification-count" *ngIf="unreadCount()">{{unreadCount() > 99 ? '99+' : unreadCount()}}</span>
+        </button>
+        <section class="notification-popover" *ngIf="notificationOpen" aria-label="Latest public alerts">
+          <div class="notification-top"><strong><i class="fa-solid fa-bell"></i> {{prefs.label('அறிவிப்புகள்','Notifications')}}</strong><button type="button" (click)="notificationOpen=false" aria-label="Close notifications"><i class="fa-solid fa-xmark"></i></button></div>
+          <div class="notification-actions"><button type="button" (click)="toggleSound()"><i class="fa-solid" [class.fa-volume-high]="soundEnabled()" [class.fa-volume-xmark]="!soundEnabled()"></i> {{soundEnabled() ? prefs.label('ஒலி இயக்கத்தில்','Sound on') : prefs.label('ஒலி அணைப்பு','Enable sound')}}</button><button type="button" (click)="markAllRead()">{{prefs.label('அனைத்தும் படித்தேன்','Mark all read')}}</button></div>
+          <div class="notification-list">
+            <a *ngFor="let alert of recentAlerts()" routerLink="/public-alerts" (click)="markRead(alert.id);notificationOpen=false" [class.unread]="!readIds().includes(alert.id)">
+              <i class="fa-solid fa-circle-exclamation"></i><span><b>{{prefs.txt(alert.title)}}</b><small>{{alert.area}} · {{alert.effectiveDate | date:'dd MMM yyyy'}}</small></span>
+            </a>
+            <p *ngIf="!recentAlerts().length" class="notification-empty">{{prefs.label('இப்போது அறிவிப்புகள் இல்லை','No public alerts yet')}}</p>
+          </div>
+          <a class="all-alerts-link" routerLink="/public-alerts" (click)="notificationOpen=false">{{prefs.label('அனைத்து அறிவிப்புகளும்','View all alerts')}} →</a>
+        </section>
+      </div>
+      <button class="mobile-header-menu" type="button" aria-label="Open navigation" (click)="mobileOpen=!mobileOpen"><i class="fa-solid" [class.fa-bars]="!mobileOpen" [class.fa-xmark]="mobileOpen"></i></button>
+    </div>
+    <form class="mobile-search-form" *ngIf="searchMobileOpen" (ngSubmit)="search()"><input name="mobileSearch" [(ngModel)]="searchTerm" [placeholder]="prefs.label('செய்திகளைத் தேடுங்கள்...','Search Madurai news...')" aria-label="Search news"/><button class="btn btn-red" type="submit">{{prefs.label('தேடு','Search')}}</button></form>
+  </header>
+<nav class="main-nav" aria-label="Main navigation"><div class="nav-inner">
+    <a *ngFor="let item of nav" [routerLink]="item.path" routerLinkActive="is-active" [routerLinkActiveOptions]="{exact:true}">{{prefs.txt(item.name)}}</a>
+    <div class="more-wrap"><button type="button" (click)="moreOpen=!moreOpen" [attr.aria-expanded]="moreOpen">{{prefs.label('மேலும்','More')}} <i class="fa-solid fa-angle-down"></i></button>
+      <div class="more-menu" *ngIf="moreOpen"><a *ngFor="let item of more" [routerLink]="item.path" (click)="moreOpen=false">{{prefs.txt(item.name)}}</a><a routerLink="/opinion-polls" (click)="moreOpen=false">{{prefs.label('கருத்துக்கணிப்புகள்','Opinion Polls')}}</a></div>
+    </div>
+  </div></nav>
+  <div class="mobile-menu" *ngIf="mobileOpen"><a *ngFor="let item of allNav" [routerLink]="item.path" (click)="mobileOpen=false">{{prefs.txt(item.name)}}</a><a routerLink="/opinion-polls" (click)="mobileOpen=false">{{prefs.label('கருத்துக்கணிப்புகள்','Opinion Polls')}}</a><a routerLink="/admin/login" (click)="mobileOpen=false">Admin</a></div>
+<app-breaking-ticker />
+<div class="welcome-hint" *ngIf="showWelcome()"><i class="fa-solid fa-circle-info"></i><span>{{prefs.label('புதியவரா? மேலே உள்ள மணி ஐகானில் பொது அறிவிப்புகளைக் காணலாம். கீழுள்ள வழிசெலுத்தலைப் பயன்படுத்துங்கள்.','New here? Tap the bell for alerts and use the bottom navigation on mobile.')}}</span><button type="button" aria-label="Dismiss tip" (click)="dismissWelcome()"><i class="fa-solid fa-xmark"></i></button></div>
+<app-mobile-bottom-nav [unread]="unreadCount()" (toggleMore)="mobileOpen=!mobileOpen" />

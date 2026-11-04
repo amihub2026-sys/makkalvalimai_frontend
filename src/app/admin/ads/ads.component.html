@@ -1,0 +1,448 @@
+
+<!-- ==========================================
+     MAKKAL VALIMAI - ADMIN ADVERTISEMENTS
+     ========================================== -->
+
+<div class="admin-columns admin-ads-page">
+
+  <!-- ======================================
+       SAVED ADVERTISEMENTS
+       ====================================== -->
+
+  <section class="panel glass ads-list-panel">
+
+    <div class="section-title ads-panel-heading">
+
+      <h2>Banner / Slider / Popup Ads</h2>
+
+      <button
+        type="button"
+        class="btn btn-red"
+        (click)="newAd()"
+        [disabled]="saving || deleting || uploadingImage"
+      >
+        <i class="fa-solid fa-plus"></i>
+        New Advertisement
+      </button>
+
+    </div>
+
+    <p class="muted">
+      Manage advertisements stored in MongoDB.
+    </p>
+
+    <!-- TOOLBAR -->
+
+    <div class="ads-toolbar">
+
+      <button
+        type="button"
+        class="btn outline small"
+        (click)="loadAds()"
+        [disabled]="loading || saving || deleting"
+      >
+        <i
+          class="fa-solid fa-rotate"
+          [class.fa-spin]="loading"
+        ></i>
+
+        {{ loading ? 'Loading...' : 'Refresh Ads' }}
+      </button>
+
+      <span class="ads-count">
+        {{ ads.length }}
+        {{ ads.length === 1 ? 'Advertisement' : 'Advertisements' }}
+      </span>
+
+    </div>
+
+    <!-- LOADING -->
+
+    <div
+      *ngIf="loading"
+      class="ads-loading"
+      role="status"
+    >
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      Loading advertisements...
+    </div>
+
+    <!-- EMPTY STATE -->
+
+    <div
+      *ngIf="!loading && ads.length === 0"
+      class="ads-empty-state"
+    >
+      <i class="fa-solid fa-rectangle-ad"></i>
+
+      <h3>No Advertisements Found</h3>
+
+      <p class="muted">
+        Create an advertisement to get started.
+      </p>
+    </div>
+
+    <!-- SAVED ADVERTISEMENTS -->
+
+    <div class="saved-ads" *ngIf="ads.length > 0">
+
+      <article
+        *ngFor="let a of ads"
+        class="saved-ad-card"
+        [class.is-selected]="draft.id === a.id"
+      >
+
+        <!-- ADVERTISEMENT IMAGE -->
+
+        <div class="saved-ad-image">
+
+          <img
+            *ngIf="a.image"
+            [src]="media.url(a.image)"
+            [alt]="a.brand"
+            loading="lazy"
+          />
+
+          <div
+            *ngIf="!a.image"
+            class="saved-ad-placeholder"
+          >
+            <i class="fa-solid fa-image"></i>
+            <span>No Image</span>
+          </div>
+
+        </div>
+
+        <!-- ADVERTISEMENT DETAILS -->
+
+        <div class="saved-ad-content">
+
+          <div class="saved-ad-heading">
+
+            <h3>{{ a.brand }}</h3>
+
+            <span
+              class="chip ad-status"
+              [class.green]="a.enabled"
+              [class.warning]="!a.enabled"
+            >
+              {{ a.enabled ? 'VISIBLE' : 'HIDDEN' }}
+            </span>
+
+          </div>
+
+          <span class="ad-position">
+            <i class="fa-solid fa-layer-group"></i>
+            {{ positionLabel(a.position) }}
+          </span>
+
+          <p
+            class="ad-caption"
+            *ngIf="a.caption"
+          >
+            {{ a.caption }}
+          </p>
+
+          <p
+            class="ad-link"
+            *ngIf="a.link"
+          >
+            <i class="fa-solid fa-link"></i>
+            {{ a.link }}
+          </p>
+
+          <div class="saved-ad-actions">
+
+            <button
+              type="button"
+              class="btn outline small"
+              (click)="selectAd(a)"
+              [disabled]="saving || deleting || uploadingImage"
+            >
+              <i class="fa-solid fa-pen-to-square"></i>
+              Edit Advertisement
+            </button>
+
+          </div>
+
+        </div>
+
+      </article>
+
+    </div>
+
+  </section>
+
+  <!-- ======================================
+       ADVERTISEMENT EDITOR
+       ====================================== -->
+
+  <section class="panel glass ads-editor-panel">
+
+    <div class="section-title ads-editor-heading">
+
+      <h2>Advertisement Editor</h2>
+
+      <span
+        class="chip"
+        [class.green]="draft.enabled"
+        [class.warning]="!draft.enabled"
+      >
+        {{ draft.enabled ? 'Visible' : 'Hidden' }}
+      </span>
+
+    </div>
+
+    <p class="muted">
+      Add advertiser details, upload an image
+      and choose where the advertisement appears.
+    </p>
+
+    <form
+      class="editor-form ads-editor-form"
+      (ngSubmit)="save()"
+    >
+
+      <!-- ADVERTISER -->
+
+      <label>
+        Advertiser / Brand *
+
+        <input
+          type="text"
+          name="brand"
+          [(ngModel)]="draft.brand"
+          placeholder="Enter advertiser or brand name"
+          required
+          [disabled]="saving || deleting"
+        />
+      </label>
+
+      <!-- POSITION -->
+
+      <label>
+        Advertisement Position
+
+        <select
+          name="position"
+          [(ngModel)]="draft.position"
+          [disabled]="saving || deleting"
+        >
+          <option value="banner">
+            Homepage Top Banner
+          </option>
+
+          <option value="sidebar">
+            Rotating Sidebar Slider
+          </option>
+
+
+          <option value="popup">
+            Optional Popup Advertisement
+          </option>
+        </select>
+      </label>
+
+      <!-- CAPTION -->
+
+      <label>
+        Advertisement Caption
+
+        <input
+          type="text"
+          name="caption"
+          [(ngModel)]="draft.caption"
+          placeholder="Enter advertisement caption"
+          [disabled]="saving || deleting"
+        />
+      </label>
+
+      <!-- DESTINATION -->
+
+      <label>
+        Destination Link (Optional)
+
+        <input
+          type="url"
+          name="link"
+          [(ngModel)]="draft.link"
+          placeholder="https://example.com"
+          [disabled]="saving || deleting"
+        />
+      </label>
+
+      <!-- IMAGE UPLOAD -->
+
+      <div class="ads-upload-section">
+
+        <h3>Advertisement Image</h3>
+
+        <p class="muted">
+          Upload a JPG, PNG or WebP image,
+          up to 8 MB.
+        </p>
+
+        <label class="ads-upload-label">
+
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+
+          <span>
+            {{
+              uploadingImage
+                ? 'Uploading Image...'
+                : 'Choose Advertisement Image'
+            }}
+          </span>
+
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            (change)="imageUpload($event)"
+            [disabled]="uploadingImage || saving || deleting"
+          />
+
+        </label>
+
+        <!-- IMAGE URL -->
+
+        <label>
+          Image URL
+
+          <input
+            type="text"
+            name="image"
+            [(ngModel)]="draft.image"
+            placeholder="Upload an image or enter its URL"
+            [disabled]="uploadingImage || saving || deleting"
+          />
+        </label>
+
+        <!-- UPLOAD PROGRESS -->
+
+        <p
+          class="muted"
+          *ngIf="uploadingImage"
+          role="status"
+        >
+          <i class="fa-solid fa-spinner fa-spin"></i>
+          Uploading image to the backend...
+        </p>
+
+        <!-- IMAGE PREVIEW -->
+
+        <div
+          class="ads-preview"
+          *ngIf="draft.image"
+        >
+
+          <h4>Image Preview</h4>
+
+          <img
+            class="upload-preview"
+            [src]="media.url(draft.image)"
+            [alt]="draft.brand || 'Advertisement preview'"
+          />
+
+        </div>
+
+      </div>
+
+      <!-- ADVERTISEMENT VISIBILITY -->
+
+      <div class="ads-visibility-control">
+
+        <label class="checkbox-label">
+
+          <input
+            type="checkbox"
+            name="enabled"
+            [(ngModel)]="draft.enabled"
+            [disabled]="saving || deleting"
+          />
+
+          Show this advertisement
+
+        </label>
+
+        <p class="muted">
+
+          {{
+            draft.enabled
+              ? 'This advertisement is enabled for public display.'
+              : 'This advertisement is hidden from public display.'
+          }}
+
+        </p>
+
+      </div>
+
+      <!-- ERRORS -->
+
+      <p
+        class="form-error"
+        *ngIf="error"
+        role="alert"
+      >
+        <i class="fa-solid fa-circle-exclamation"></i>
+        {{ error }}
+      </p>
+
+      <!-- SUCCESS -->
+
+      <p
+        class="success-message"
+        *ngIf="message"
+        role="status"
+      >
+        <i class="fa-solid fa-circle-check"></i>
+        {{ message }}
+      </p>
+
+      <!-- FORM BUTTONS -->
+
+      <div class="ads-editor-actions">
+
+        <button
+          type="submit"
+          class="btn btn-red"
+          [disabled]="saving || deleting || uploadingImage"
+        >
+
+          <i
+            class="fa-solid"
+            [class.fa-spinner]="saving"
+            [class.fa-spin]="saving"
+            [class.fa-floppy-disk]="!saving"
+          ></i>
+
+          {{
+            saving
+              ? 'Saving Advertisement...'
+              : 'Save Advertisement'
+          }}
+
+        </button>
+
+        <button
+          type="button"
+          class="btn outline danger"
+          *ngIf="isSaved"
+          (click)="remove()"
+          [disabled]="saving || deleting || uploadingImage"
+        >
+          <i class="fa-solid fa-trash"></i>
+
+          {{
+            deleting
+              ? 'Deleting...'
+              : 'Delete Advertisement'
+          }}
+        </button>
+
+      </div>
+
+    </form>
+
+  </section>
+
+</div>

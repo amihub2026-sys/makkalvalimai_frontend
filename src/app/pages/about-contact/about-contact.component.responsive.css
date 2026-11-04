@@ -1,0 +1,5 @@
+/* Responsive rules for about-contact; isolated from common/desktop CSS. */
+@media (max-width: 600px) {
+  .about-contact-page { width: 100%; }
+  .about-contact-page .page-intro { margin-bottom: 1rem; }
+}

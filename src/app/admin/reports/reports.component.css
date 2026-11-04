@@ -1,0 +1,24 @@
+/* reports — section layout and responsive styles */
+.moderation-list {
+  display:grid;gap:1rem
+}
+
+.moderation-item {
+  background:#101724;border:1px solid var(--line);border-radius:12px;padding:1rem;display:grid;grid-template-columns:155px minmax(0,1fr);gap:1rem
+}
+
+.moderation-item>img {
+  width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px
+}
+
+.moderation-body>p {
+  font-size:.8rem
+}
+
+.moderation-body>small {
+  display:block;margin:.3rem 0 1rem;color:#c2c7d5
+}
+
+.issue-editor {
+  padding:1rem;margin-top:1rem;background:#1a2230;border:1px solid #ffffff19;border-radius:12px;display:grid;gap:1rem
+}

@@ -1,0 +1,5 @@
+/* Responsive rules for report-problem; isolated from common/desktop CSS. */
+@media (max-width: 600px) {
+  .report-problem-page { width: 100%; }
+  .report-problem-page .page-intro { margin-bottom: 1rem; }
+}

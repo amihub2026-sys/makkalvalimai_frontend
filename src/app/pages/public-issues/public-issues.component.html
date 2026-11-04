@@ -1,0 +1,51 @@
+<div class="container page-section public-issues-page">
+<div class="page-intro glass">
+<div>
+<span class="eyebrow">MADURAI CIVIC REPORTING</span>
+<h1>{{solved?prefs.label('தீர்வு கண்ட பிரச்சினைகள்','Problems Solved'):prefs.label('மக்கள் பிரச்சினைகள்','Public Issues')}}</h1>
+<p>{{solved?prefs.label('உறுதிப்படுத்தப்பட்ட தீர்வுகள்','Verified outcomes and before/after photographs'):prefs.label('நிர்வாகி ஒப்புதல் அளித்த பிரச்சினைகள் மட்டும்','Only admin-approved reports are visible publicly')}}</p>
+</div>
+<i class="fa-solid fa-road giant-icon">
+</i>
+</div>
+<div class="filter-panel glass">
+<label>{{prefs.label('பிரச்சினை வகை','Category')}}<select [(ngModel)]="category">
+<option value="">{{prefs.label('அனைத்தும்','All categories')}}</option>
+<option *ngFor="let c of categories" [value]="c">{{c}}</option>
+</select>
+</label>
+<label>{{prefs.label('உங்கள் பகுதி','Your area')}}<input [(ngModel)]="area" list="mv-areas" placeholder="Madurai / Melur / Usilampatti..."/>
+</label>
+<a routerLink="/report-problem" class="btn btn-red" *ngIf="!solved">
+<i class="fa-solid fa-plus">
+</i> {{prefs.label('புகார் பதிவு செய்க','Report an issue')}}</a>
+</div>
+<datalist id="mv-areas">
+<option *ngFor="let locality of areas" [value]="locality">
+</option>
+</datalist>
+<app-audio-player [src]="prefs.language()==='ta'?(store.settings().sectionAudio[solved?'solved':'issues']?.ta||''):(store.settings().sectionAudio[solved?'solved':'issues']?.en||'')"/>
+<div class="issue-list">
+<article class="issue-card glass" *ngFor="let item of filtered">
+<div class="issue-pictures">
+<img *ngIf="item.photo" [src]="media.url(item.photo)" alt="Reported issue photograph" loading="lazy"/>
+<img *ngIf="solved&&item.afterPhoto" [src]="media.url(item.afterPhoto)" alt="After: verified resolution" loading="lazy"/>
+</div>
+<div class="issue-data">
+<span class="eyebrow">{{item.category}} · {{item.area}}</span>
+<h3>{{item.title}}</h3>
+<p>{{item.description}}</p>
+<p class="muted" *ngIf="solved">{{prefs.label('தீர்வு:','Resolution:')}} {{item.resolution}}</p>
+<div class="card-actions">
+<span class="chip" [class.green]="solved">{{solved?'✓ Verified solved':'✓ Admin approved'}}</span>
+<a [href]="share(item)" target="_blank" rel="noopener noreferrer" class="share">
+<i class="fa-brands fa-whatsapp">
+</i>
+</a>
+</div>
+<app-audio-player [src]="prefs.language()==='ta'?item.audio.ta:item.audio.en"/>
+</div>
+</article>
+</div>
+<div class="empty-state glass" *ngIf="!filtered.length">{{prefs.label('இந்த பகுதியில் பதிவுகள் எதுவும் இல்லை','No approved reports for the selected filters')}}</div>
+</div>

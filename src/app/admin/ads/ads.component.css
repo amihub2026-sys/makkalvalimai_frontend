@@ -1,0 +1,666 @@
+/* ==========================================
+   MAKKAL VALIMAI - ADMIN ADVERTISEMENTS
+   Banner / Slider / Popup Management
+   ========================================== */
+
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+/* ==========================================
+   MAIN LAYOUT
+   ========================================== */
+
+.admin-ads-page,
+.admin-ads-page *,
+.admin-ads-page *::before,
+.admin-ads-page *::after {
+  box-sizing: border-box;
+}
+
+.admin-columns.admin-ads-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 22px;
+  width: 100%;
+  min-width: 0;
+}
+
+.admin-ads-page .panel {
+  min-width: 0;
+  width: 100%;
+}
+
+.ads-list-panel,
+.ads-editor-panel {
+  min-width: 0;
+}
+
+/* ==========================================
+   SECTION HEADINGS
+   ========================================== */
+
+.ads-panel-heading,
+.ads-editor-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.ads-panel-heading h2,
+.ads-editor-heading h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 21px;
+  line-height: 1.4;
+}
+
+.admin-ads-page .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition:
+    opacity 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.admin-ads-page .btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ==========================================
+   ADS TOOLBAR
+   ========================================== */
+
+.ads-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 20px 0;
+}
+
+.ads-count {
+  color: #adb8cb;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+/* ==========================================
+   LOADING
+   ========================================== */
+
+.ads-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 110px;
+  color: #b8c4d5;
+  font-size: 14px;
+}
+
+/* ==========================================
+   EMPTY STATE
+   ========================================== */
+
+.ads-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 210px;
+  padding: 30px 18px;
+  border: 1px dashed #46516a;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
+  text-align: center;
+}
+
+.ads-empty-state > i {
+  margin-bottom: 14px;
+  color: #fa4b72;
+  font-size: 34px;
+}
+
+.ads-empty-state h3 {
+  margin: 0 0 9px;
+  color: #ffffff;
+  font-size: 19px;
+}
+
+.ads-empty-state p {
+  margin: 0;
+  font-size: 13px;
+}
+
+/* ==========================================
+   SAVED ADVERTISEMENTS LIST
+   ========================================== */
+
+.saved-ads {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  margin-top: 18px;
+  width: 100%;
+}
+
+/* ==========================================
+   ADVERTISEMENT CARD
+   ========================================== */
+
+.saved-ad-card {
+  display: grid;
+  grid-template-columns: minmax(130px, 34%) minmax(0, 1fr);
+  align-items: stretch;
+  gap: 18px;
+  min-width: 0;
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #354159;
+  border-radius: 14px;
+  background: linear-gradient(
+    145deg,
+    #1a2435,
+    #101827
+  );
+  overflow: hidden;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.saved-ad-card:hover {
+  border-color: rgba(250, 75, 114, 0.5);
+}
+
+.saved-ad-card.is-selected {
+  border-color: #f5476c;
+  box-shadow: 0 0 0 1px rgba(245, 71, 108, 0.15);
+}
+
+/* ==========================================
+   SAVED ADVERTISEMENT IMAGE
+   ========================================== */
+
+.saved-ad-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border: 1px solid #38435a;
+  border-radius: 10px;
+  background: #0b1220;
+  overflow: hidden;
+}
+
+.saved-ad-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+/* ==========================================
+   NO IMAGE PLACEHOLDER
+   ========================================== */
+
+.saved-ad-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  color: #8290a8;
+  font-size: 12px;
+  text-align: center;
+}
+
+.saved-ad-placeholder i {
+  color: #6a7892;
+  font-size: 30px;
+}
+
+/* ==========================================
+   SAVED ADVERTISEMENT CONTENT
+   ========================================== */
+
+.saved-ad-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 11px;
+  min-width: 0;
+}
+
+.saved-ad-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+}
+
+.saved-ad-heading h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 750;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+/* ==========================================
+   VISIBLE / HIDDEN STATUS
+   ========================================== */
+
+.ad-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 5px 10px;
+  border-radius: 7px;
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+}
+
+.ad-status.green {
+  border: 1px solid rgba(40, 198, 124, 0.35);
+  background: rgba(40, 198, 124, 0.12);
+  color: #80edb5;
+}
+
+.ad-status.warning {
+  border: 1px solid rgba(255, 179, 71, 0.35);
+  background: rgba(255, 179, 71, 0.1);
+  color: #ffd18d;
+}
+
+/* ==========================================
+   ADVERTISEMENT POSITION
+   ========================================== */
+
+.ad-position {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #3c4760;
+  border-radius: 8px;
+  background: #202b3f;
+  color: #c8d2e1;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.ad-position i {
+  color: #f35078;
+}
+
+/* ==========================================
+   AD CAPTION AND LINK
+   ========================================== */
+
+.ad-caption {
+  margin: 0;
+  color: #b8c3d5;
+  font-size: 13px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.ad-link {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  color: #8bbef0;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.ad-link i {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: #f35078;
+}
+
+/* ==========================================
+   SAVED AD ACTIONS
+   ========================================== */
+
+.saved-ad-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+  margin-top: auto;
+  padding-top: 7px;
+}
+
+.saved-ad-actions .btn {
+  min-height: 38px;
+  font-size: 12px;
+}
+
+/* ==========================================
+   ADVERTISEMENT EDITOR
+   ========================================== */
+
+.ads-editor-panel {
+  min-width: 0;
+}
+
+.ads-editor-form {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+  margin-top: 22px;
+}
+
+.ads-editor-form > label,
+.ads-upload-section > label:not(.ads-upload-label) {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  color: #dae3f1;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.ads-editor-form input:not([type="checkbox"]):not([type="file"]),
+.ads-editor-form select {
+  width: 100%;
+  min-width: 0;
+  min-height: 45px;
+  padding: 11px 13px;
+  border: 1px solid #404d65;
+  border-radius: 9px;
+  background: #0d1626;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.ads-editor-form input::placeholder {
+  color: #8190a6;
+}
+
+.ads-editor-form input:focus,
+.ads-editor-form select:focus {
+  border-color: #f44a72;
+  box-shadow: 0 0 0 3px rgba(244, 74, 114, 0.12);
+}
+
+.ads-editor-form input:disabled,
+.ads-editor-form select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ads-editor-form select option {
+  background: #111a2b;
+  color: #ffffff;
+}
+
+/* ==========================================
+   IMAGE UPLOAD SECTION
+   ========================================== */
+
+.ads-upload-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid #3b4760;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.ads-upload-section h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 17px;
+}
+
+.ads-upload-section > p {
+  margin: 0;
+  color: #aebad0;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+/* ==========================================
+   FILE UPLOAD BUTTON
+   ========================================== */
+
+.ads-upload-label {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 135px;
+  padding: 22px 16px;
+  border: 2px dashed #56637a;
+  border-radius: 12px;
+  background: #10192a;
+  color: #dbe4f2;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.ads-upload-label:hover {
+  border-color: #fa5079;
+  background: #192237;
+}
+
+.ads-upload-label:focus-within {
+  outline: 2px solid #ff6488;
+  outline-offset: 3px;
+}
+
+.ads-upload-label i {
+  color: #fb5078;
+  font-size: 29px;
+}
+
+.ads-upload-label span {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.ads-upload-label input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+/* ==========================================
+   ADVERTISEMENT IMAGE PREVIEW
+   ========================================== */
+
+.ads-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid #3a465d;
+  border-radius: 12px;
+  background: #0e1726;
+}
+
+.ads-preview h4 {
+  margin: 0;
+  color: #dae3f0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.ads-preview .upload-preview {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  max-height: 360px;
+  height: auto;
+  object-fit: contain;
+  object-position: center;
+  border: 1px solid #3c4760;
+  border-radius: 9px;
+  background: #0a1120;
+}
+
+/* ==========================================
+   ADVERTISEMENT VISIBILITY CONTROL
+   ========================================== */
+
+.ads-visibility-control {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 17px;
+  border: 1px solid #3d4860;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.ads-visibility-control .checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.ads-visibility-control input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #f44770;
+  flex-shrink: 0;
+}
+
+.ads-visibility-control p {
+  margin: 0;
+  color: #a9b6c9;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* ==========================================
+   SUCCESS AND ERROR FEEDBACK
+   ========================================== */
+
+.ads-editor-form .form-error,
+.ads-editor-form .success-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 0;
+  padding: 13px 15px;
+  border-radius: 9px;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.ads-editor-form .form-error {
+  border: 1px solid rgba(245, 70, 106, 0.35);
+  background: rgba(245, 70, 106, 0.1);
+  color: #ffa0b4;
+}
+
+.ads-editor-form .success-message {
+  border: 1px solid rgba(36, 195, 127, 0.35);
+  background: rgba(36, 195, 127, 0.1);
+  color: #84edbc;
+}
+
+.ads-editor-form .form-error i,
+.ads-editor-form .success-message i {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+/* ==========================================
+   SAVE AND DELETE BUTTONS
+   ========================================== */
+
+.ads-editor-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 13px;
+  margin-top: 6px;
+}
+
+.ads-editor-actions .btn {
+  min-height: 44px;
+  padding: 11px 18px;
+}
+
+/* ==========================================
+   LARGE DESKTOP
+   ========================================== */
+
+
+
+/* ==========================================
+   TABLET
+   ========================================== */
+
+
+
+/* ==========================================
+   MOBILE
+   ========================================== */
+
+
+
+/* ==========================================
+   SMALL MOBILE
+   ========================================== */
+
+
+
+/* ==========================================
+   REDUCED MOTION
+   ========================================== */

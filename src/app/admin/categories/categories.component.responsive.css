@@ -1,0 +1,14 @@
+/* Responsive rules for categories; isolated from common/desktop CSS. */
+@media (max-width: 850px) {
+      .categories-page {
+        padding: 14px;
+      }
+
+      .category-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        padding: 16px;
+      }
+    }

@@ -1,0 +1,28 @@
+/* Responsive overrides specific to sidebar-ad */
+@media (max-width: 850px) {
+.side-ad-slider {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 600px) {
+.side-ad-slider {
+    gap: 0.65rem;
+    padding: 0.65rem;
+    flex-wrap: wrap;
+  }
+.side-ad-slider > img {
+    width: 105px;
+    height: 105px;
+  }
+.side-ad-slider h3 {
+    font-size: 0.87rem;
+  }
+.side-ad-slider p {
+    font-size: 0.65rem;
+  }
+.side-ad-slider .btn {
+    font-size: 0.66rem;
+    padding: 0.5rem;
+  }
+}

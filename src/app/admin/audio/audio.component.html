@@ -1,0 +1,238 @@
+
+<!-- ==========================================
+     MAKKAL VALIMAI
+     SECTION AUDIO MANAGEMENT
+     Record / Upload / Drag & Drop
+========================================== -->
+
+<div class="panel glass audio-admin-page">
+
+  <!-- PAGE HEADER -->
+  <div class="section-title audio-admin-heading">
+
+    <h2>
+      <i class="fa-solid fa-headphones"></i>
+      Audio Management — Every Website Section
+    </h2>
+
+    <button
+      type="button"
+      class="btn outline small"
+      (click)="loadSettings()"
+      [disabled]="busy"
+    >
+      <i
+        class="fa-solid fa-rotate"
+        [class.fa-spin]="loading"
+      ></i>
+      Reload Audio
+    </button>
+
+  </div>
+
+  <p class="muted">
+    Choose Record New Audio or Select Audio File
+    separately for Tamil and English.
+    Recordings and selected files are processed
+    in the browser and uploaded using your
+    existing media API.
+  </p>
+
+  <!-- LOADING -->
+  <p
+    class="muted audio-loading"
+    *ngIf="loading"
+    role="status"
+  >
+    <i class="fa-solid fa-spinner fa-spin"></i>
+    Loading saved audio settings...
+  </p>
+
+  <!-- SECTION PICKER -->
+  <div class="audio-section-picker">
+
+    <label for="audio-section-select">
+      Choose a Website Section
+    </label>
+
+    <select
+      id="audio-section-select"
+      name="section"
+      [(ngModel)]="section"
+      [disabled]="busy"
+    >
+      <option
+        *ngFor="let entry of sections"
+        [value]="entry.section"
+      >
+        {{ entry.name.en }} · {{ entry.name.ta }}
+      </option>
+    </select>
+
+  </div>
+
+  <!-- LANGUAGE AUDIO CARDS -->
+  <div class="form-grid audio-admin-grid">
+
+    <!-- =====================================
+         TAMIL AUDIO
+    ====================================== -->
+    <section class="glass audio-upload-box">
+
+      <h3>
+        <i class="fa-solid fa-volume-high"></i>
+        தமிழ் ஒலி · Tamil Audio
+      </h3>
+
+      <!-- RECORD / SELECT FILE COMPONENT -->
+     <app-audio-recorder
+  language="ta"
+  [disabled]="busy"
+  (uploaded)="assignRecordedAudio('ta', $event)">
+</app-audio-recorder>
+      
+
+      <!-- UPLOAD PROGRESS -->
+      <p
+        class="muted"
+        *ngIf="uploading === 'ta'"
+        role="status"
+      >
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        Processing / Uploading Tamil audio...
+      </p>
+
+      <!-- SAVED AUDIO -->
+      <div class="audio-preview">
+
+        <h4>Current Tamil Recording</h4>
+
+        <app-audio-player
+          [src]="source('ta')"
+        >
+        </app-audio-player>
+
+        <p
+          class="muted"
+          *ngIf="!source('ta')"
+        >
+          No Tamil recording assigned to this section.
+        </p>
+
+      </div>
+
+      <!-- REMOVE -->
+      <button
+        type="button"
+        class="btn outline danger"
+        (click)="remove('ta')"
+        [disabled]="busy || !source('ta')"
+      >
+        <i class="fa-solid fa-trash"></i>
+        Remove Tamil Audio
+      </button>
+
+    </section>
+
+    <!-- =====================================
+         ENGLISH AUDIO
+    ====================================== -->
+    <section class="glass audio-upload-box">
+
+      <h3>
+        <i class="fa-solid fa-volume-high"></i>
+        English Audio
+      </h3>
+
+      <!-- RECORD / SELECT FILE COMPONENT -->
+   <app-audio-recorder
+  language="en"
+  [disabled]="busy"
+  (uploaded)="assignRecordedAudio('en', $event)">
+</app-audio-recorder>
+
+      <!-- UPLOAD PROGRESS -->
+      <p
+        class="muted"
+        *ngIf="uploading === 'en'"
+        role="status"
+      >
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        Processing / Uploading English audio...
+      </p>
+
+      <!-- SAVED AUDIO -->
+      <div class="audio-preview">
+
+        <h4>Current English Recording</h4>
+
+        <app-audio-player
+          [src]="source('en')"
+        >
+        </app-audio-player>
+
+        <p
+          class="muted"
+          *ngIf="!source('en')"
+        >
+          No English recording assigned to this section.
+        </p>
+
+      </div>
+
+      <!-- REMOVE -->
+      <button
+        type="button"
+        class="btn outline danger"
+        (click)="remove('en')"
+        [disabled]="busy || !source('en')"
+      >
+        <i class="fa-solid fa-trash"></i>
+        Remove English Audio
+      </button>
+
+    </section>
+
+  </div>
+
+  <!-- SAVING -->
+  <p
+    class="muted"
+    *ngIf="saving"
+    role="status"
+  >
+    <i class="fa-solid fa-spinner fa-spin"></i>
+    Saving audio assignment to MongoDB...
+  </p>
+
+  <!-- SUCCESS MESSAGE -->
+  <p
+    class="success-message"
+    *ngIf="message"
+    role="status"
+  >
+    <i class="fa-solid fa-circle-check"></i>
+    {{ message }}
+  </p>
+
+  <!-- ERROR MESSAGE -->
+  <p
+    class="form-error"
+    *ngIf="error"
+    role="alert"
+  >
+    <i class="fa-solid fa-circle-exclamation"></i>
+    {{ error }}
+  </p>
+
+  <!-- FILE INFORMATION -->
+  <p class="muted audio-admin-note">
+    Supported source formats: MP3 and compatible
+    OGG/Opus recordings.
+    Microphone recordings and OGG files are converted
+    to MP3 in the browser before upload.
+    Maximum audio size: 20 MB.
+    Microphone permission is required for recording.
+  </p>
+
+</div>

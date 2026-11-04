@@ -1,0 +1,5 @@
+/* dialogue-stories: customize only this page here.
+   Shared site-wide typography, cards, and forms are in src/styles.css. */
+:host { display: block; min-width: 0; }
+.dialogue-stories-page { min-width: 0; }
+.dialogue-stories-page .page-intro { border-inline-start: 3px solid var(--red); }

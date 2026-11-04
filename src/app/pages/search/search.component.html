@@ -1,0 +1,26 @@
+<div class="container page-section search-page">
+<div class="page-intro glass">
+<div>
+<span class="eyebrow">MADURAI DISTRICT NEWS SEARCH</span>
+<h1>{{prefs.label('செய்திகளைத் தேடுங்கள்','Search Makkal Valimai')}}</h1>
+</div>
+<i class="fa-solid fa-magnifying-glass giant-icon">
+</i>
+</div>
+<form class="filter-panel glass" (ngSubmit)="search()">
+<label>{{prefs.label('தேடும் சொல்','Search words')}}<input [(ngModel)]="q" name="query" placeholder="Road, Madurai, குடிநீர்..."/>
+</label>
+<button type="submit" class="btn btn-red">Search</button>
+</form>
+<div class="section-title">
+<h2>{{results.length}} {{prefs.label('செய்திகள்','Stories')}}</h2>
+<small class="muted" *ngIf="query">Searched {{searchedCount}} published articles{{hasMore ? ' so far' : ''}}. The current backend does not provide server-side full-text search.</small>
+</div>
+<div class="card-grid">
+<app-story-card *ngFor="let a of results" [article]="a"/>
+</div>
+<div class="empty-state glass" *ngIf="!results.length && !loading && !hasMore && query">{{prefs.label('செய்திகள் கிடைக்கவில்லை','No matching published news articles')}}</div>
+<div class="empty-state glass" role="status" *ngIf="loading">Searching published news…</div>
+<div class="empty-state glass" role="alert" *ngIf="error">{{error}} <button type="button" class="btn outline" (click)="loadMore()">Retry</button></div>
+<div class="load-more-row" *ngIf="hasMore && !error"><button type="button" class="btn btn-red" (click)="loadMore()" [disabled]="loading">{{loading ? 'Loading…' : 'Search older published articles'}}</button></div>
+</div>

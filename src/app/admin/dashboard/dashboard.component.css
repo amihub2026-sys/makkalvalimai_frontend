@@ -1,0 +1,20 @@
+/* dashboard — section layout and responsive styles */
+.stat-grid {
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.9rem;margin-bottom:1rem
+}
+
+.stat {
+  padding:1.25rem;display:grid;gap:.5rem
+}
+
+.stat i {
+  font-size:1.3rem;color:#ff4e65
+}
+
+.stat b {
+  font-size:1.8rem
+}
+
+.stat span {
+  font-size:.77rem;color:#ccd2dd
+}

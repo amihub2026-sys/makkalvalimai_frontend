@@ -1,0 +1,7 @@
+/* Home page composition only. Individual sections are self-contained. */
+:host { display:block; min-width:0 }
+.home{display:grid;grid-template-columns:minmax(0,1fr);gap:1rem;width:min(1390px,calc(100% - 28px));margin-inline:auto;min-width:0}
+.home > * {display:block;min-width:0}
+
+.home-status{padding:15px 19px;background:#0b5189;border:1px solid #75b6e580;border-radius:11px;color:#e5f5ff;font-weight:600;font-size:.82rem}
+.home-status.error{border-color:#e14c63;color:#ffb8c0}

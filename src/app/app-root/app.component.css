@@ -1,0 +1,3 @@
+/* app page — edit this file to change this page without touching others.
+   Layout tokens (.glass, .panel, .container, .btn) live in src/styles.css. */
+:host { display: block; min-width: 0; }

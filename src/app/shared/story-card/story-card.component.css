@@ -1,0 +1,34 @@
+/* story-card — section layout and responsive styles */
+.story-card {
+  overflow:hidden;min-width:0
+}
+
+.story-photo {
+  display:block;overflow:hidden;aspect-ratio:16/9
+}
+
+.story-photo img {
+  width:100%;height:100%;object-fit:cover;transition:transform .3s
+}
+
+.story-card:hover img {
+  transform:scale(1.04)
+}
+
+.story-info {
+  padding:.85rem 1rem;display:grid;gap:.55rem
+}
+
+.story-heading {
+  font-weight:850;line-height:1.45;font-size:.94rem
+}
+
+.card-actions {
+  display:flex;align-items:center;justify-content:space-between;gap:.65rem
+}
+
+.share {
+  border:1px solid #14bb75;border-radius:9px;padding:.38rem .55rem;color:#63e5a1;font-size:1.08rem
+}
+
+.story-no-photo {display:flex;width:100%;height:100%;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d4778,#032a52);color:#bed9ee;font-size:2rem;}

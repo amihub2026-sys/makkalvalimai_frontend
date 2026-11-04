@@ -1,0 +1,101 @@
+/* Responsive rules for styles; isolated from common/desktop CSS. */
+@media (max-width:850px) {
+.container {
+  width:calc(100% - 30px)
+}
+.card-grid {
+  grid-template-columns:repeat(2,minmax(0,1fr))
+}
+}@media (max-width:600px) {
+html {
+  font-size:calc(15px * var(--reader-scale))
+}
+.container {
+  width:calc(100% - 24px)
+}
+.page-section,.home {
+  padding:.8rem 0 2rem
+}
+.panel {
+  padding:1rem
+}
+.card-grid,.home-two .card-grid {
+  grid-template-columns:1fr 1fr;gap:.55rem
+}
+.section-title h2 {
+  font-size:1.05rem
+}
+.page-intro {
+  padding:1.1rem
+}
+.page-intro h1 {
+  font-size:1.5rem
+}
+.page-intro p {
+  font-size:.76rem
+}
+.giant-icon {
+  font-size:2.4rem
+}
+.filter-panel {
+  padding:.85rem
+}
+.filter-panel label {
+  min-width:100%
+}
+.filter-panel input,.filter-panel select {
+  width:100%
+}
+.article-layout,.issue-card {
+  grid-template-columns:1fr
+}
+.form-grid {
+  grid-template-columns:1fr
+}
+.report-form {
+  padding:1rem
+}
+}@media (max-width:380px) {
+.card-grid,.home-two .card-grid {
+  grid-template-columns:1fr
+}
+}@media (prefers-reduced-motion:reduce) {
+*,*:before,*:after {
+  scroll-behavior:auto!important;animation:none!important;transition:none!important
+}
+}@media (max-width:850px){
+.right-stories .story-card {
+  display:block;height:auto
+}
+
+.right-stories .story-photo {
+  width:100%;height:auto;aspect-ratio:16/9
+}
+
+}@media (max-width:600px){
+.right-stories .story-card {
+  display:flex;height:92px
+}
+
+.right-stories .story-photo {
+  height:100%;width:36%;min-width:36%;aspect-ratio:auto
+}
+
+.right-stories .story-info {
+  padding:.5rem;gap:.18rem
+}
+
+.right-stories .story-heading {
+  font-size:.76rem
+}
+
+}@media(max-width:650px){
+  body{background:#043c76;background-attachment:scroll}
+  .site-shell .page-section,.site-shell .home{width:calc(100% - 18px);max-width:100%;margin-left:auto;margin-right:auto}
+  .site-shell .home{gap:.75rem}
+  .site-shell .lead-story{border-radius:12px}
+  .site-shell .story-card{border-radius:9px}
+  .site-shell .card-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem}
+  .site-shell .page-intro{padding:1.1rem}
+  .admin-main{min-width:0}
+}@media(max-width:390px){.site-shell .card-grid{grid-template-columns:1fr}}

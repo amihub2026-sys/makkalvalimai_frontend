@@ -1,0 +1,30 @@
+<!-- ==========================================
+       TOP ADVERTISEMENT
+       ========================================== -->
+
+  <div
+    class="ad-banner glass"
+    *ngIf="topAd() as ad"
+    [style.background-image]="'linear-gradient(90deg,rgba(7,9,16,.9),rgba(7,9,16,.5)),url('+media.url(ad.image)+')'"
+  >
+
+    <div>
+      <span class="ad-tag">
+        ADVERTISEMENT / விளம்பரம்
+      </span>
+
+      <h3>{{ ad.brand }}</h3>
+      <p>{{ ad.caption }}</p>
+    </div>
+
+    <a
+      *ngIf="ad.link"
+      [href]="ad.link"
+      rel="noopener noreferrer sponsored"
+      target="_blank"
+      class="btn btn-red"
+    >
+      Visit advertiser ↗
+    </a>
+
+  </div>

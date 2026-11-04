@@ -1,0 +1,9 @@
+/* Responsive rules for problems-solved; isolated from common/desktop CSS. */
+@media (max-width:600px) {
+.issue-pictures {
+  min-height:185px;max-height:240px
+}
+.issue-data {
+  padding:.9rem
+}
+}

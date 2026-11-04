@@ -1,0 +1,4 @@
+/* Public layout responsive only. */
+@media(max-width:650px){
+.public-main{padding-bottom:74px}
+}

@@ -1,0 +1,4 @@
+/* Responsive rules for app; isolated from common/desktop CSS. */
+@media (max-width: 640px) {
+  :host { width: 100%; }
+}

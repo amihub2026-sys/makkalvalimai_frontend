@@ -1,0 +1,6 @@
+<div class="site-shell">
+  <app-site-header />
+  <main id="main-content" class="public-main"><router-outlet /></main>
+  <div class="popup-overlay" *ngIf="popupOpen && activePopup() as ad" role="dialog" aria-modal="true" aria-label="Advertisement"><div class="ad-popup glass"><button type="button" class="close-popup" (click)="closePopup()" aria-label="Close advertisement">×</button><span class="ad-tag">SPONSORED · விளம்பரம்</span><img [src]="media.url(ad.image)" [alt]="ad.brand"/><div><h2>{{ad.brand}}</h2><p *ngIf="ad.caption">{{ad.caption}}</p><a *ngIf="ad.link" [href]="ad.link" target="_blank" rel="noopener noreferrer sponsored" class="btn btn-red">{{prefs.label('மேலும் அறிய','Visit advertiser')}} ↗</a></div></div></div>
+  <app-site-footer />
+</div>

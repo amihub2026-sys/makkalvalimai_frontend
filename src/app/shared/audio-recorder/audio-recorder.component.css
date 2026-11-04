@@ -1,0 +1,608 @@
+
+/* ==========================================
+   MAKKAL VALIMAI
+   AUDIO RECORDER — DESKTOP STYLES
+   Medium Blue + Red Theme
+========================================== */
+
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.mv-audio-recorder {
+  --audio-blue: #124d83;
+  --audio-dark-blue: #0c355c;
+  --audio-light-blue: #eaf3fb;
+  --audio-red: #df2442;
+  --audio-border: #cbdceb;
+  --audio-text: #18344f;
+  --audio-muted: #65788c;
+
+  width: 100%;
+  min-width: 0;
+  color: var(--audio-text);
+  font-family: inherit;
+}
+
+.mv-audio-recorder *,
+.mv-audio-recorder *::before,
+.mv-audio-recorder *::after {
+  box-sizing: border-box;
+}
+
+/* ==========================================
+   1. RECORD / UPLOAD MODE SWITCH
+========================================== */
+
+.audio-mode-switch {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+
+  padding: 6px;
+  margin-bottom: 22px;
+
+  background: #e9f1f9;
+  border: 1px solid var(--audio-border);
+  border-radius: 14px;
+}
+
+.audio-mode-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+  min-width: 0;
+  min-height: 48px;
+  padding: 12px 14px;
+
+  border: 1px solid transparent;
+  border-radius: 10px;
+
+  background: transparent;
+  color: var(--audio-blue);
+
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.audio-mode-btn i {
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.audio-mode-btn:hover:not(:disabled) {
+  background: #d6e7f6;
+}
+
+.audio-mode-btn.active {
+  background: var(--audio-blue);
+  border-color: var(--audio-blue);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(12, 53, 92, 0.16);
+}
+
+.audio-mode-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.audio-mode-btn:focus-visible,
+.audio-action-btn:focus-visible {
+  outline: 3px solid #f1a8b4;
+  outline-offset: 3px;
+}
+
+/* ==========================================
+   2. RECORD / FILE PANELS
+========================================== */
+
+.audio-record-panel,
+.audio-file-panel {
+  width: 100%;
+  padding: 22px;
+
+  background: linear-gradient(
+    145deg,
+    #ffffff 0%,
+    #f0f6fc 100%
+  );
+
+  border: 1px solid var(--audio-border);
+  border-radius: 16px;
+}
+
+/* ==========================================
+   3. PANEL HEADING
+========================================== */
+
+.audio-panel-heading {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  margin-bottom: 22px;
+}
+
+.audio-panel-icon {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--audio-light-blue);
+  border: 1px solid #c9deef;
+  border-radius: 12px;
+
+  color: var(--audio-blue);
+  font-size: 19px;
+}
+
+.audio-panel-heading h4 {
+  margin: 0 0 5px;
+
+  color: var(--audio-dark-blue);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.audio-panel-heading p {
+  margin: 0;
+
+  color: var(--audio-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ==========================================
+   4. RECORDING INDICATOR
+========================================== */
+
+.recording-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: 18px;
+  padding: 10px 15px;
+
+  background: #fff0f2;
+  border: 1px solid #ffd0d8;
+  border-radius: 30px;
+
+  color: #b91834;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.recording-dot {
+  display: block;
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+
+  background: var(--audio-red);
+  border-radius: 50%;
+
+  animation: mv-recording-pulse 1.3s ease-in-out infinite;
+}
+
+@keyframes mv-recording-pulse {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(223, 36, 66, 0.3);
+  }
+
+  50% {
+    opacity: 0.6;
+    box-shadow: 0 0 0 7px rgba(223, 36, 66, 0);
+  }
+}
+
+/* ==========================================
+   5. AUDIO ACTION BUTTONS
+========================================== */
+
+.audio-record-actions,
+.audio-preview-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.audio-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  min-height: 45px;
+  padding: 12px 18px;
+
+  border: 1px solid transparent;
+  border-radius: 10px;
+
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.audio-action-btn i {
+  font-size: 14px;
+}
+
+.audio-action-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.audio-action-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Start Recording */
+
+.record-btn {
+  background: var(--audio-red);
+  color: #fff;
+  box-shadow: 0 5px 14px rgba(223, 36, 66, 0.18);
+}
+
+.record-btn:hover:not(:disabled) {
+  background: #bf1935;
+}
+
+/* Stop Recording */
+
+.stop-btn {
+  background: #a71932;
+  color: #fff;
+}
+
+.stop-btn:hover:not(:disabled) {
+  background: #87132a;
+}
+
+/* Save / Upload */
+
+.save-btn {
+  background: var(--audio-blue);
+  color: #fff;
+}
+
+.save-btn:hover:not(:disabled) {
+  background: var(--audio-dark-blue);
+}
+
+/* Discard */
+
+.discard-btn {
+  background: #fff;
+  color: #b4233d;
+  border-color: #e9b5c0;
+}
+
+.discard-btn:hover:not(:disabled) {
+  background: #fff0f3;
+}
+
+/* Browse */
+
+.browse-btn {
+  background: var(--audio-blue);
+  color: #fff;
+}
+
+.browse-btn:hover:not(:disabled) {
+  background: var(--audio-dark-blue);
+}
+
+/* ==========================================
+   6. HELP TEXT
+========================================== */
+
+.audio-help-text {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+
+  margin: 18px 0 0;
+
+  color: var(--audio-muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.audio-help-text i {
+  margin-top: 3px;
+  color: var(--audio-blue);
+}
+
+/* ==========================================
+   7. DRAG AND DROP UPLOAD
+========================================== */
+
+.audio-drop-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 11px;
+  min-height: 260px;
+  padding: 28px 20px;
+
+  background: #f5faff;
+  border: 2px dashed #99b9d5;
+  border-radius: 15px;
+
+  text-align: center;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.audio-drop-zone.drag-active {
+  background: #dcecfb;
+  border-color: var(--audio-blue);
+  box-shadow: inset 0 0 0 2px rgba(18, 77, 131, 0.09);
+}
+
+.audio-drop-zone.has-file {
+  background: #edf7f4;
+  border-color: #5aa68f;
+}
+
+.audio-drop-zone.is-disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.drop-zone-icon {
+  width: 62px;
+  height: 62px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #e2eef8;
+  border-radius: 17px;
+
+  color: var(--audio-blue);
+  font-size: 27px;
+}
+
+.audio-drop-zone h4 {
+  margin: 0;
+
+  color: var(--audio-dark-blue);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.audio-drop-zone p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.audio-supported-formats {
+  padding: 6px 12px;
+
+  background: #e4eff9;
+  border-radius: 30px;
+
+  color: var(--audio-blue);
+  font-size: 11px !important;
+  font-weight: 700;
+}
+
+.audio-file-limit {
+  color: var(--audio-muted);
+  font-size: 11px !important;
+}
+
+/* ==========================================
+   8. SELECTED FILE DETAILS
+========================================== */
+
+.audio-selected-file {
+  margin-top: 18px;
+  padding: 14px;
+
+  background: #edf4fb;
+  border: 1px solid var(--audio-border);
+  border-radius: 12px;
+}
+
+.selected-file-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.selected-file-heading > i {
+  color: var(--audio-blue);
+  font-size: 23px;
+}
+
+.selected-file-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  min-width: 0;
+}
+
+.selected-file-info strong {
+  color: var(--audio-dark-blue);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.selected-file-info span {
+  color: var(--audio-muted);
+  font-size: 12px;
+}
+
+/* ==========================================
+   9. AUDIO PREVIEW
+========================================== */
+
+.audio-selected-preview {
+  margin-top: 20px;
+  padding: 18px;
+
+  background: #fff;
+  border: 1px solid var(--audio-border);
+  border-radius: 13px;
+}
+
+.audio-preview-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.audio-preview-heading i {
+  color: var(--audio-blue);
+  font-size: 18px;
+}
+
+.audio-preview-heading h4 {
+  margin: 0;
+
+  color: var(--audio-dark-blue);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.audio-selected-preview > p {
+  margin: 10px 0 15px;
+
+  color: var(--audio-muted);
+  font-size: 12px;
+}
+
+.audio-selected-preview audio {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: 45px;
+  margin-bottom: 17px;
+}
+
+/* ==========================================
+   10. PROCESSING STATUS
+========================================== */
+
+.audio-processing-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-top: 15px;
+  padding: 13px 15px;
+
+  background: #e7f2ff;
+  border: 1px solid #b8d8f5;
+  border-radius: 11px;
+
+  color: var(--audio-dark-blue);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* ==========================================
+   11. SUCCESS / INFORMATION
+========================================== */
+
+.audio-status-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+
+  margin: 15px 0 0;
+  padding: 13px 15px;
+
+  background: #edf8f2;
+  border: 1px solid #b6ddc7;
+  border-radius: 11px;
+
+  color: #176341;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.audio-status-message i {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+/* ==========================================
+   12. ERROR MESSAGE
+========================================== */
+
+.audio-error-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+
+  margin: 15px 0 0;
+  padding: 13px 15px;
+
+  background: #fff0f2;
+  border: 1px solid #f0b6c0;
+  border-radius: 11px;
+
+  color: #ab1933;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.audio-error-message i {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+/* ==========================================
+   13. REDUCED MOTION ACCESSIBILITY
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .mv-audio-recorder *,
+  .mv-audio-recorder *::before,
+  .mv-audio-recorder *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

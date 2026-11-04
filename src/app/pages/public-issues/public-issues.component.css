@@ -1,0 +1,52 @@
+/* public-issues — section layout and responsive styles */
+.issue-preview {
+  display:flex;gap:.8rem;align-items:center;margin:.7rem 0
+}
+
+.issue-preview img {
+  width:80px;height:64px;object-fit:cover;border-radius:8px
+}
+
+.issue-preview b,.issue-preview small {
+  display:block
+}
+
+.issue-preview b {
+  font-size:.8rem
+}
+
+.issue-preview small {
+  color:#bfc2c9
+}
+
+.issue-list {
+  display:grid;gap:1rem;margin-top:1rem
+}
+
+.issue-card {
+  display:grid;grid-template-columns:minmax(200px,.85fr) minmax(0,1.45fr);gap:1rem;overflow:hidden
+}
+
+.issue-pictures {
+  display:flex;min-height:195px;max-height:320px
+}
+
+.issue-pictures img {
+  width:100%;min-width:0;object-fit:cover;flex:1
+}
+
+.issue-pictures img+img {
+  width:50%
+}
+
+.issue-data {
+  padding:1rem;min-width:0
+}
+
+.issue-data h3 {
+  margin:.5rem 0
+}
+
+.issue-data p {
+  font-size:.8rem
+}

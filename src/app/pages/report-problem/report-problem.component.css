@@ -1,0 +1,5 @@
+/* report-problem: customize only this page here.
+   Shared site-wide typography, cards, and forms are in src/styles.css. */
+:host { display: block; min-width: 0; }
+.report-problem-page { min-width: 0; }
+.report-problem-page .page-intro { border-inline-start: 3px solid var(--red); }

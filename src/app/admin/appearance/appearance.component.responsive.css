@@ -1,0 +1,111 @@
+/* Responsive rules for appearance; isolated from common/desktop CSS. */
+@media (max-width: 1000px) {
+
+  .appearance-image-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .appearance-preview .upload-preview {
+    height: 225px;
+  }
+
+}@media (max-width: 700px) {
+
+  .appearance-heading {
+    margin-bottom: 19px;
+  }
+
+  .appearance-heading h2 {
+    font-size: 21px;
+  }
+
+  .appearance-heading p {
+    font-size: 12px;
+  }
+
+  .appearance-image-card {
+    padding: 15px;
+    gap: 13px;
+  }
+
+  .appearance-card-heading h3 {
+    font-size: 16px;
+  }
+
+  .appearance-headlines-section {
+    margin-top: 23px;
+    padding-top: 20px;
+  }
+
+  .appearance-section-heading h3 {
+    font-size: 17px;
+  }
+
+  .appearance-headline-card {
+    padding: 14px;
+  }
+
+  .appearance-headline-card .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .appearance-popup-section {
+    padding: 15px;
+  }
+
+  .appearance-actions {
+    align-items: stretch;
+  }
+
+  .appearance-actions .btn {
+    flex: 1;
+  }
+
+}@media (max-width: 420px) {
+
+  .appearance-card-heading h3 {
+    font-size: 15px;
+  }
+
+  .appearance-page input[type="file"] {
+    font-size: 11px;
+  }
+
+  .appearance-page input[type="file"]::file-selector-button {
+    padding: 8px;
+    margin-right: 6px;
+  }
+
+  .appearance-preview .upload-preview {
+    height: 165px;
+  }
+
+  .appearance-headline-card-heading {
+    align-items: flex-start;
+  }
+
+  .appearance-popup-section .checkbox-label {
+    align-items: flex-start;
+  }
+
+  .appearance-actions {
+    flex-direction: column;
+  }
+
+  .appearance-actions .btn {
+    width: 100%;
+  }
+
+  .appearance-saved-indicator {
+    justify-content: center;
+  }
+
+}@media (prefers-reduced-motion: reduce) {
+
+  .appearance-page input[type="text"] {
+    transition: none;
+  }
+
+}

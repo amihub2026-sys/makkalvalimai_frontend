@@ -1,0 +1,97 @@
+/* Responsive rules for articles; isolated from common/desktop CSS. */
+@media (max-width: 1180px) {
+
+  .admin-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .articles-list-panel {
+    position: static;
+  }
+
+  .admin-list {
+    max-height: 300px;
+  }
+
+}@media (max-width: 700px) {
+
+  .admin-articles {
+    padding: 8px 0 30px;
+  }
+
+  .admin-columns {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .admin-columns .panel {
+    padding: 17px;
+    border-radius: 13px;
+  }
+
+  .panel-heading {
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .panel-heading h2 {
+    font-size: 19px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .article-editor-form {
+    gap: 20px;
+  }
+
+  .form-section {
+    padding-top: 19px;
+  }
+
+  .form-section h3 {
+    font-size: 16px;
+  }
+
+  .article-editor-form .field textarea {
+    min-height: 150px;
+  }
+
+  .checkbox-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+  }
+
+  .admin-list-item img {
+    width: 75px;
+    height: 68px;
+  }
+
+}@media (max-width: 420px) {
+
+  .admin-columns .panel {
+    padding: 13px;
+  }
+
+  .panel-heading h2 {
+    font-size: 17px;
+  }
+
+  .article-editor-form .field input,
+  .article-editor-form .field select,
+  .article-editor-form .field textarea {
+    font-size: 14px;
+  }
+
+}@media(max-width:650px){.editorial-tool-grid{grid-template-columns:1fr}.editorial-toolkit{padding:12px}}

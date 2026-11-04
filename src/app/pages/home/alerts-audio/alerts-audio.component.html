@@ -1,0 +1,85 @@
+<!-- ==========================================
+       PUBLIC ALERTS AND AUDIO NEWS
+       ========================================== -->
+
+  <div class="home-mid">
+
+    <!-- PUBLIC ALERTS -->
+
+    <section class="panel glass">
+
+      <div class="section-title">
+
+        <h2>
+          <i class="fa-solid fa-bell"></i>
+          {{ prefs.label('மதுரை பொது அறிவிப்புகள்', 'Madurai Public Alerts') }}
+        </h2>
+
+        <a routerLink="/public-alerts">
+          {{ prefs.label('அனைத்தும்', 'View all') }} →
+        </a>
+
+      </div>
+
+      <article
+        class="alert-row"
+        *ngFor="let alert of store.alerts().slice(0,3)"
+      >
+
+        <div class="alert-symbol">
+          <i class="fa-solid fa-circle-exclamation"></i>
+        </div>
+
+        <div>
+
+          <b>
+            {{ prefs.txt(alert.title) }}
+          </b>
+
+          <small>
+            {{ alert.area }} ·
+            {{ alert.effectiveDate | date:'dd MMM yyyy' }}
+          </small>
+
+        </div>
+
+      </article>
+
+    </section>
+
+    <!-- AUDIO NEWS -->
+
+    <section class="panel glass">
+
+      <div class="section-title">
+        <h2>
+          <i class="fa-solid fa-headphones"></i>
+          {{ prefs.label('ஒலி செய்திகள்', 'Audio News') }}
+        </h2>
+      </div>
+
+      <p class="muted">
+        {{
+          prefs.label(
+            'தமிழ் / ஆங்கில ஒலி வடிவில் செய்திகளைக் கேளுங்கள்.',
+            'Listen to news in Tamil or English.'
+          )
+        }}
+      </p>
+
+      <app-audio-player
+        [src]="prefs.language() === 'ta'
+          ? (store.settings().sectionAudio.home?.ta || '')
+          : (store.settings().sectionAudio.home?.en || '')"
+      />
+
+      <a
+        routerLink="/madurai-news"
+        class="tiny-link"
+      >
+        {{ prefs.label('செய்திகளைப் பாருங்கள்', 'Browse stories') }} →
+      </a>
+
+    </section>
+
+  </div>

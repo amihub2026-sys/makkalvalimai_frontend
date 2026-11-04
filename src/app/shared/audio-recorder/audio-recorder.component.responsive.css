@@ -1,0 +1,362 @@
+
+/* ==========================================
+   MAKKAL VALIMAI
+   AUDIO RECORDER — RESPONSIVE CSS
+   Tablet + Mobile + Small Screens
+========================================== */
+
+/* ==========================================
+   TABLET — 1024px AND BELOW
+========================================== */
+
+@media (max-width: 1024px) {
+
+  .mv-audio-recorder {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .audio-record-panel,
+  .audio-file-panel {
+    padding: 18px;
+  }
+
+  .audio-mode-btn {
+    font-size: 12px;
+    padding: 12px 10px;
+    gap: 7px;
+  }
+
+  .audio-drop-zone {
+    min-height: 230px;
+    padding: 24px 18px;
+  }
+
+  .audio-selected-preview {
+    padding: 16px;
+  }
+
+}
+
+/* ==========================================
+   MOBILE — 768px AND BELOW
+========================================== */
+
+@media (max-width: 768px) {
+
+  :host {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .mv-audio-recorder {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  /* MODE BUTTONS */
+
+  .audio-mode-switch {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+    padding: 5px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+  }
+
+  .audio-mode-btn {
+    min-height: 50px;
+    padding: 10px 7px;
+    gap: 6px;
+    font-size: 11px;
+    line-height: 1.3;
+    border-radius: 9px;
+  }
+
+  .audio-mode-btn i {
+    font-size: 14px;
+  }
+
+  .audio-mode-btn span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  /* RECORD / FILE PANELS */
+
+  .audio-record-panel,
+  .audio-file-panel {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+  }
+
+  /* PANEL HEADING */
+
+  .audio-panel-heading {
+    gap: 10px;
+    margin-bottom: 17px;
+  }
+
+  .audio-panel-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 16px;
+  }
+
+  .audio-panel-heading h4 {
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .audio-panel-heading p {
+    font-size: 11px;
+  }
+
+  /* RECORDING STATUS */
+
+  .recording-indicator {
+    width: 100%;
+    justify-content: center;
+    padding: 10px;
+    font-size: 12px;
+    margin-bottom: 15px;
+  }
+
+  /* ACTION BUTTONS */
+
+  .audio-record-actions,
+  .audio-preview-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .audio-action-btn {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px;
+    font-size: 12px;
+  }
+
+  /* DRAG AND DROP */
+
+  .audio-drop-zone {
+    width: 100%;
+    min-height: 220px;
+    padding: 22px 12px;
+    gap: 9px;
+    border-radius: 12px;
+  }
+
+  .drop-zone-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+    font-size: 23px;
+  }
+
+  .audio-drop-zone h4 {
+    font-size: 14px;
+  }
+
+  .audio-drop-zone p {
+    font-size: 11px;
+  }
+
+  .audio-supported-formats {
+    font-size: 10px !important;
+  }
+
+  .audio-file-limit {
+    font-size: 10px !important;
+  }
+
+  /* SELECTED FILE */
+
+  .audio-selected-file {
+    margin-top: 15px;
+    padding: 12px;
+  }
+
+  .selected-file-heading {
+    gap: 10px;
+  }
+
+  .selected-file-heading > i {
+    font-size: 20px;
+  }
+
+  .selected-file-info strong {
+    font-size: 12px;
+  }
+
+  .selected-file-info span {
+    font-size: 11px;
+  }
+
+  /* PREVIEW */
+
+  .audio-selected-preview {
+    margin-top: 16px;
+    padding: 13px;
+    border-radius: 11px;
+  }
+
+  .audio-preview-heading h4 {
+    font-size: 13px;
+  }
+
+  .audio-selected-preview > p {
+    font-size: 11px;
+  }
+
+  .audio-selected-preview audio {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+  }
+
+  /* STATUS MESSAGES */
+
+  .audio-processing-status,
+  .audio-status-message,
+  .audio-error-message {
+    width: 100%;
+    padding: 12px;
+    font-size: 11px;
+    border-radius: 10px;
+  }
+
+  .audio-help-text {
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+}
+
+/* ==========================================
+   SMALL MOBILE — 480px AND BELOW
+========================================== */
+
+@media (max-width: 480px) {
+
+  .audio-mode-switch {
+    gap: 4px;
+    padding: 4px;
+  }
+
+  .audio-mode-btn {
+    min-height: 52px;
+    padding: 9px 5px;
+    font-size: 10px;
+    gap: 5px;
+  }
+
+  .audio-mode-btn i {
+    font-size: 13px;
+  }
+
+  .audio-record-panel,
+  .audio-file-panel {
+    padding: 12px;
+  }
+
+  .audio-panel-heading {
+    align-items: flex-start;
+  }
+
+  .audio-panel-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 15px;
+  }
+
+  .audio-panel-heading h4 {
+    font-size: 13px;
+  }
+
+  .audio-drop-zone {
+    min-height: 205px;
+    padding: 18px 10px;
+  }
+
+  .audio-action-btn {
+    min-height: 48px;
+    font-size: 11px;
+  }
+
+}
+
+/* ==========================================
+   EXTRA SMALL DEVICES — 360px AND BELOW
+========================================== */
+
+@media (max-width: 360px) {
+
+  .audio-mode-btn {
+    flex-direction: column;
+    gap: 4px;
+    min-height: 58px;
+    font-size: 10px;
+    text-align: center;
+  }
+
+  .audio-mode-btn i {
+    font-size: 15px;
+  }
+
+  .audio-record-panel,
+  .audio-file-panel {
+    padding: 10px;
+  }
+
+  .audio-drop-zone {
+    padding: 16px 8px;
+  }
+
+  .audio-drop-zone h4 {
+    font-size: 12px;
+  }
+
+}
+
+/* ==========================================
+   TOUCH DEVICES
+========================================== */
+
+@media (hover: none) and (pointer: coarse) {
+
+  .audio-mode-btn,
+  .audio-action-btn {
+    min-height: 48px;
+  }
+
+  .audio-action-btn:hover:not(:disabled) {
+    transform: none;
+  }
+
+}
+
+/* ==========================================
+   LANDSCAPE MOBILE
+========================================== */
+
+@media (max-width: 900px) and (orientation: landscape) {
+
+  .audio-drop-zone {
+    min-height: 170px;
+  }
+
+  .audio-record-panel,
+  .audio-file-panel {
+    padding: 14px;
+  }
+
+}

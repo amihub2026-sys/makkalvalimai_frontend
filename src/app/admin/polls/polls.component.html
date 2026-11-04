@@ -1,0 +1,587 @@
+
+<!-- =========================================
+     MAKKAL VALIMAI - ADMIN OPINION POLLS
+     ========================================= -->
+
+<div class="admin-columns admin-polls-page">
+
+  <!-- =====================================
+       LEFT SECTION - SAVED POLLS
+       ===================================== -->
+
+  <section class="panel glass polls-list-panel">
+
+    <!-- HEADER -->
+
+    <div class="section-title polls-panel-heading">
+
+      <h2>Opinion Polls</h2>
+
+      <button
+        type="button"
+        class="btn btn-red"
+        (click)="newPoll()"
+        [disabled]="saving || deleting"
+      >
+        <i class="fa-solid fa-plus"></i>
+        New Poll
+      </button>
+
+    </div>
+
+    <p class="muted">
+      Manage public opinion polls and view
+      real vote counts from MongoDB.
+    </p>
+
+    <!-- TOOLBAR -->
+
+    <div class="polls-toolbar">
+
+      <button
+        type="button"
+        class="btn outline small"
+        (click)="loadPolls()"
+        [disabled]="loading || saving || deleting"
+      >
+
+        <i
+          class="fa-solid fa-rotate"
+          [class.fa-spin]="loading"
+        ></i>
+
+        {{ loading ? 'Loading...' : 'Refresh Polls' }}
+
+      </button>
+
+      <span class="polls-count">
+
+        {{ polls.length }}
+
+        {{
+          polls.length === 1
+            ? 'Saved Poll'
+            : 'Saved Polls'
+        }}
+
+      </span>
+
+    </div>
+
+    <!-- LOADING STATE -->
+
+    <div
+      class="polls-loading"
+      *ngIf="loading"
+      role="status"
+    >
+
+      <i class="fa-solid fa-spinner fa-spin"></i>
+
+      Loading polls from MongoDB...
+
+    </div>
+
+    <!-- NO POLLS -->
+
+    <div
+      class="polls-empty-state"
+      *ngIf="!loading && polls.length === 0"
+    >
+
+      <i class="fa-solid fa-chart-simple"></i>
+
+      <h3>No Opinion Polls Found</h3>
+
+      <p class="muted">
+        Create your first opinion poll.
+      </p>
+
+    </div>
+
+    <!-- =====================================
+         SAVED POLLS LIST
+         ===================================== -->
+
+    <div
+      class="saved-polls"
+      *ngIf="polls.length > 0"
+    >
+
+      <article
+        *ngFor="let p of polls"
+        class="saved-poll-card"
+        [class.is-selected]="draft.id === p.id"
+      >
+
+        <!-- POLL QUESTION -->
+
+        <div class="saved-poll-header">
+
+          <div class="saved-poll-question">
+
+            <h3 class="poll-question-ta">
+              {{ p.question.ta }}
+            </h3>
+
+            <p class="poll-question-en">
+              {{ p.question.en }}
+            </p>
+
+          </div>
+
+          <!-- STATUS -->
+
+          <span
+            class="chip poll-status"
+            [class.green]="p.active"
+            [class.warning]="!p.active"
+          >
+
+            <i
+              class="fa-solid"
+              [class.fa-circle-check]="p.active"
+              [class.fa-circle-xmark]="!p.active"
+            ></i>
+
+            {{ p.active ? 'ACTIVE' : 'CLOSED' }}
+
+          </span>
+
+        </div>
+
+        <!-- =================================
+             ALL OPTIONS AND VOTE COUNTS
+             ================================= -->
+
+        <div class="saved-poll-options">
+
+          <div
+            class="saved-poll-option"
+            *ngFor="let option of p.options; let i = index"
+          >
+
+            <!-- OPTION NUMBER -->
+
+            <span class="poll-option-number">
+              {{ i + 1 }}
+            </span>
+
+            <!-- OPTION NAME -->
+
+            <div class="saved-poll-option-text">
+
+              <span class="option-title-ta">
+                {{ option.ta }}
+              </span>
+
+              <span class="option-title-en">
+                {{ option.en }}
+              </span>
+
+            </div>
+
+            <!-- REAL VOTE COUNT -->
+
+            <div class="saved-poll-votes">
+
+              <strong class="vote-count">
+                {{ p.counts[i] || 0 }}
+              </strong>
+
+              <span class="vote-label">
+
+                {{
+                  (p.counts[i] || 0) === 1
+                    ? 'Vote'
+                    : 'Votes'
+                }}
+
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- TOTAL VOTES AND EDIT BUTTON -->
+
+        <div class="saved-poll-footer">
+
+          <div class="saved-poll-total">
+
+            <i class="fa-solid fa-users"></i>
+
+            <span>Total Votes</span>
+
+            <strong>
+              {{ total(p) }}
+            </strong>
+
+          </div>
+
+          <button
+            type="button"
+            class="btn outline small edit-poll-btn"
+            (click)="selectPoll(p)"
+            [disabled]="saving || deleting"
+          >
+
+            <i class="fa-solid fa-pen-to-square"></i>
+
+            Edit Poll
+
+          </button>
+
+        </div>
+
+      </article>
+
+    </div>
+
+  </section>
+
+  <!-- =====================================
+       RIGHT SECTION - CREATE / EDIT POLL
+       ===================================== -->
+
+  <section class="panel glass poll-editor-panel">
+
+    <!-- EDITOR HEADER -->
+
+    <div class="section-title">
+
+      <h2>Create or Edit a Poll</h2>
+
+      <span
+        class="chip"
+        [class.green]="draft.active"
+        [class.warning]="!draft.active"
+      >
+
+        {{ draft.active ? 'Active' : 'Inactive' }}
+
+      </span>
+
+    </div>
+
+    <p class="muted">
+      Voluntary visitor participation only.
+      Results are not statistically representative.
+    </p>
+
+    <!-- POLL FORM -->
+
+    <form
+      class="editor-form"
+      (ngSubmit)="save()"
+    >
+
+      <!-- =================================
+           POLL QUESTIONS
+           ================================= -->
+
+      <div class="form-grid">
+
+        <label>
+
+          Question Tamil *
+
+          <input
+            type="text"
+            name="qta"
+            [(ngModel)]="draft.question.ta"
+            placeholder="தமிழில் கேள்வியை உள்ளிடவும்"
+            required
+            [disabled]="saving || deleting"
+          />
+
+        </label>
+
+        <label>
+
+          Question English *
+
+          <input
+            type="text"
+            name="qen"
+            [(ngModel)]="draft.question.en"
+            placeholder="Enter the poll question"
+            required
+            [disabled]="saving || deleting"
+          />
+
+        </label>
+
+      </div>
+
+      <!-- =================================
+           ANSWER OPTIONS HEADER
+           ================================= -->
+
+      <div class="poll-editor-options-heading">
+
+        <h3>Answer Options</h3>
+
+        <span class="muted">
+
+          {{ draft.options.length }} / 6 options
+
+        </span>
+
+      </div>
+
+      <p class="muted">
+        Enter each option in Tamil and English.
+        A poll must contain at least two options.
+      </p>
+
+      <!-- =================================
+           EDITABLE ANSWER OPTIONS
+           ================================= -->
+
+      <div class="poll-editor-options">
+
+        <div
+          class="poll-editor-option"
+          *ngFor="let o of draft.options; let i = index"
+        >
+
+          <div class="form-grid">
+
+            <label>
+
+              Option {{ i + 1 }} Tamil *
+
+              <input
+                type="text"
+                [name]="'ta' + i"
+                [(ngModel)]="o.ta"
+                required
+                [disabled]="saving || deleting || hasVotes"
+              />
+
+            </label>
+
+            <label>
+
+              Option {{ i + 1 }} English *
+
+              <input
+                type="text"
+                [name]="'en' + i"
+                [(ngModel)]="o.en"
+                required
+                [disabled]="saving || deleting || hasVotes"
+              />
+
+            </label>
+
+          </div>
+
+          <!-- OPTION VOTES AND REMOVE -->
+
+          <div class="poll-option-actions">
+
+            <span class="option-votes-info">
+
+              <i class="fa-solid fa-chart-bar"></i>
+
+              Votes:
+
+              <strong>
+                {{ draft.counts[i] || 0 }}
+              </strong>
+
+            </span>
+
+            <button
+              *ngIf="draft.options.length > 2"
+              type="button"
+              class="btn outline danger small"
+              (click)="removeOption(i)"
+              [disabled]="saving || deleting || hasVotes"
+            >
+
+              <i class="fa-solid fa-xmark"></i>
+
+              Remove Option
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ADD NEW OPTION -->
+
+      <button
+        type="button"
+        class="btn outline small add-poll-option-btn"
+        (click)="addOption()"
+        [disabled]="
+          saving ||
+          deleting ||
+          hasVotes ||
+          draft.options.length >= 6
+        "
+      >
+
+        <i class="fa-solid fa-plus"></i>
+
+        Add Option
+
+      </button>
+
+      <!-- =================================
+           TOTAL VOTES SUMMARY
+           ================================= -->
+
+      <div class="poll-voting-summary">
+
+        <div class="poll-summary-heading">
+
+          <h3>Total Votes</h3>
+
+          <strong>
+            {{ total(draft) }}
+          </strong>
+
+        </div>
+
+        <p
+          class="muted"
+          *ngIf="!hasVotes"
+        >
+          No votes have been recorded yet.
+        </p>
+
+        <p
+          class="muted"
+          *ngIf="hasVotes"
+        >
+          Votes are retrieved from MongoDB.
+          Answer options are locked after voting
+          to protect previously recorded votes.
+        </p>
+
+      </div>
+
+      <!-- =================================
+           ACTIVE / INACTIVE STATUS
+           ================================= -->
+
+      <div class="poll-active-control">
+
+        <label class="checkbox-label">
+
+          <input
+            type="checkbox"
+            name="active"
+            [(ngModel)]="draft.active"
+            [disabled]="saving || deleting"
+          />
+
+          Poll Active
+
+        </label>
+
+        <p class="muted">
+
+          {{
+            draft.active
+              ? 'This poll is active for public voting.'
+              : 'This poll is inactive and cannot accept public votes.'
+          }}
+
+        </p>
+
+      </div>
+
+      <!-- ERROR MESSAGE -->
+
+      <p
+        class="form-error"
+        *ngIf="error"
+        role="alert"
+      >
+
+        <i class="fa-solid fa-circle-exclamation"></i>
+
+        {{ error }}
+
+      </p>
+
+      <!-- SUCCESS MESSAGE -->
+
+      <p
+        class="success-message"
+        *ngIf="message"
+        role="status"
+      >
+
+        <i class="fa-solid fa-circle-check"></i>
+
+        {{ message }}
+
+      </p>
+
+      <!-- =================================
+           SAVE / DELETE ACTIONS
+           ================================= -->
+
+      <div class="poll-editor-actions">
+
+        <!-- SAVE POLL -->
+
+        <button
+          type="submit"
+          class="btn btn-red"
+          [disabled]="saving || deleting"
+        >
+
+          <i
+            class="fa-solid"
+            [class.fa-spinner]="saving"
+            [class.fa-spin]="saving"
+            [class.fa-floppy-disk]="!saving"
+          ></i>
+
+          {{
+            saving
+              ? 'Saving Poll...'
+              : 'Save Poll'
+          }}
+
+        </button>
+
+        <!-- DELETE POLL -->
+
+        <button
+          *ngIf="isSaved"
+          type="button"
+          class="btn outline danger"
+          (click)="remove()"
+          [disabled]="saving || deleting"
+        >
+
+          <i class="fa-solid fa-trash"></i>
+
+          {{
+            deleting
+              ? 'Deleting...'
+              : 'Delete Poll'
+          }}
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </section>
+
+</div>

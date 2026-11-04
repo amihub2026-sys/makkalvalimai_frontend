@@ -1,0 +1,8 @@
+/* Admin login is a single readable app-style card on mobile. */
+@media(max-width:650px){
+  .login-bg{padding:12px;min-height:100dvh}
+  .login-card{width:100%;padding:1.25rem;gap:.7rem;border-radius:13px}
+  .login-card>img{height:80px;width:80px}
+  .login-card h1{font-size:1.35rem}
+  .login-card form{gap:.8rem}
+}
