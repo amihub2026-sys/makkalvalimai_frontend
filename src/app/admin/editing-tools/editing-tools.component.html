@@ -1,0 +1,409 @@
+
+<div class="editing-tools-page">
+
+  <!-- PAGE HEADER -->
+  <div class="tools-header">
+    <div>
+      <span class="eyebrow">DYNAMIC PAGE BUILDER</span>
+      <h2>Editing Tools Management</h2>
+      <p>
+        Create and manage reusable editing tools
+        for your website pages.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="btn primary"
+      (click)="startCreate()"
+      [disabled]="saving"
+    >
+      <i class="fa-solid fa-plus"></i>
+      Add New Tool
+    </button>
+  </div>
+
+  <!-- MESSAGES -->
+  <div
+    class="tools-message error"
+    *ngIf="errorMessage"
+    role="alert"
+  >
+    {{ errorMessage }}
+  </div>
+
+  <div
+    class="tools-message success"
+    *ngIf="successMessage"
+    role="status"
+  >
+    {{ successMessage }}
+  </div>
+
+  <!-- CREATE / EDIT FORM -->
+  <section class="tools-form-panel" *ngIf="showForm">
+
+    <div class="panel-heading">
+      <h3>
+        {{ isEditing ? 'Edit Editing Tool' : 'Create Editing Tool' }}
+      </h3>
+
+      <button
+        type="button"
+        class="icon-button"
+        (click)="cancelEdit()"
+        aria-label="Close form"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <form (ngSubmit)="saveTool()">
+
+      <div class="tools-form-grid">
+
+        <!-- TOOL KEY -->
+        <div class="form-field">
+          <label for="toolKey">Tool Key</label>
+
+          <input
+            id="toolKey"
+            type="text"
+            name="key"
+            [(ngModel)]="form.key"
+            [disabled]="isEditing"
+            placeholder="example: special-banner"
+            maxlength="80"
+            required
+          />
+
+          <small>
+            Unique identifier. Cannot be changed after creation.
+          </small>
+        </div>
+
+        <!-- RENDERER -->
+        <div class="form-field">
+          <label for="rendererType">Renderer Type</label>
+
+          <select
+            id="rendererType"
+            name="rendererType"
+            [(ngModel)]="form.rendererType"
+            [disabled]="isEditing || loadingRenderers"
+            required
+          >
+            <option value="">Select Renderer</option>
+
+            <option
+              *ngFor="let option of rendererOptions"
+              [value]="option.value"
+            >
+              {{ option.label }}
+            </option>
+          </select>
+
+          <small>
+            Renderer options are loaded from the backend.
+          </small>
+        </div>
+
+        <!-- TAMIL LABEL -->
+        <div class="form-field">
+          <label for="labelTa">Tool Name (Tamil)</label>
+
+          <input
+            id="labelTa"
+            type="text"
+            name="labelTa"
+            [(ngModel)]="form.label.ta"
+            placeholder="தமிழ் பெயர்"
+            maxlength="120"
+            required
+          />
+        </div>
+
+        <!-- ENGLISH LABEL -->
+        <div class="form-field">
+          <label for="labelEn">Tool Name (English)</label>
+
+          <input
+            id="labelEn"
+            type="text"
+            name="labelEn"
+            [(ngModel)]="form.label.en"
+            placeholder="English Name"
+            maxlength="120"
+            required
+          />
+        </div>
+
+        <!-- ICON -->
+<!-- ICON IMAGE UPLOAD -->
+<div class="form-field">
+
+  <label for="toolIcon">Upload Icon Image</label>
+
+  <div class="icon-input">
+    <input
+      id="toolIcon"
+      type="file"
+      accept=".png,.jpg,.jpeg,.webp"
+      [disabled]="saving"
+      (change)="uploadToolIcon($event)"
+    />
+  </div>
+<!-- UPLOADED ICON PREVIEW -->
+<div
+  *ngIf="form.iconUrl"
+  style="margin-top: 12px;"
+>
+  <img
+    [src]="iconImageSrc(form.iconUrl)"
+    alt="Uploaded tool icon"
+    style="
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      padding: 6px;
+    "
+  />
+</div>
+  <small>
+    Upload a PNG, JPG or WebP icon (maximum 2 MB).
+  </small>
+
+</div>
+
+        <!-- POSITION -->
+        <div class="form-field">
+          <label for="sortOrder">Display Order</label>
+
+          <input
+            id="sortOrder"
+            type="number"
+            name="sortOrder"
+            [(ngModel)]="form.sortOrder"
+            min="0"
+            max="10000"
+            required
+          />
+        </div>
+
+      </div>
+
+      <!-- ENABLE / DISABLE -->
+      <label class="active-toggle">
+        <input
+          type="checkbox"
+          name="active"
+          [(ngModel)]="form.active"
+        />
+
+        <span>Enable this editing tool</span>
+      </label>
+
+      <!-- FORM ACTIONS -->
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="btn outline"
+          (click)="cancelEdit()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn primary"
+          [disabled]="saving || loadingRenderers"
+        >
+          <i class="fa-solid fa-floppy-disk"></i>
+
+          {{ saving ? 'Saving...' : 'Save Tool' }}
+        </button>
+
+      </div>
+
+    </form>
+
+  </section>
+
+  <!-- TOOLS LIST -->
+  <section class="tools-list-panel">
+
+    <div class="panel-heading">
+      <div>
+        <h3>Available Editing Tools</h3>
+        <p>Manage editing tools stored in MongoDB.</p>
+      </div>
+
+      <button
+        type="button"
+        class="btn outline"
+        (click)="loadTools()"
+        [disabled]="loading"
+      >
+        <i class="fa-solid fa-rotate"></i>
+        Refresh
+      </button>
+    </div>
+
+    <!-- LOADING -->
+    <div class="tools-empty" *ngIf="loading">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      Loading editing tools...
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div
+      class="tools-empty"
+      *ngIf="!loading && tools.length === 0"
+    >
+      <i class="fa-solid fa-screwdriver-wrench"></i>
+
+      <h3>No Editing Tools Found</h3>
+
+      <p>
+        Click Add New Tool to create your first tool.
+      </p>
+    </div>
+
+    <!-- DATABASE RECORDS -->
+    <div
+      class="tools-table-wrapper"
+      *ngIf="!loading && tools.length > 0"
+    >
+
+      <table class="tools-table">
+
+        <thead>
+          <tr>
+            <th>Tool</th>
+            <th>Renderer</th>
+            <th>Order</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr
+            *ngFor="let tool of tools; trackBy: trackByKey"
+          >
+
+            <td>
+              <div class="tool-identity">
+               
+<span class="tool-icon">
+
+  <!-- Display uploaded icon -->
+  <img
+    *ngIf="tool.iconUrl"
+    [src]="iconImageSrc(tool.iconUrl)"
+    [alt]="tool.label.en + ' icon'"
+    style="
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+    "
+  />
+
+  <!-- Keep existing icons working -->
+  <i
+    *ngIf="!tool.iconUrl"
+    [class]="tool.icon"
+  ></i>
+
+</span>
+                <div>
+                  <strong>{{ tool.label.en }}</strong>
+                  <small>{{ tool.label.ta }}</small>
+                  <small>{{ tool.key }}</small>
+                </div>
+              </div>
+            </td>
+
+            <td>{{ tool.rendererType }}</td>
+
+            <td>{{ tool.sortOrder }}</td>
+
+            <td>
+              <span
+                class="tool-status archived"
+                *ngIf="isArchived(tool)"
+              >
+                Archived
+              </span>
+
+              <span
+                class="tool-status active"
+                *ngIf="!isArchived(tool) && tool.active"
+              >
+                Active
+              </span>
+
+              <span
+                class="tool-status inactive"
+                *ngIf="!isArchived(tool) && !tool.active"
+              >
+                Disabled
+              </span>
+            </td>
+
+            <td>
+              <div class="tool-actions">
+
+                <ng-container *ngIf="!isArchived(tool)">
+
+                  <button
+                    type="button"
+                    class="action-edit"
+                    (click)="editTool(tool)"
+                    [disabled]="saving"
+                    title="Edit tool"
+                  >
+                    <i class="fa-solid fa-pen"></i>
+                    Edit
+                  </button>
+
+                  <button
+                    type="button"
+                    class="action-archive"
+                    (click)="archiveTool(tool)"
+                    [disabled]="saving"
+                    title="Archive tool"
+                  >
+                    <i class="fa-solid fa-box-archive"></i>
+                    Archive
+                  </button>
+
+                </ng-container>
+
+                <button
+                  *ngIf="isArchived(tool)"
+                  type="button"
+                  class="action-restore"
+                  (click)="restoreTool(tool)"
+                  [disabled]="saving"
+                >
+                  <i class="fa-solid fa-rotate-left"></i>
+                  Restore
+                </button>
+
+              </div>
+            </td>
+
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+</div>

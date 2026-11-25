@@ -1,0 +1,739 @@
+
+/* ==========================================
+   MAKKAL VALIMAI - COMMON PAGE BUILDER
+   MAIN DESKTOP STYLES
+========================================== */
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.page-builder-page {
+  width: 100%;
+  padding: 28px;
+  color: #092e59;
+  box-sizing: border-box;
+}
+
+.page-builder-page *,
+.page-builder-page *::before,
+.page-builder-page *::after {
+  box-sizing: border-box;
+}
+
+/* ==========================================
+   PAGE HEADER
+========================================== */
+
+.builder-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.builder-header .eyebrow {
+  display: inline-block;
+  color: #df173c;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  margin-bottom: 9px;
+}
+
+.builder-header h2 {
+  margin: 0;
+  color: #073469;
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.builder-header p {
+  margin: 10px 0 0;
+  color: #6b7c93;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ==========================================
+   COMMON PANELS
+========================================== */
+
+.builder-tools-panel,
+.builder-create-panel {
+  background: #ffffff;
+  border: 1px solid #e1e9f4;
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 10px 35px rgba(14, 48, 85, 0.05);
+  min-width: 0;
+}
+
+.builder-create-panel {
+  margin-bottom: 26px;
+}
+
+/* ==========================================
+   PANEL HEADING
+========================================== */
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 26px;
+}
+
+.panel-heading h3 {
+  margin: 0;
+  color: #073469;
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.panel-heading p {
+  margin: 8px 0 0;
+  color: #75849b;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* ==========================================
+   BUTTONS
+========================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 11px 18px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.btn.primary {
+  background: #145ca8;
+  border-color: #145ca8;
+  color: #ffffff;
+}
+
+.btn.primary:hover:not(:disabled) {
+  background: #073f80;
+  border-color: #073f80;
+}
+
+.btn.outline {
+  color: #073469;
+  border: 1px solid #d7e3f1;
+  background: #ffffff;
+}
+
+.btn.outline:hover:not(:disabled) {
+  background: #eef5ff;
+  border-color: #aac7e9;
+}
+
+.btn:focus-visible {
+  outline: 3px solid #75a9eb;
+  outline-offset: 3px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ==========================================
+   CREATE PAGE FORM
+========================================== */
+
+.builder-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.builder-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+}
+
+.builder-form-field label {
+  color: #143d70;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.builder-form-field input {
+  width: 100%;
+  min-width: 0;
+  min-height: 45px;
+
+  padding: 12px 14px;
+
+  background: #f9fbff;
+  border: 1px solid #dbe5f2;
+  border-radius: 10px;
+
+  color: #173d68;
+  font-size: 14px;
+
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.builder-form-field input::placeholder {
+  color: #9baabd;
+}
+
+.builder-form-field input:focus {
+  background: #ffffff;
+  border-color: #145ca8;
+  box-shadow: 0 0 0 3px rgba(20, 92, 168, 0.1);
+}
+
+.builder-form-field input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.builder-form-field input.ng-invalid.ng-touched {
+  border-color: #dc3652;
+}
+
+.builder-form-field small {
+  color: #8090a6;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* ==========================================
+   FORM INFORMATION
+========================================== */
+
+.builder-form-hint {
+  margin: 22px 0 0;
+  padding: 14px 17px;
+
+  background: #f0f6ff;
+  border: 1px solid #dceaff;
+  border-radius: 10px;
+
+  color: #42658e;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* ==========================================
+   FORM ACTIONS
+========================================== */
+
+.builder-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  margin-top: 24px;
+  padding-top: 20px;
+
+  border-top: 1px solid #e8edf5;
+}
+
+/* ==========================================
+   SUCCESS AND ERROR MESSAGES
+========================================== */
+
+.builder-message {
+  padding: 13px 16px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.builder-message.error {
+  border: 1px solid #ffc8cf;
+  background: #fff0f2;
+  color: #b3233c;
+}
+
+.builder-message.success {
+  border: 1px solid #c4e8d1;
+  background: #effbf3;
+  color: #177245;
+}
+
+/* ==========================================
+   DYNAMIC EDITING TOOL ICONS
+========================================== */
+
+.builder-tool-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+
+  margin-bottom: 16px;
+
+  background: #ffffff;
+  border: 1px solid #dce7f5;
+  border-radius: 14px;
+
+  overflow: hidden;
+}
+
+.builder-tool-icon img {
+  display: block;
+  width: 40px;
+  height: 40px;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.builder-tool-icon i {
+  font-size: 27px;
+  color: #145ca8;
+  line-height: 1;
+}
+
+/* ==========================================
+   DYNAMIC TOOLS GRID
+========================================== */
+
+.builder-tools-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.builder-tool-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+
+  min-width: 0;
+  padding: 22px;
+
+  background: #f8fbff;
+  border: 1px solid #e0eaf6;
+  border-radius: 15px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.builder-tool-card:hover {
+  border-color: #93b9e8;
+  box-shadow: 0 8px 24px rgba(14, 48, 85, 0.07);
+}
+
+/* ==========================================
+   TOOL CONTENT
+========================================== */
+
+.tool-content {
+  min-width: 0;
+}
+
+.tool-content h4 {
+  margin: 0 0 7px;
+  color: #073469;
+  font-size: 16px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.tool-content p {
+  margin: 0 0 9px;
+  color: #435f84;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.tool-content small {
+  display: block;
+  color: #8a9bb0;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+/* ==========================================
+   RENDERER TYPE
+========================================== */
+
+.renderer-badge {
+  align-self: flex-start;
+  display: inline-block;
+
+  padding: 6px 11px;
+  border-radius: 7px;
+
+  background: #e6efff;
+  color: #245d9f;
+
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ==========================================
+   LOADING AND EMPTY STATES
+========================================== */
+
+.builder-empty {
+  padding: 45px 20px;
+  text-align: center;
+  color: #7a8aa0;
+}
+
+.builder-empty > i {
+  display: block;
+  margin-bottom: 15px;
+  font-size: 30px;
+  color: #8fa9c9;
+}
+
+.builder-empty h3 {
+  margin: 0 0 8px;
+  color: #073469;
+  font-size: 17px;
+}
+
+.builder-empty p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* ==========================================
+   PAGE BUILDER - TWO COLUMN EDITOR
+========================================== */
+
+.builder-editor-layout {
+  display: grid;
+  grid-template-columns: minmax(235px, 28%) minmax(0, 1fr);
+  align-items: start;
+  gap: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.builder-editor-sidebar,
+.builder-editor-form-panel {
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.builder-tool-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.builder-tool-choice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #dce4f0;
+  border-radius: 12px;
+  text-align: left;
+  color: #193554;
+  font: inherit;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+}
+
+.builder-tool-choice:hover {
+  border-color: #2466b3;
+  background: #f5f9ff;
+}
+
+.builder-tool-choice.is-selected {
+  background: #edf5ff;
+  border: 2px solid #2466b3;
+}
+
+.builder-tool-choice:disabled {
+  cursor: not-allowed;
+  opacity: .6;
+}
+
+.builder-choice-icon {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #edf3fa;
+  color: #2466b3;
+  font-size: 20px;
+}
+
+.builder-choice-icon img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.builder-choice-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.builder-choice-text strong {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.builder-choice-text small {
+  font-size: 12px;
+  color: #64748b;
+  overflow-wrap: anywhere;
+}
+
+.builder-page-actions,
+.builder-item-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.builder-form-field {
+  min-width: 0;
+  margin-bottom: 16px;
+}
+
+.builder-editor-form-panel .builder-form-field input:not([type="checkbox"]),
+.builder-editor-form-panel .builder-form-field textarea,
+.builder-editor-form-panel .builder-form-field select {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+}
+
+.builder-editor-item {
+  border: 1px solid #dce4f0;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.builder-block-settings {
+  border-top: 1px solid #e5eaf1;
+  padding-top: 18px;
+  margin-top: 20px;
+}
+
+.builder-block-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+  cursor: pointer;
+}
+
+.builder-upload-preview img,
+.builder-gallery-thumbnail {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  max-height: 220px;
+  object-fit: contain;
+  margin: 10px 0;
+  border-radius: 10px;
+}
+
+.builder-preview-media {
+  display: block;
+  width: 100%;
+  max-width: 620px;
+  max-height: 360px;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.builder-saved-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.builder-saved-block {
+  padding: 18px;
+  border: 1px solid #dce4f0;
+  border-radius: 12px;
+  background: #fff;
+  min-width: 0;
+}
+
+.builder-saved-block.is-hidden {
+  opacity: .65;
+  border-style: dashed;
+}
+
+.builder-saved-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.builder-saved-heading > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.builder-saved-heading small {
+  color: #64748b;
+}
+
+.builder-content-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.7;
+}
+
+.builder-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.builder-preview-card {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #e5eaf1;
+  border-radius: 10px;
+}
+
+.builder-preview-card img {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.builder-saved-panel {
+  margin-top: 20px;
+}
+
+.builder-saved-block audio {
+  max-width: 100%;
+}
+
+/* ==========================================
+   FIX: SAVED PAGE CONTENT TEXT VISIBILITY
+========================================== */
+
+.builder-saved-block .builder-content-heading {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  color: #10345c !important;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.5;
+
+  margin: 12px 0;
+  padding: 0;
+
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.builder-saved-block .builder-content-text {
+  display: block;
+  visibility: visible;
+  opacity: 1;
+
+  color: #263b55 !important;
+  font-size: 16px;
+  line-height: 1.8;
+
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ==========================================
+   PAGE BUILDER - EDITOR FORM INPUT FIX
+========================================== */
+
+.builder-editor-form-panel input:not([type="checkbox"]):not([type="file"]),
+.builder-editor-form-panel textarea,
+.builder-editor-form-panel select {
+  background: #ffffff !important;
+  color: #173456 !important;
+  border: 1px solid #d4dfed !important;
+  border-radius: 9px;
+  padding: 12px 14px;
+  font-size: 14px;
+  outline: none;
+}
+
+.builder-editor-form-panel input:focus,
+.builder-editor-form-panel textarea:focus,
+.builder-editor-form-panel select:focus {
+  border-color: #1764b4 !important;
+  box-shadow: 0 0 0 3px rgba(23, 100, 180, 0.12);
+}
+
+.builder-editor-form-panel input::placeholder,
+.builder-editor-form-panel textarea::placeholder {
+  color: #8594a8 !important;
+}
+
+.builder-editor-form-panel input[type="file"] {
+  background: #f5f8fc !important;
+  color: #173456 !important;
+  border: 1px dashed #b9cbe0 !important;
+  border-radius: 9px;
+  padding: 12px;
+}
+
+.builder-editor-form-panel label {
+  color: #173456;
+  font-weight: 600;
+}

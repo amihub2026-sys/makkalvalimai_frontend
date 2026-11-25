@@ -1,0 +1,232 @@
+
+/* ==========================================
+   MAKKAL VALIMAI - PAGE BUILDER ACTIONS
+   ========================================== */
+
+/* Saved block action button container */
+
+.builder-block-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  margin-top: 20px;
+  padding-top: 16px;
+
+  border-top: 1px solid #e5eaf1;
+}
+
+/* Common action button styling */
+
+.builder-block-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  min-height: 38px;
+  padding: 9px 14px;
+
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.builder-block-actions .btn i {
+  font-size: 13px;
+}
+
+/* ==========================================
+   EDIT BUTTON
+========================================== */
+
+.builder-action-edit {
+  background: #edf5ff !important;
+  border: 1px solid #b8d4f5 !important;
+  color: #175ca7 !important;
+}
+
+.builder-action-edit:hover:not(:disabled) {
+  background: #dcecff !important;
+  border-color: #1764b4 !important;
+}
+
+/* ==========================================
+   SHOW / HIDE BUTTON
+========================================== */
+
+.builder-action-visibility {
+  background: #f3f6fa !important;
+  border: 1px solid #d5dfeb !important;
+  color: #334b68 !important;
+}
+
+.builder-action-visibility:hover:not(:disabled) {
+  background: #e9eff7 !important;
+  border-color: #91abc8 !important;
+}
+
+/* ==========================================
+   MOVE UP / MOVE DOWN BUTTONS
+========================================== */
+
+.builder-action-order {
+  background: #ffffff !important;
+  border: 1px solid #d5dfeb !important;
+  color: #34465e !important;
+}
+
+.builder-action-order:hover:not(:disabled) {
+  background: #f1f6fd !important;
+  border-color: #94b6dc !important;
+  color: #1764b4 !important;
+}
+
+/* ==========================================
+   DELETE BUTTON
+========================================== */
+
+.builder-action-delete {
+  background: #fff1f2 !important;
+  border: 1px solid #fecdd3 !important;
+  color: #b42332 !important;
+}
+
+.builder-action-delete:hover:not(:disabled) {
+  background: #ffe4e6 !important;
+  border-color: #e35e6c !important;
+}
+
+/* ==========================================
+   DISABLED BUTTONS
+========================================== */
+
+.builder-block-actions .btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none !important;
+}
+
+/* ==========================================
+   KEYBOARD ACCESSIBILITY
+========================================== */
+
+.builder-block-actions .btn:focus-visible {
+  outline: 3px solid rgba(23, 100, 180, 0.35);
+  outline-offset: 2px;
+}
+
+/* ==========================================
+   CURRENTLY EDITED BLOCK
+========================================== */
+
+.builder-saved-block.is-being-edited {
+  border: 2px solid #1764b4 !important;
+  background: #f7fbff !important;
+  box-shadow: 0 0 0 3px rgba(23, 100, 180, 0.07);
+}
+
+/* ==========================================
+   HIDDEN BLOCK APPEARANCE
+========================================== */
+
+.builder-saved-block.is-hidden {
+  opacity: 0.7;
+  border-style: dashed;
+  background: #f8fafc;
+}
+
+/* ==========================================
+   EDITING NOTICE ABOVE FORM
+========================================== */
+
+.builder-editing-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+
+  padding: 15px 16px;
+  margin: 0 0 20px;
+
+  background: #edf5ff;
+  border: 1px solid #b8d4f5;
+  border-left: 4px solid #1764b4;
+  border-radius: 11px;
+}
+
+.builder-editing-notice strong {
+  color: #173f72;
+  font-size: 14px;
+}
+
+.builder-editing-notice i {
+  color: #1764b4;
+  margin-right: 7px;
+}
+
+.builder-editing-notice p {
+  margin: 6px 0 0;
+  color: #536b85;
+  font-size: 12px;
+}
+
+.builder-editing-notice .btn {
+  flex-shrink: 0;
+}
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 900px) {
+
+  .builder-block-actions {
+    justify-content: flex-start;
+  }
+
+}
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 600px) {
+
+  .builder-block-actions {
+    gap: 8px;
+  }
+
+  .builder-block-actions .btn {
+    padding: 9px 11px;
+    font-size: 12px;
+  }
+
+  .builder-editing-notice {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+}
+
+/* ==========================================
+   SMALL MOBILE
+========================================== */
+
+@media (max-width: 380px) {
+
+  .builder-block-actions .btn {
+    flex: 1 1 auto;
+  }
+
+}

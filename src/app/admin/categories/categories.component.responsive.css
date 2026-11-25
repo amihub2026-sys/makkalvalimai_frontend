@@ -1,14 +1,307 @@
-/* Responsive rules for categories; isolated from common/desktop CSS. */
+
+/* ==========================================
+   MAKKAL VALIMAI
+   NEWS CATEGORIES MANAGEMENT
+   RESPONSIVE CSS
+========================================== */
+
+/* ==========================================
+   SMALL DESKTOP / TABLET
+   UP TO 1400px
+========================================== */
+
+@media (max-width: 1400px) {
+
+  .categories-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .category-form-panel,
+  .category-list-panel {
+    width: 100%;
+  }
+
+  .category-form {
+    max-width: 700px;
+  }
+
+  .category-table-wrapper {
+    max-width: 100%;
+  }
+
+}
+
+/* ==========================================
+   TABLET
+   UP TO 850px
+========================================== */
+
 @media (max-width: 850px) {
-      .categories-page {
-        padding: 14px;
-      }
 
-      .category-layout {
-        grid-template-columns: 1fr;
-      }
+  .categories-page {
+    gap: 18px;
+  }
 
-      .panel {
-        padding: 16px;
-      }
-    }
+  .categories-header {
+    gap: 15px;
+  }
+
+  .categories-heading h2 {
+    font-size: 21px;
+  }
+
+  .categories-heading p {
+    font-size: 11px;
+  }
+
+  .category-form-panel,
+  .category-list-panel {
+    padding: 19px;
+  }
+
+  .panel-header h3 {
+    font-size: 16px;
+  }
+
+  .category-table {
+    min-width: 640px;
+  }
+
+}
+
+/* ==========================================
+   MOBILE
+   UP TO 600px
+========================================== */
+
+@media (max-width: 600px) {
+
+  .categories-page {
+    width: 100%;
+    min-width: 0;
+    gap: 15px;
+  }
+
+  /* PAGE HEADING */
+
+  .categories-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .categories-heading h2 {
+    font-size: 20px;
+  }
+
+  .categories-heading p {
+    font-size: 11px;
+  }
+
+  .section-eyebrow {
+    font-size: 9px;
+    letter-spacing: 1.2px;
+  }
+
+  .add-category-btn {
+    align-self: flex-start;
+    min-height: 40px;
+    padding: 10px 14px;
+    font-size: 11px;
+  }
+
+  /* MAIN LAYOUT */
+
+  .categories-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 15px;
+  }
+
+  .category-form-panel,
+  .category-list-panel {
+    min-width: 0;
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  /* PANEL HEADER */
+
+  .panel-header {
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .panel-icon {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    font-size: 15px;
+  }
+
+  .panel-header h3 {
+    font-size: 15px;
+  }
+
+  .panel-header p {
+    font-size: 10px;
+  }
+
+  /* CATEGORY FORM */
+
+  .category-form {
+    max-width: 100%;
+    gap: 16px;
+  }
+
+  .form-group {
+    gap: 7px;
+  }
+
+  .form-group label {
+    font-size: 11px;
+  }
+
+  .form-group input {
+    width: 100%;
+    min-height: 43px;
+    padding: 10px 11px;
+    font-size: 12px;
+  }
+
+  #categoryTamil {
+    font-size: 13px;
+  }
+
+  .field-help {
+    font-size: 10px;
+  }
+
+  /* CATEGORY SETTINGS */
+
+  .category-settings {
+    gap: 8px;
+    padding-top: 15px;
+  }
+
+  .category-settings h4 {
+    font-size: 12px;
+  }
+
+  .setting-item {
+    gap: 10px;
+    padding: 11px;
+  }
+
+  .setting-content b {
+    font-size: 11px;
+  }
+
+  .setting-content small {
+    font-size: 10px;
+  }
+
+  /* FORM ACTIONS */
+
+  .category-form-actions {
+    gap: 8px;
+  }
+
+  .save-category-btn,
+  .reset-category-btn {
+    min-height: 42px;
+    padding: 10px 13px;
+    font-size: 11px;
+  }
+
+  /* SAVED CATEGORIES TABLE */
+
+  .category-table-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+
+  .category-table {
+    min-width: 620px;
+  }
+
+  .category-table th,
+  .category-table td {
+    padding: 12px 10px;
+  }
+
+  .category-name-cell strong {
+    font-size: 12px;
+  }
+
+  .category-row-actions {
+    flex-wrap: nowrap;
+  }
+
+  /* MESSAGES */
+
+  .category-message {
+    padding: 12px;
+    font-size: 11px;
+  }
+
+  /* INFORMATION NOTE */
+
+  .category-info-note {
+    gap: 9px;
+    padding: 11px;
+  }
+
+  .category-info-note p {
+    font-size: 10px;
+  }
+
+}
+
+/* ==========================================
+   SMALL MOBILE
+   UP TO 380px
+========================================== */
+
+@media (max-width: 380px) {
+
+  .categories-heading h2 {
+    font-size: 18px;
+  }
+
+  .category-form-panel,
+  .category-list-panel {
+    padding: 12px;
+  }
+
+  .panel-icon {
+    width: 35px;
+    height: 35px;
+    min-width: 35px;
+  }
+
+  .panel-header h3 {
+    font-size: 14px;
+  }
+
+  .category-form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .save-category-btn,
+  .reset-category-btn {
+    width: 100%;
+  }
+
+  .category-count {
+    min-width: 29px;
+    height: 29px;
+    font-size: 12px;
+  }
+
+}

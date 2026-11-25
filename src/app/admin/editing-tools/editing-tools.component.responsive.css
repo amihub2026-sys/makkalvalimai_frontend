@@ -1,0 +1,221 @@
+
+/* ==========================================
+   MAKKAL VALIMAI
+   EDITING TOOLS - RESPONSIVE DESIGN
+========================================== */
+
+/* ==========================================
+   TABLET - 950px AND BELOW
+========================================== */
+
+@media (max-width: 950px) {
+
+  .editing-tools-page {
+    padding: 6px 0 24px;
+  }
+
+  .tools-header {
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .tools-header h2 {
+    font-size: 24px;
+  }
+
+  .tools-form-panel,
+  .tools-list-panel {
+    padding: 20px;
+    border-radius: 15px;
+  }
+
+  .tools-form-grid {
+    gap: 16px;
+  }
+
+  .tools-table {
+    min-width: 680px;
+  }
+
+}
+
+/* ==========================================
+   MOBILE - 650px AND BELOW
+========================================== */
+
+@media (max-width: 650px) {
+
+  :host {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .editing-tools-page {
+    width: 100%;
+    min-width: 0;
+    padding: 4px 0 20px;
+  }
+
+  /* PAGE HEADER */
+
+  .tools-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  .tools-header h2 {
+    font-size: 21px;
+    line-height: 1.3;
+  }
+
+  .tools-header p {
+    font-size: 12px;
+  }
+
+  .tools-header .btn {
+    width: 100%;
+  }
+
+  /* PANELS */
+
+  .tools-form-panel,
+  .tools-list-panel {
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 13px;
+  }
+
+  .panel-heading {
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .panel-heading h3 {
+    font-size: 16px;
+  }
+
+  .panel-heading p {
+    font-size: 12px;
+  }
+
+  /* FORM */
+
+  .tools-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 15px;
+  }
+
+  .form-field {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .form-field input,
+  .form-field select {
+    min-height: 44px;
+    font-size: 14px;
+  }
+
+  .active-toggle {
+    margin-top: 20px;
+    font-size: 12px;
+  }
+
+  /* FORM BUTTONS */
+
+  .form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 16px;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+  }
+
+  /* TABLE */
+
+  .tools-table-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tools-table {
+    min-width: 650px;
+  }
+
+  .tools-table th {
+    padding: 12px;
+    font-size: 10px;
+  }
+
+  .tools-table td {
+    padding: 12px;
+    font-size: 12px;
+  }
+
+  .tool-identity {
+    min-width: 170px;
+  }
+
+  .tool-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 15px;
+  }
+
+  .tool-actions {
+    gap: 6px;
+  }
+
+  .tool-actions button {
+    min-height: 32px;
+    padding: 6px 9px;
+  }
+
+  /* FEEDBACK */
+
+  .tools-message {
+    padding: 12px;
+    font-size: 12px;
+  }
+
+  .tools-empty {
+    min-height: 160px;
+    padding: 18px;
+  }
+
+}
+
+/* ==========================================
+   SMALL MOBILE - 400px AND BELOW
+========================================== */
+
+@media (max-width: 400px) {
+
+  .tools-header h2 {
+    font-size: 19px;
+  }
+
+  .tools-form-panel,
+  .tools-list-panel {
+    padding: 12px;
+  }
+
+  .panel-heading h3 {
+    font-size: 15px;
+  }
+
+  .editing-tools-page .btn {
+    font-size: 12px;
+  }
+
+}

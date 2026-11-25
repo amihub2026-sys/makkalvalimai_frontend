@@ -1,47 +1,128 @@
 
 <div class="admin-layout">
 
-  <!-- ADMIN SIDEBAR -->
+  <!-- =========================
+       ADMIN SIDEBAR
+  ========================== -->
   <aside class="admin-sidebar">
 
-    <!-- LOGO AND BRAND -->
+    <!-- BRAND -->
     <a
       routerLink="/admin/dashboard"
       class="admin-brand"
+      aria-label="Makkal Valimai Admin Dashboard"
     >
-      <img
-        src="assets/images/makkal-valimai-logo.png"
-        alt="Makkal Valimai Logo"
-      />
+      <div class="brand-logo">
+        <img
+          src="assets/images/makkal-valimai-logo.png"
+          alt="Makkal Valimai Logo"
+        />
+      </div>
 
-      <b>மக்கள் வலிமை</b>
-
-      <small>NEWSROOM · ADMIN</small>
+      <div class="brand-text">
+        <b>மக்கள் வலிமை</b>
+        <small>NEWSROOM · ADMIN</small>
+      </div>
     </a>
 
-    <!-- SIDEBAR NAVIGATION -->
-    <nav>
+    <!-- NAVIGATION -->
+    <nav class="admin-nav" aria-label="Admin navigation">
 
       <ng-container *ngFor="let n of nav">
 
-        <!-- EXISTING MENU ITEMS -->
+        <!-- GROUP HEADINGS -->
+        <div
+          class="nav-group-title"
+          *ngIf="n.url === '/admin/dashboard'"
+        >
+          OVERVIEW
+        </div>
+
+        <div
+          class="nav-group-title"
+          *ngIf="n.url === '/admin/articles'"
+        >
+          NEWS MANAGEMENT
+        </div>
+
+        <div
+          class="nav-group-title"
+          *ngIf="n.url === '/admin/reports'"
+        >
+          CITIZEN ISSUES
+        </div>
+
+        <div
+          class="nav-group-title"
+          *ngIf="n.url === '/admin/audio'"
+        >
+          MEDIA & ENGAGEMENT
+        </div>
+
+        <div
+          class="nav-group-title"
+          *ngIf="n.url === '/admin/ads'"
+        >
+          WEBSITE MANAGEMENT
+        </div>
+
+        <!-- EXISTING ADMIN MENU -->
         <a
+          class="nav-item"
           [routerLink]="n.url"
           routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
         >
-          <i [class]="n.icon"></i>
-          {{ n.label }}
+          <span class="nav-icon">
+            <i [class]="n.icon" aria-hidden="true"></i>
+          </span>
+
+          <span class="nav-label">
+            {{ n.label }}
+          </span>
         </a>
 
-        <!-- NEW: NEWS CATEGORY MANAGEMENT -->
+        <!-- NEWS CATEGORIES -->
         <a
           *ngIf="n.url === '/admin/articles'"
+          class="nav-item"
           routerLink="/admin/categories"
           routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
         >
-          <i class="fa-solid fa-layer-group"></i>
-          News Categories
+          <span class="nav-icon">
+            <i
+              class="fa-solid fa-layer-group"
+              aria-hidden="true"
+            ></i>
+          </span>
+
+          <span class="nav-label">
+            News Categories
+          </span>
         </a>
+
+
+<!-- HEADER MENU MANAGEMENT -->
+<a
+  *ngIf="n.url === '/admin/articles'"
+  class="nav-item"
+  routerLink="/admin/navigation"
+  routerLinkActive="active"
+  [routerLinkActiveOptions]="{ exact: true }"
+>
+  <span class="nav-icon">
+    <i
+      class="fa-solid fa-bars"
+      aria-hidden="true"
+    ></i>
+  </span>
+
+  <span class="nav-label">
+    Header Menu Management
+  </span>
+</a>
+
 
       </ng-container>
 
@@ -53,54 +134,88 @@
       <a
         routerLink="/"
         target="_blank"
+        rel="noopener noreferrer"
+        class="sidebar-public-link"
       >
-        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-        View Public Site
+        <i
+          class="fa-solid fa-arrow-up-right-from-square"
+          aria-hidden="true"
+        ></i>
+
+        <span>View Public Website</span>
       </a>
 
       <button
         type="button"
+        class="sidebar-logout"
         (click)="logout()"
       >
-        <i class="fa-solid fa-right-from-bracket"></i>
-        Logout
+        <i
+          class="fa-solid fa-right-from-bracket"
+          aria-hidden="true"
+        ></i>
+
+        <span>Logout</span>
       </button>
 
     </div>
 
   </aside>
 
-  <!-- ADMIN MAIN CONTENT -->
+  <!-- =========================
+       MAIN ADMIN AREA
+  ========================== -->
   <main class="admin-main">
 
-    <!-- HEADER -->
+    <!-- TOP HEADER -->
     <header class="admin-topbar">
 
-      <div>
+      <div class="topbar-heading">
+
         <span class="eyebrow">
           MAKKAL VALIMAI NEWSROOM
         </span>
 
         <h2>{{ currentTitle }}</h2>
+
+        <p class="topbar-description">
+          Newsroom management and publishing workspace
+        </p>
+
       </div>
 
-      <div>
-        <span class="chip warning">
+      <div class="topbar-actions">
+
+        <span class="chip warning admin-status">
+          <i
+            class="fa-solid fa-shield-halved"
+            aria-hidden="true"
+          ></i>
           ADMIN PANEL
         </span>
 
         <a
           routerLink="/"
-          class="btn outline"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn outline public-site-btn"
         >
-          Public Site ↗
+          <i
+            class="fa-solid fa-arrow-up-right-from-square"
+            aria-hidden="true"
+          ></i>
+
+          <span>Public Site</span>
         </a>
+
       </div>
 
     </header>
 
-    <!-- ADMIN PAGE CONTENT -->
-    <router-outlet></router-outlet>
+    <!-- DYNAMIC ADMIN CONTENT -->
+    <div class="admin-content">
+      <router-outlet></router-outlet>
+    </div>
 
   </main>
 

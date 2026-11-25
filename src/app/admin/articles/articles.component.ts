@@ -12,7 +12,6 @@ import {
 } from '../../core/models';
 
 import { ContentService } from '../../services/content.service';
-import { SERVER_ARTICLE_KINDS } from '../../core/article-categories';
 import { NewsApiService } from '../../services/news-api.service';
 import { MediaService } from '../../services/media.service';
 import {AudioRecorderComponent} from '../../shared/audio-recorder/audio-recorder.component';
@@ -149,11 +148,49 @@ export class ArticlesAdminComponent implements OnInit {
   }
 
   async loadCategories(): Promise<void> {
-    // The existing backend has a fixed Article.kind enum, not category CRUD.
-    // No request to a nonexistent /api/admin/categories endpoint.
-    this.categories = SERVER_ARTICLE_KINDS.map(item => structuredClone(item));
-    if (!this.editing && !this.kinds.includes(this.draft.kind)) {
-      this.draft.kind = this.categories[0].slug;
+    this.categoryLoading = true;
+
+    try {
+      const result = await this.api.adminCategories();
+
+      if (!Array.isArray(result)) {
+        throw new Error('Invalid category response from backend.');
+      }
+
+      // Load categories dynamically from MongoDB.
+      this.categories = [...result].sort(
+        (a, b) =>
+          a.sortOrder - b.sortOrder ||
+          a.slug.localeCompare(b.slug)
+      );
+
+      // Select the first active category for new articles.
+      // Preserve the existing category when editing an article.
+      if (
+        !this.editing &&
+        !this.categories.some(
+          category =>
+            category.active &&
+            category.slug === this.draft.kind
+        )
+      ) {
+        this.draft.kind =
+          this.categories.find(
+            category => category.active
+          )?.slug || '';
+      }
+
+      if (this.categories.length === 0) {
+        this.error =
+          'No news categories found. Add categories in the admin panel first.';
+      }
+
+    } catch (error) {
+      this.categories = [];
+      this.error = this.getError(error);
+
+    } finally {
+      this.categoryLoading = false;
     }
   }
 

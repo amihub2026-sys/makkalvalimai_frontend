@@ -1,0 +1,607 @@
+
+<!-- ==========================================
+     MAKKAL VALIMAI
+     ADMIN DYNAMIC HEADER NAVIGATION
+========================================== -->
+
+<div class="navigation-admin-page">
+
+  <!-- PAGE HEADER -->
+
+  <div class="navigation-page-header">
+    <div>
+      <h1>
+        <i class="fa-solid fa-bars"></i>
+        Header Menu Management
+      </h1>
+
+      <p>
+        Manage your website's Main Header, More dropdown,
+        About Us dropdown and other navigation links.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="nav-btn nav-btn-primary"
+      (click)="newItem()"
+      [disabled]="saving || !!deletingKey"
+    >
+      <i class="fa-solid fa-plus"></i>
+      Add New Menu
+    </button>
+  </div>
+
+  <!-- SUCCESS MESSAGE -->
+
+  <div
+    class="navigation-message success-message"
+    *ngIf="message"
+    role="status"
+  >
+    <i class="fa-solid fa-circle-check"></i>
+    {{ message }}
+  </div>
+
+  <!-- ERROR MESSAGE -->
+
+  <div
+    class="navigation-message error-message"
+    *ngIf="error"
+    role="alert"
+  >
+    <i class="fa-solid fa-circle-exclamation"></i>
+    {{ error }}
+  </div>
+
+  <!-- ======================================
+       ADD / EDIT NAVIGATION FORM
+  ======================================= -->
+
+  <section class="navigation-card">
+
+    <div class="navigation-card-header">
+      <h2>
+        <i class="fa-solid fa-pen-to-square"></i>
+
+        {{
+          editingKey
+            ? 'Edit Navigation Menu'
+            : 'Add Navigation Menu'
+        }}
+      </h2>
+
+      <span class="navigation-form-mode">
+        {{
+          editingKey
+            ? 'Editing: ' + editingKey
+            : 'New Menu'
+        }}
+      </span>
+    </div>
+
+    <form
+      class="navigation-form"
+      (ngSubmit)="saveItem()"
+      #navigationForm="ngForm"
+    >
+
+      <div class="navigation-form-grid">
+
+        <!-- MENU KEY -->
+
+        <div class="navigation-form-group">
+          <label for="menuKey">
+            Menu Key
+            <span class="required">*</span>
+          </label>
+
+          <input
+            id="menuKey"
+            name="menuKey"
+            type="text"
+            [(ngModel)]="draft.key"
+            [readonly]="!!editingKey"
+            [disabled]="saving || !!deletingKey"
+            placeholder="Example: home, more, contact-us"
+            maxlength="80"
+            required
+            pattern="[a-z0-9]+(-[a-z0-9]+)*"
+          />
+
+          <small>
+            Unique identifier. Cannot be changed after creation.
+          </small>
+        </div>
+
+        <!-- MENU TYPE -->
+
+        <div class="navigation-form-group">
+          <label for="menuType">
+            Menu Type
+            <span class="required">*</span>
+          </label>
+
+          <select
+            id="menuType"
+            name="menuType"
+            [(ngModel)]="draft.type"
+            (ngModelChange)="onTypeChange()"
+            [disabled]="saving || !!deletingKey"
+            required
+          >
+            <option value="page">
+              Website Page
+            </option>
+
+            <option value="category">
+              News Category
+            </option>
+
+            <option value="dropdown">
+              Dropdown Menu
+            </option>
+          </select>
+
+          <small>
+            Choose what happens when visitors select this menu.
+          </small>
+        </div>
+
+        <!-- TAMIL MENU NAME -->
+
+        <div class="navigation-form-group">
+          <label for="menuTamilName">
+            Menu Name (Tamil)
+            <span class="required">*</span>
+          </label>
+
+          <input
+            id="menuTamilName"
+            name="menuTamilName"
+            type="text"
+            [(ngModel)]="draft.name.ta"
+            [disabled]="saving || !!deletingKey"
+            placeholder="உதாரணம்: முகப்பு"
+            maxlength="120"
+            required
+          />
+        </div>
+
+        <!-- ENGLISH MENU NAME -->
+
+        <div class="navigation-form-group">
+          <label for="menuEnglishName">
+            Menu Name (English)
+            <span class="required">*</span>
+          </label>
+
+          <input
+            id="menuEnglishName"
+            name="menuEnglishName"
+            type="text"
+            [(ngModel)]="draft.name.en"
+            [disabled]="saving || !!deletingKey"
+            placeholder="Example: Home"
+            maxlength="120"
+            required
+          />
+        </div>
+
+        <!-- ==================================
+             WEBSITE PAGE URL
+        =================================== -->
+
+        <div
+          class="navigation-form-group"
+          *ngIf="draft.type === 'page'"
+        >
+          <label for="menuPath">
+            Website Page URL
+            <span class="required">*</span>
+          </label>
+
+          <input
+            id="menuPath"
+            name="menuPath"
+            type="text"
+            [(ngModel)]="draft.path"
+            [disabled]="saving || !!deletingKey"
+            placeholder="Example: /public-issues"
+            maxlength="200"
+            required
+          />
+
+          <small>
+            Enter an existing Angular route, such as
+            /, /public-issues, /report-problem or /about-contact.
+          </small>
+        </div>
+
+        <!-- ==================================
+             NEWS CATEGORY SELECT
+        =================================== -->
+
+        <div
+          class="navigation-form-group"
+          *ngIf="draft.type === 'category'"
+        >
+          <label for="menuCategory">
+            Select News Category
+            <span class="required">*</span>
+          </label>
+
+          <select
+            id="menuCategory"
+            name="menuCategory"
+            [(ngModel)]="draft.categorySlug"
+            [disabled]="saving || !!deletingKey || loading"
+            required
+          >
+            <option value="">
+              -- Select News Category --
+            </option>
+
+            <option
+              *ngFor="let category of activeCategories"
+              [value]="category.slug"
+            >
+              {{ category.name.en }}
+              ({{ category.name.ta }})
+            </option>
+          </select>
+
+          <small>
+            Categories are loaded from MongoDB.
+            Add new news categories in Admin → Categories.
+          </small>
+        </div>
+
+        <!-- ==================================
+             PARENT DROPDOWN
+        =================================== -->
+
+        <div
+          class="navigation-form-group"
+          *ngIf="draft.type !== 'dropdown'"
+        >
+          <label for="menuParent">
+            Menu Position
+          </label>
+
+          <select
+            id="menuParent"
+            name="menuParent"
+            [(ngModel)]="draft.parentKey"
+            [disabled]="saving || !!deletingKey"
+          >
+            <option [ngValue]="null">
+              Main Header
+            </option>
+
+            <option
+              *ngFor="let parent of parentDropdowns"
+              [ngValue]="parent.key"
+            >
+              Inside {{ parent.name.en }} Dropdown
+            </option>
+          </select>
+
+          <small>
+            Select Main Header or an existing dropdown.
+            Create the dropdown first if it does not appear here.
+          </small>
+        </div>
+
+        <!-- DROPDOWN POSITION -->
+
+        <div
+          class="navigation-form-group"
+          *ngIf="draft.type === 'dropdown'"
+        >
+          <label>
+            Menu Position
+          </label>
+
+          <div class="navigation-static-value">
+            Main Header
+          </div>
+
+          <small>
+            Dropdowns appear in the main header and contain
+            other navigation links.
+          </small>
+        </div>
+
+        <!-- DISPLAY ORDER -->
+
+        <div class="navigation-form-group">
+          <label for="menuSortOrder">
+            Display Order
+            <span class="required">*</span>
+          </label>
+
+          <input
+            id="menuSortOrder"
+            name="menuSortOrder"
+            type="number"
+            [(ngModel)]="draft.sortOrder"
+            [disabled]="saving || !!deletingKey"
+            min="0"
+            step="1"
+            required
+          />
+
+          <small>
+            Lower numbers appear first.
+            Example: Home = 1, Local News = 2.
+          </small>
+        </div>
+
+        <!-- ACTIVE / INACTIVE -->
+
+        <div class="navigation-form-group">
+          <label>
+            Menu Visibility
+          </label>
+
+          <label class="navigation-checkbox">
+            <input
+              type="checkbox"
+              name="menuActive"
+              [(ngModel)]="draft.active"
+              [disabled]="saving || !!deletingKey"
+            />
+
+            <span>
+              Enable this menu on the public website
+            </span>
+          </label>
+
+          <small>
+            Disable to hide the menu without deleting it.
+          </small>
+        </div>
+
+      </div>
+
+      <!-- FORM ACTIONS -->
+
+      <div class="navigation-form-actions">
+
+        <button
+          type="submit"
+          class="nav-btn nav-btn-primary"
+          [disabled]="saving || !!deletingKey || navigationForm.invalid"
+        >
+          <i
+            class="fa-solid"
+            [class.fa-spinner]="saving"
+            [class.fa-floppy-disk]="!saving"
+          ></i>
+
+          {{
+            saving
+              ? 'Saving...'
+              : editingKey
+                ? 'Update Menu'
+                : 'Save Menu'
+          }}
+        </button>
+
+        <button
+          type="button"
+          class="nav-btn nav-btn-secondary"
+          (click)="newItem()"
+          [disabled]="saving || !!deletingKey"
+        >
+          <i class="fa-solid fa-rotate-left"></i>
+          Clear Form
+        </button>
+
+      </div>
+
+    </form>
+
+  </section>
+
+  <!-- ======================================
+       SAVED NAVIGATION MENU ITEMS
+  ======================================= -->
+
+  <section class="navigation-card">
+
+    <div class="navigation-card-header">
+      <h2>
+        <i class="fa-solid fa-list"></i>
+        Saved Navigation Menus
+      </h2>
+
+      <span class="navigation-total">
+        {{ items.length }} Items
+      </span>
+    </div>
+
+    <!-- LOADING -->
+
+    <div
+      class="navigation-loading"
+      *ngIf="loading"
+    >
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      Loading navigation menus...
+    </div>
+
+    <!-- EMPTY STATE -->
+
+    <div
+      class="navigation-empty"
+      *ngIf="!loading && items.length === 0"
+    >
+      <i class="fa-solid fa-bars"></i>
+
+      <h3>No navigation menus added yet</h3>
+
+      <p>
+        Create your first menu using the form above.
+        For example, add Home or create a More dropdown.
+      </p>
+    </div>
+
+    <!-- NAVIGATION TABLE -->
+
+    <div
+      class="navigation-table-wrapper"
+      *ngIf="!loading && items.length > 0"
+    >
+
+      <table class="navigation-table">
+
+        <thead>
+          <tr>
+            <th>Order</th>
+            <th>Menu Name</th>
+            <th>Menu Key</th>
+            <th>Type</th>
+            <th>Position</th>
+            <th>Destination</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr
+            *ngFor="let item of items"
+            [class.navigation-disabled]="!item.active"
+          >
+
+            <!-- ORDER -->
+
+            <td>
+              {{ item.sortOrder }}
+            </td>
+
+            <!-- NAME -->
+
+            <td>
+              <div class="navigation-name-cell">
+                <strong>
+                  {{ item.name.en }}
+                </strong>
+
+                <small>
+                  {{ item.name.ta }}
+                </small>
+              </div>
+            </td>
+
+            <!-- KEY -->
+
+            <td>
+              <code>
+                {{ item.key }}
+              </code>
+            </td>
+
+            <!-- TYPE -->
+
+            <td>
+              <span class="navigation-type-badge">
+                {{
+                  item.type === 'page'
+                    ? 'Website Page'
+                    : item.type === 'category'
+                      ? 'News Category'
+                      : 'Dropdown'
+                }}
+              </span>
+            </td>
+
+            <!-- POSITION -->
+
+            <td>
+              {{ positionLabel(item) }}
+            </td>
+
+            <!-- DESTINATION -->
+
+            <td>
+              <ng-container [ngSwitch]="item.type">
+
+                <code *ngSwitchCase="'page'">
+                  {{ item.path }}
+                </code>
+
+                <code *ngSwitchCase="'category'">
+                  /category/{{ item.categorySlug }}
+                </code>
+
+                <span *ngSwitchDefault>
+                  Contains menu items
+                </span>
+
+              </ng-container>
+            </td>
+
+            <!-- STATUS -->
+
+            <td>
+              <span
+                class="navigation-status"
+                [class.is-active]="item.active"
+                [class.is-disabled]="!item.active"
+              >
+                {{
+                  item.active
+                    ? 'Enabled'
+                    : 'Disabled'
+                }}
+              </span>
+            </td>
+
+            <!-- ACTIONS -->
+
+            <td>
+              <div class="navigation-table-actions">
+
+                <button
+                  type="button"
+                  class="nav-btn nav-btn-edit"
+                  (click)="editItem(item)"
+                  [disabled]="saving || !!deletingKey"
+                >
+                  <i class="fa-solid fa-pen"></i>
+                  Edit
+                </button>
+
+                <button
+                  type="button"
+                  class="nav-btn nav-btn-delete"
+                  (click)="deleteItem(item)"
+                  [disabled]="saving || !!deletingKey"
+                >
+                  <i class="fa-solid fa-trash"></i>
+
+                  {{
+                    deletingKey === item.key
+                      ? 'Deleting...'
+                      : 'Delete'
+                  }}
+                </button>
+
+              </div>
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+</div>

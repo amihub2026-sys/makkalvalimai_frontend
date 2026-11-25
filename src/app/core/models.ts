@@ -29,12 +29,17 @@ export type Section =
 export type ArticleKind = string;
 
 // MongoDB-managed news category
+
 export interface NewsCategory {
   _id?: string;
   slug: string;
   name: Bilingual;
   active: boolean;
   showInMenu: boolean;
+
+  // NEW: Admin-controlled header placement
+  headerType?: 'main' | 'more' | 'about' | 'hidden';
+
   sortOrder: number;
   requiresVerifiedSource: boolean;
   createdAt?: string;

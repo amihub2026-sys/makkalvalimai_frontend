@@ -1,0 +1,1637 @@
+
+<div class="page-builder-page">
+
+  <!-- ======================================
+       MAIN HEADER
+  ======================================= -->
+
+  <header class="builder-header">
+    <div>
+      <span class="eyebrow">
+        DYNAMIC PAGE BUILDER
+      </span>
+
+      <h2>
+        {{
+          selectedPage
+            ? (isEditMode ? 'Edit Page' : 'View Page')
+            : 'Website Pages'
+        }}
+      </h2>
+
+      <p *ngIf="!selectedPage">
+        Create, organize and manage your website pages.
+      </p>
+
+      <p *ngIf="selectedPage">
+        {{ selectedPage.title.en }}
+      </p>
+    </div>
+
+    <button
+      *ngIf="!selectedPage"
+      type="button"
+      class="btn primary"
+      (click)="openCreatePageForm()"
+      [disabled]="creatingPage"
+    >
+      <i class="fa-solid fa-plus"></i>
+      Create New Page
+    </button>
+
+    <button
+      *ngIf="selectedPage"
+      type="button"
+      class="btn outline"
+      (click)="closeSelectedPage()"
+      [disabled]="blockActionInProgress"
+    >
+      <i class="fa-solid fa-arrow-left"></i>
+      Back to Pages
+    </button>
+  </header>
+
+  <!-- ======================================
+       PAGE MESSAGES
+  ======================================= -->
+
+  <div
+    *ngIf="pageSuccessMessage"
+    class="builder-message success"
+    role="status"
+  >
+    {{ pageSuccessMessage }}
+  </div>
+
+  <div
+    *ngIf="pageErrorMessage"
+    class="builder-message error"
+    role="alert"
+  >
+    {{ pageErrorMessage }}
+  </div>
+
+  <!-- ======================================
+       SCREEN 1: WEBSITE PAGES
+  ======================================= -->
+
+  <ng-container *ngIf="!selectedPage">
+
+    <!-- CREATE PAGE FORM -->
+
+    <section
+      class="builder-create-panel"
+      *ngIf="showCreatePageForm"
+    >
+      <div class="panel-heading">
+        <div>
+          <h3>Create New Page</h3>
+          <p>Enter the page details below.</p>
+        </div>
+
+        <button
+          type="button"
+          class="btn outline"
+          (click)="closeCreatePageForm()"
+          [disabled]="creatingPage"
+        >
+          <i class="fa-solid fa-xmark"></i>
+          Close
+        </button>
+      </div>
+
+      <form
+        #pageFormRef="ngForm"
+        (ngSubmit)="createPage()"
+      >
+        <div class="builder-form-grid">
+
+          <!-- PAGE SLUG -->
+
+          <div class="builder-form-field">
+            <label for="pageSlug">
+              Page URL
+            </label>
+
+            <input
+              id="pageSlug"
+              type="text"
+              name="pageSlug"
+              [(ngModel)]="pageForm.slug"
+              placeholder="example: about-us"
+              maxlength="100"
+              pattern="[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*"
+              [disabled]="creatingPage"
+              required
+            />
+
+            <small>
+              Unique page URL. Cannot be changed later.
+            </small>
+          </div>
+
+          <!-- ENGLISH PAGE NAME -->
+
+          <div class="builder-form-field">
+            <label for="pageTitleEn">
+              Page Name (English)
+            </label>
+
+            <input
+              id="pageTitleEn"
+              type="text"
+              name="pageTitleEn"
+              [(ngModel)]="pageForm.title.en"
+              maxlength="200"
+              placeholder="Enter page name"
+              [disabled]="creatingPage"
+              required
+            />
+          </div>
+
+          <!-- TAMIL PAGE NAME -->
+
+          <div class="builder-form-field">
+            <label for="pageTitleTa">
+              Page Name (Tamil)
+            </label>
+
+            <input
+              id="pageTitleTa"
+              type="text"
+              name="pageTitleTa"
+              [(ngModel)]="pageForm.title.ta"
+              maxlength="200"
+              placeholder="பக்கத்தின் பெயர்"
+              [disabled]="creatingPage"
+              required
+            />
+          </div>
+
+        </div>
+
+        <p class="builder-form-hint">
+          New pages are saved as drafts and are not
+          automatically published.
+        </p>
+
+        <div class="builder-form-actions">
+          <button
+            type="button"
+            class="btn outline"
+            (click)="closeCreatePageForm()"
+            [disabled]="creatingPage"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            class="btn primary"
+            [disabled]="creatingPage || pageFormRef.invalid"
+          >
+            <i class="fa-solid fa-floppy-disk"></i>
+            {{ creatingPage ? 'Creating...' : 'Create Page' }}
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ====================================
+         ALL WEBSITE PAGES
+    ===================================== -->
+
+    <section class="builder-tools-panel">
+      <div class="panel-heading">
+        <div>
+          <h3>All Website Pages</h3>
+          <p>Select a page to view or edit its content.</p>
+        </div>
+
+        <button
+          type="button"
+          class="btn outline"
+          (click)="loadPages()"
+          [disabled]="loadingPages"
+        >
+          <i
+            class="fa-solid fa-rotate"
+            [class.fa-spin]="loadingPages"
+          ></i>
+          Refresh
+        </button>
+      </div>
+
+      <div
+        *ngIf="pagesErrorMessage"
+        class="builder-message error"
+        role="alert"
+      >
+        {{ pagesErrorMessage }}
+      </div>
+
+      <div
+        *ngIf="loadingPages"
+        class="builder-empty"
+        role="status"
+      >
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        Loading pages...
+      </div>
+
+      <div
+        *ngIf="
+          !loadingPages &&
+          !pagesErrorMessage &&
+          pages.length === 0
+        "
+        class="builder-empty"
+      >
+        <i class="fa-solid fa-file-circle-plus"></i>
+        <h3>No Pages Created</h3>
+        <p>Click Create New Page to get started.</p>
+      </div>
+
+      <div
+        class="builder-tools-grid"
+        *ngIf="
+          !loadingPages &&
+          !pagesErrorMessage &&
+          pages.length > 0
+        "
+      >
+        <article
+          class="builder-tool-card"
+          *ngFor="
+            let page of pages;
+            trackBy: trackBySlug
+          "
+        >
+          <div class="tool-content">
+            <div class="builder-tool-icon">
+              <i class="fa-solid fa-file-lines"></i>
+            </div>
+
+            <h4>{{ page.title.en }}</h4>
+
+            <p lang="ta">
+              {{ page.title.ta }}
+            </p>
+
+            <small>{{ page.slug }}</small>
+          </div>
+
+          <span class="renderer-badge">
+            {{ pageStatus(page) }}
+          </span>
+
+          <button
+            type="button"
+            class="btn outline"
+            (click)="selectPage(page)"
+          >
+            <i class="fa-solid fa-folder-open"></i>
+            Open Page
+          </button>
+        </article>
+      </div>
+    </section>
+
+  </ng-container>
+
+  <!-- ======================================
+       SCREEN 2: SELECTED PAGE
+  ======================================= -->
+
+  <ng-container *ngIf="selectedPage as page">
+
+    <!-- PAGE DETAILS -->
+
+    <section class="builder-create-panel">
+
+      <div class="panel-heading">
+        <div>
+          <h3>{{ page.title.en }}</h3>
+
+          <p lang="ta">
+            {{ page.title.ta }}
+          </p>
+        </div>
+
+        <span class="renderer-badge">
+          {{ pageStatus(page) }}
+        </span>
+      </div>
+
+      <div class="builder-form-grid">
+
+        <div class="builder-form-field">
+          <label>Page URL</label>
+          <p>{{ page.slug }}</p>
+        </div>
+
+        <div class="builder-form-field">
+          <label>Saved Content Blocks</label>
+          <p>{{ savedBlocks.length }}</p>
+        </div>
+
+      </div>
+
+      <!-- VIEW / EDIT BUTTONS -->
+
+      <div class="builder-page-actions">
+
+        <button
+          *ngIf="isViewMode"
+          type="button"
+          class="btn primary"
+          (click)="editSelectedPage()"
+          [disabled]="
+            loadingSelectedPage ||
+            blockActionInProgress ||
+            !!page.archivedAt
+          "
+        >
+          <i class="fa-solid fa-pen-to-square"></i>
+          Edit Page
+        </button>
+
+        <button
+          *ngIf="isEditMode"
+          type="button"
+          class="btn outline"
+          (click)="viewSelectedPage()"
+          [disabled]="blockActionInProgress"
+        >
+          <i class="fa-solid fa-eye"></i>
+          View Page
+        </button>
+
+<!-- ==================================
+     PUBLISH DYNAMIC PAGE
+=================================== -->
+
+<button
+  type="button"
+  class="btn primary builder-publish-button"
+  (click)="publishSelectedPage()"
+  [disabled]="
+    loadingSelectedPage ||
+    blockActionInProgress ||
+    savedBlocks.length === 0 ||
+    !!page.archivedAt
+  "
+>
+  <i class="fa-solid fa-globe"></i>
+
+  {{
+    publishingPage
+      ? 'Publishing...'
+      : page.status === 'published'
+        ? 'Publish Changes'
+        : 'Publish Page'
+  }}
+</button>
+
+        <button
+          type="button"
+          class="btn outline"
+          (click)="reloadSelectedPage()"
+          [disabled]="
+            loadingSelectedPage ||
+            blockActionInProgress
+          "
+        >
+          <i class="fa-solid fa-rotate"></i>
+          Refresh Content
+        </button>
+
+      </div>
+
+      <p class="builder-form-hint">
+        Content changes are saved to this page's
+        working draft. They are not automatically published.
+      </p>
+
+    </section>
+
+    <!-- ====================================
+         EDIT MODE: LEFT / RIGHT LAYOUT
+    ===================================== -->
+
+    <div
+      *ngIf="isEditMode"
+      class="builder-editor-layout"
+    >
+
+      <!-- ==================================
+           LEFT: EDITING TOOLS
+      =================================== -->
+
+      <aside
+        class="builder-tools-panel builder-editor-sidebar"
+      >
+        <div class="panel-heading">
+          <div>
+            <h3>Editing Tools</h3>
+            <p>Select a content type.</p>
+          </div>
+
+          <button
+            type="button"
+            class="btn outline"
+            title="Refresh editing tools"
+            (click)="loadAvailableTools()"
+            [disabled]="
+              loadingTools ||
+              blockActionInProgress
+            "
+          >
+            <i class="fa-solid fa-rotate"></i>
+          </button>
+        </div>
+
+        <div
+          *ngIf="errorMessage"
+          class="builder-message error"
+          role="alert"
+        >
+          {{ errorMessage }}
+        </div>
+
+        <div
+          *ngIf="loadingTools"
+          class="builder-empty"
+        >
+          Loading editing tools...
+        </div>
+
+        <div
+          *ngIf="
+            !loadingTools &&
+            !errorMessage &&
+            availableTools.length === 0
+          "
+          class="builder-empty"
+        >
+          No active editing tools found.
+        </div>
+
+        <!-- TOOLS FROM MONGODB -->
+
+        <div class="builder-tool-choices">
+
+          <button
+            *ngFor="
+              let tool of availableTools;
+              trackBy: trackByKey
+            "
+            type="button"
+            class="builder-tool-choice"
+            [class.is-selected]="isToolSelected(tool)"
+            [attr.aria-pressed]="isToolSelected(tool)"
+            [disabled]="
+              blockActionInProgress ||
+              loadingSelectedPage
+            "
+            (click)="selectTool(tool)"
+          >
+            <span class="builder-choice-icon">
+
+              <img
+                *ngIf="tool.iconUrl"
+                [src]="iconImageSrc(tool.iconUrl)"
+                [alt]="tool.label.en + ' icon'"
+                width="32"
+                height="32"
+              />
+
+              <i
+                *ngIf="!tool.iconUrl && tool.icon"
+                [class]="tool.icon"
+                aria-hidden="true"
+              ></i>
+
+              <i
+                *ngIf="!tool.iconUrl && !tool.icon"
+                class="fa-solid fa-puzzle-piece"
+                aria-hidden="true"
+              ></i>
+
+            </span>
+
+            <span class="builder-choice-text">
+              <strong>{{ tool.label.en }}</strong>
+
+              <small lang="ta">
+                {{ tool.label.ta }}
+              </small>
+
+              <small>
+                {{ tool.rendererType }}
+              </small>
+            </span>
+
+            <i
+              *ngIf="isToolSelected(tool)"
+              class="fa-solid fa-circle-check"
+              aria-hidden="true"
+            ></i>
+          </button>
+
+        </div>
+      </aside>
+
+      <!-- ==================================
+           RIGHT: DYNAMIC EDITING FORM
+      =================================== -->
+
+      <section
+        class="builder-create-panel builder-editor-form-panel"
+      >
+
+        <div class="panel-heading">
+          <div>
+            <h3>
+              {{
+                selectedTool
+                  ? selectedTool.label.en + ' Editor'
+                  : 'Content Editor'
+              }}
+            </h3>
+
+            <p>
+              {{
+                isEditingExistingBlock
+                  ? 'Update the selected saved content block.'
+                  : 'Add new content to this page.'
+              }}
+            </p>
+          </div>
+        </div>
+
+        <!-- EXISTING BLOCK EDIT MODE -->
+
+        <div
+          *ngIf="isEditingExistingBlock"
+          class="builder-editing-notice"
+        >
+          <div>
+            <i class="fa-solid fa-pen-to-square"></i>
+            <strong>Editing Existing Content</strong>
+
+            <p>
+              Update the fields and click Save Changes.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            class="btn outline"
+            (click)="cancelBlockEdit()"
+            [disabled]="blockActionInProgress"
+          >
+            Cancel Edit
+          </button>
+        </div>
+
+        <!-- MESSAGES -->
+
+        <div
+          *ngIf="blockErrorMessage"
+          class="builder-message error"
+          role="alert"
+        >
+          {{ blockErrorMessage }}
+        </div>
+
+        <div
+          *ngIf="blockSuccessMessage"
+          class="builder-message success"
+          role="status"
+        >
+          {{ blockSuccessMessage }}
+        </div>
+
+        <div
+          *ngIf="!selectedTool"
+          class="builder-empty"
+        >
+          <i class="fa-solid fa-hand-pointer"></i>
+          <p>Select an editing tool from the left.</p>
+        </div>
+
+        <!-- DYNAMIC FORM -->
+
+        <form
+          *ngIf="selectedTool as tool"
+          #blockFormRef="ngForm"
+          (ngSubmit)="addPageBlock()"
+        >
+
+          <ng-container [ngSwitch]="tool.rendererType">
+
+            <!-- ============================
+                 HEADING
+            ============================= -->
+
+            <div *ngSwitchCase="'heading'">
+
+              <div class="builder-form-field">
+                <label for="headingEn">
+                  English Heading
+                </label>
+
+                <input
+                  id="headingEn"
+                  type="text"
+                  name="headingEn"
+                  [(ngModel)]="blockForm.text.en"
+                  maxlength="500"
+                  required
+                />
+              </div>
+
+              <div class="builder-form-field">
+                <label for="headingTa">
+                  Tamil Heading
+                </label>
+
+                <input
+                  id="headingTa"
+                  type="text"
+                  name="headingTa"
+                  [(ngModel)]="blockForm.text.ta"
+                  maxlength="500"
+                  required
+                />
+              </div>
+
+              <div class="builder-form-field">
+                <label for="headingLevel">
+                  Heading Level
+                </label>
+
+                <select
+                  id="headingLevel"
+                  name="headingLevel"
+                  [(ngModel)]="blockForm.level"
+                >
+                  <option [ngValue]="1">H1</option>
+                  <option [ngValue]="2">H2</option>
+                  <option [ngValue]="3">H3</option>
+                  <option [ngValue]="4">H4</option>
+                  <option [ngValue]="5">H5</option>
+                  <option [ngValue]="6">H6</option>
+                </select>
+              </div>
+
+            </div>
+
+            <!-- ============================
+                 TEXT
+            ============================= -->
+
+            <div *ngSwitchCase="'text'">
+
+              <div class="builder-form-field">
+                <label for="textEn">
+                  English Text
+                </label>
+
+                <textarea
+                  id="textEn"
+                  name="textEn"
+                  [(ngModel)]="blockForm.text.en"
+                  rows="6"
+                  maxlength="20000"
+                  required
+                ></textarea>
+              </div>
+
+              <div class="builder-form-field">
+                <label for="textTa">
+                  Tamil Text
+                </label>
+
+                <textarea
+                  id="textTa"
+                  name="textTa"
+                  [(ngModel)]="blockForm.text.ta"
+                  rows="6"
+                  maxlength="20000"
+                  required
+                ></textarea>
+              </div>
+
+            </div>
+
+            <!-- ============================
+                 IMAGE
+            ============================= -->
+
+            <div *ngSwitchCase="'image'">
+
+              <div class="builder-form-field">
+                <label>Upload Image</label>
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  (change)="uploadBlockMedia($event, 'main')"
+                  [disabled]="blockActionInProgress"
+                />
+
+                <small *ngIf="uploadingMedia">
+                  Uploading image...
+                </small>
+              </div>
+
+              <div
+                *ngIf="blockForm.url"
+                class="builder-upload-preview"
+              >
+                <img
+                  [src]="iconImageSrc(blockForm.url)"
+                  alt="Uploaded image preview"
+                />
+              </div>
+
+              <div class="builder-form-field">
+                <label>Alternative Text (English)</label>
+
+                <input
+                  type="text"
+                  name="imageAltEn"
+                  [(ngModel)]="blockForm.alt.en"
+                  maxlength="300"
+                  required
+                />
+              </div>
+
+              <div class="builder-form-field">
+                <label>Alternative Text (Tamil)</label>
+
+                <input
+                  type="text"
+                  name="imageAltTa"
+                  [(ngModel)]="blockForm.alt.ta"
+                  maxlength="300"
+                  required
+                />
+              </div>
+
+              <div class="builder-form-field">
+                <label>Caption (English, optional)</label>
+
+                <input
+                  type="text"
+                  name="imageCaptionEn"
+                  [(ngModel)]="blockForm.caption.en"
+                  maxlength="1000"
+                />
+              </div>
+
+              <div class="builder-form-field">
+                <label>Caption (Tamil, optional)</label>
+
+                <input
+                  type="text"
+                  name="imageCaptionTa"
+                  [(ngModel)]="blockForm.caption.ta"
+                  maxlength="1000"
+                />
+              </div>
+
+            </div>
+
+            <!-- ============================
+                 VIDEO
+            ============================= -->
+
+            <div *ngSwitchCase="'video'">
+
+              <div class="builder-form-field">
+                <label>Upload Video</label>
+
+                <input
+                  type="file"
+                  accept="video/*"
+                  (change)="uploadBlockMedia($event, 'main')"
+                  [disabled]="blockActionInProgress"
+                />
+
+                <small *ngIf="uploadingMedia">
+                  Uploading video...
+                </small>
+              </div>
+
+              <video
+                *ngIf="blockForm.url"
+                class="builder-preview-media"
+                [src]="iconImageSrc(blockForm.url)"
+                controls
+                preload="metadata"
+              ></video>
+
+              <div class="builder-form-field">
+                <label>Caption (English, optional)</label>
+
+                <input
+                  type="text"
+                  name="videoCaptionEn"
+                  [(ngModel)]="blockForm.caption.en"
+                  maxlength="1000"
+                />
+              </div>
+
+              <div class="builder-form-field">
+                <label>Caption (Tamil, optional)</label>
+
+                <input
+                  type="text"
+                  name="videoCaptionTa"
+                  [(ngModel)]="blockForm.caption.ta"
+                  maxlength="1000"
+                />
+              </div>
+
+            </div>
+
+            <!-- ============================
+                 AUDIO
+            ============================= -->
+
+            <div *ngSwitchCase="'audio'">
+
+              <div class="builder-form-field">
+                <label>Upload Audio</label>
+
+                <input
+                  type="file"
+                  accept="audio/*"
+                  (change)="uploadBlockMedia($event, 'main')"
+                  [disabled]="blockActionInProgress"
+                />
+
+                <small *ngIf="uploadingMedia">
+                  Uploading audio...
+                </small>
+              </div>
+
+              <audio
+                *ngIf="blockForm.url"
+                [src]="iconImageSrc(blockForm.url)"
+                controls
+                preload="metadata"
+              ></audio>
+
+              <div class="builder-form-field">
+                <label>Caption (English, optional)</label>
+
+                <input
+                  type="text"
+                  name="audioCaptionEn"
+                  [(ngModel)]="blockForm.caption.en"
+                  maxlength="1000"
+                />
+              </div>
+
+              <div class="builder-form-field">
+                <label>Caption (Tamil, optional)</label>
+
+                <input
+                  type="text"
+                  name="audioCaptionTa"
+                  [(ngModel)]="blockForm.caption.ta"
+                  maxlength="1000"
+                />
+              </div>
+
+            </div>
+
+            <!-- ============================
+                 GALLERY
+            ============================= -->
+
+            <div *ngSwitchCase="'gallery'">
+
+              <div
+                *ngFor="
+                  let item of blockForm.galleryItems;
+                  let i = index
+                "
+                class="builder-editor-item"
+              >
+                <div class="builder-item-heading">
+                  <h4>Gallery Image {{ i + 1 }}</h4>
+
+                  <button
+                    type="button"
+                    class="btn outline"
+                    (click)="removeGalleryItem(i)"
+                    [disabled]="blockActionInProgress"
+                  >
+                    Remove
+                  </button>
+                </div>
+
+                <div class="builder-form-field">
+                  <label>Upload Image</label>
+
+                  <input
+                    type="file"
+                    accept="image/*"
+                    (change)="uploadBlockMedia($event, 'gallery', i)"
+                    [disabled]="blockActionInProgress"
+                  />
+                </div>
+
+                <img
+                  *ngIf="item.url"
+                  class="builder-gallery-thumbnail"
+                  [src]="iconImageSrc(item.url)"
+                  alt="Gallery preview"
+                />
+
+                <div class="builder-form-field">
+                  <label>Alternative Text (English)</label>
+
+                  <input
+                    type="text"
+                    [name]="'galleryAltEn' + i"
+                    [(ngModel)]="item.alt.en"
+                    maxlength="300"
+                    required
+                  />
+                </div>
+
+                <div class="builder-form-field">
+                  <label>Alternative Text (Tamil)</label>
+
+                  <input
+                    type="text"
+                    [name]="'galleryAltTa' + i"
+                    [(ngModel)]="item.alt.ta"
+                    maxlength="300"
+                    required
+                  />
+                </div>
+
+                <div class="builder-form-field">
+                  <label>Caption (English, optional)</label>
+
+                  <input
+                    type="text"
+                    [name]="'galleryCaptionEn' + i"
+                    [(ngModel)]="item.caption.en"
+                    maxlength="1000"
+                  />
+                </div>
+
+                <div class="builder-form-field">
+                  <label>Caption (Tamil, optional)</label>
+
+                  <input
+                    type="text"
+                    [name]="'galleryCaptionTa' + i"
+                    [(ngModel)]="item.caption.ta"
+                    maxlength="1000"
+                  />
+                </div>
+
+              </div>
+
+              <button
+                type="button"
+                class="btn outline"
+                (click)="addGalleryItem()"
+                [disabled]="
+                  blockActionInProgress ||
+                  blockForm.galleryItems.length >= 30
+                "
+              >
+                <i class="fa-solid fa-plus"></i>
+                Add Gallery Image
+              </button>
+
+            </div>
+
+            <!-- ============================
+                 CARDS
+            ============================= -->
+
+            <div *ngSwitchCase="'cards'">
+
+              <div
+                *ngFor="
+                  let item of blockForm.cardItems;
+                  let i = index
+                "
+                class="builder-editor-item"
+              >
+                <div class="builder-item-heading">
+                  <h4>Card {{ i + 1 }}</h4>
+
+                  <button
+                    type="button"
+                    class="btn outline"
+                    (click)="removeCardItem(i)"
+                    [disabled]="blockActionInProgress"
+                  >
+                    Remove
+                  </button>
+                </div>
+
+                <div class="builder-form-field">
+                  <label>Title (English)</label>
+
+                  <input
+                    type="text"
+                    [name]="'cardTitleEn' + i"
+                    [(ngModel)]="item.title.en"
+                    maxlength="200"
+                    required
+                  />
+                </div>
+
+                <div class="builder-form-field">
+                  <label>Title (Tamil)</label>
+
+                  <input
+                    type="text"
+                    [name]="'cardTitleTa' + i"
+                    [(ngModel)]="item.title.ta"
+                    maxlength="200"
+                    required
+                  />
+                </div>
+
+                <div class="builder-form-field">
+                  <label>Description (English, optional)</label>
+
+                  <textarea
+                    [name]="'cardDescEn' + i"
+                    [(ngModel)]="item.description.en"
+                    maxlength="2000"
+                    rows="3"
+                  ></textarea>
+                </div>
+
+                <div class="builder-form-field">
+                  <label>Description (Tamil, optional)</label>
+
+                  <textarea
+                    [name]="'cardDescTa' + i"
+                    [(ngModel)]="item.description.ta"
+                    maxlength="2000"
+                    rows="3"
+                  ></textarea>
+                </div>
+
+                <div class="builder-form-field">
+                  <label>Card Image (optional)</label>
+
+                  <input
+                    type="file"
+                    accept="image/*"
+                    (change)="uploadBlockMedia($event, 'card', i)"
+                    [disabled]="blockActionInProgress"
+                  />
+                </div>
+
+                <img
+                  *ngIf="item.imageUrl"
+                  class="builder-gallery-thumbnail"
+                  [src]="iconImageSrc(item.imageUrl)"
+                  alt="Card image preview"
+                />
+
+                <div class="builder-form-field">
+                  <label>Link URL (optional)</label>
+
+                  <input
+                    type="text"
+                    [name]="'cardLink' + i"
+                    [(ngModel)]="item.linkUrl"
+                    placeholder="https://example.com"
+                  />
+                </div>
+
+              </div>
+
+              <button
+                type="button"
+                class="btn outline"
+                (click)="addCardItem()"
+                [disabled]="
+                  blockActionInProgress ||
+                  blockForm.cardItems.length >= 30
+                "
+              >
+                <i class="fa-solid fa-plus"></i>
+                Add Card
+              </button>
+
+            </div>
+
+          </ng-container>
+
+          <!-- ==================================
+               COMMON BLOCK SETTINGS
+          =================================== -->
+
+          <div class="builder-block-settings">
+
+            <div class="builder-form-field">
+              <label for="blockSortOrder">
+                Display Order
+              </label>
+
+              <input
+                id="blockSortOrder"
+                type="number"
+                name="blockSortOrder"
+                [(ngModel)]="blockForm.sortOrder"
+                min="0"
+                max="10000"
+                required
+              />
+            </div>
+
+            <label class="builder-block-checkbox">
+              <input
+                type="checkbox"
+                name="blockEnabled"
+                [(ngModel)]="blockForm.enabled"
+              />
+
+              Show this content block
+            </label>
+
+          </div>
+
+          <p class="builder-form-hint">
+            {{
+              isEditingExistingBlock
+                ? 'Your changes will update this saved draft block.'
+                : 'New content will be added to this page draft.'
+            }}
+          </p>
+
+          <!-- ADD / SAVE BUTTONS -->
+
+          <div class="builder-form-actions">
+
+            <button
+              *ngIf="isEditingExistingBlock"
+              type="button"
+              class="btn outline"
+              (click)="cancelBlockEdit()"
+              [disabled]="blockActionInProgress"
+            >
+              Cancel Edit
+            </button>
+
+            <button
+              type="submit"
+              class="btn primary"
+              [disabled]="
+                blockFormRef.invalid ||
+                blockActionInProgress ||
+                loadingSelectedPage
+              "
+            >
+              <i class="fa-solid fa-floppy-disk"></i>
+
+              {{
+                savingBlock
+                  ? 'Saving...'
+                  : uploadingMedia
+                    ? 'Uploading...'
+                    : isEditingExistingBlock
+                      ? 'Save Changes'
+                      : 'Add to Page'
+              }}
+            </button>
+
+          </div>
+
+        </form>
+      </section>
+
+    </div>
+
+    <!-- ====================================
+         SAVED CONTENT BLOCKS
+    ===================================== -->
+
+    <section
+      class="builder-tools-panel builder-saved-panel"
+    >
+
+      <div class="panel-heading">
+        <div>
+          <h3>Saved Page Content</h3>
+
+          <p>
+            Content blocks stored in this page's draft.
+          </p>
+        </div>
+
+        <span class="renderer-badge">
+          {{ savedBlocks.length }} Blocks
+        </span>
+      </div>
+
+      <!-- LOADING -->
+
+      <div
+        *ngIf="loadingSelectedPage"
+        class="builder-empty"
+        role="status"
+      >
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        Loading saved content...
+      </div>
+
+      <!-- EMPTY -->
+
+      <div
+        *ngIf="
+          !loadingSelectedPage &&
+          savedBlocks.length === 0
+        "
+        class="builder-empty"
+      >
+        <i class="fa-solid fa-layer-group"></i>
+
+        <h3>No Content Added</h3>
+
+        <p *ngIf="isViewMode">
+          Click Edit Page to add your first content block.
+        </p>
+
+        <p *ngIf="isEditMode">
+          Select an editing tool from the left.
+        </p>
+      </div>
+
+      <!-- SAVED BLOCK LIST -->
+
+      <div
+        class="builder-saved-list"
+        *ngIf="
+          !loadingSelectedPage &&
+          savedBlocks.length > 0
+        "
+      >
+
+        <article
+          *ngFor="
+            let block of savedBlocks;
+            trackBy: trackByBlock
+          "
+          class="builder-saved-block"
+          [class.is-hidden]="!block.enabled"
+          [class.is-being-edited]="
+            editingBlockId === block._id
+          "
+        >
+
+          <!-- BLOCK TITLE / STATUS -->
+
+          <div class="builder-saved-heading">
+
+            <div>
+              <strong>
+                {{ blockToolLabel(block) }}
+              </strong>
+
+              <small>
+                {{ block.rendererType }}
+                · Order {{ block.sortOrder }}
+              </small>
+            </div>
+
+            <span class="renderer-badge">
+              {{ block.enabled ? 'Visible' : 'Hidden' }}
+            </span>
+
+          </div>
+
+          <!-- ==================================
+               CONTENT PREVIEW
+          =================================== -->
+
+          <div [ngSwitch]="block.rendererType">
+
+            <!-- SAVED HEADING -->
+
+            <div *ngSwitchCase="'heading'">
+              <h3 class="builder-content-heading">
+                {{ blockText(block, 'en') }}
+              </h3>
+
+              <h3
+                class="builder-content-heading"
+                lang="ta"
+              >
+                {{ blockText(block, 'ta') }}
+              </h3>
+            </div>
+
+            <!-- SAVED TEXT -->
+
+            <div *ngSwitchCase="'text'">
+
+              <p class="builder-content-text">
+                {{ blockText(block, 'en') }}
+              </p>
+
+              <p
+                class="builder-content-text"
+                lang="ta"
+              >
+                {{ blockText(block, 'ta') }}
+              </p>
+
+            </div>
+
+            <!-- SAVED IMAGE -->
+
+            <div *ngSwitchCase="'image'">
+
+              <img
+                *ngIf="blockMediaSrc(block)"
+                class="builder-preview-media"
+                [src]="blockMediaSrc(block)"
+                [alt]="
+                  $any(block.content)?.alt?.en ||
+                  blockToolLabel(block)
+                "
+              />
+
+              <p>
+                {{ $any(block.content)?.caption?.en }}
+              </p>
+
+              <p lang="ta">
+                {{ $any(block.content)?.caption?.ta }}
+              </p>
+
+            </div>
+
+            <!-- SAVED VIDEO -->
+
+            <div *ngSwitchCase="'video'">
+
+              <video
+                *ngIf="blockMediaSrc(block)"
+                class="builder-preview-media"
+                [src]="blockMediaSrc(block)"
+                controls
+                preload="metadata"
+              ></video>
+
+              <p>
+                {{ $any(block.content)?.caption?.en }}
+              </p>
+
+              <p lang="ta">
+                {{ $any(block.content)?.caption?.ta }}
+              </p>
+
+            </div>
+
+            <!-- SAVED AUDIO -->
+
+            <div *ngSwitchCase="'audio'">
+
+              <audio
+                *ngIf="blockMediaSrc(block)"
+                [src]="blockMediaSrc(block)"
+                controls
+                preload="metadata"
+              ></audio>
+
+              <p>
+                {{ $any(block.content)?.caption?.en }}
+              </p>
+
+              <p lang="ta">
+                {{ $any(block.content)?.caption?.ta }}
+              </p>
+
+            </div>
+
+            <!-- SAVED GALLERY -->
+
+            <div
+              *ngSwitchCase="'gallery'"
+              class="builder-preview-grid"
+            >
+
+              <div
+                *ngFor="
+                  let item of (
+                    $any(block.content)?.items || []
+                  )
+                "
+                class="builder-preview-card"
+              >
+                <img
+                  [src]="iconImageSrc(item.url)"
+                  [alt]="item.alt?.en || 'Gallery image'"
+                />
+
+                <p>{{ item.caption?.en }}</p>
+
+                <p lang="ta">
+                  {{ item.caption?.ta }}
+                </p>
+              </div>
+
+            </div>
+
+            <!-- SAVED CARDS -->
+
+            <div
+              *ngSwitchCase="'cards'"
+              class="builder-preview-grid"
+            >
+
+              <div
+                *ngFor="
+                  let item of (
+                    $any(block.content)?.items || []
+                  )
+                "
+                class="builder-preview-card"
+              >
+
+                <img
+                  *ngIf="item.imageUrl"
+                  [src]="iconImageSrc(item.imageUrl)"
+                  [alt]="item.title?.en || 'Card image'"
+                />
+
+                <h4>{{ item.title?.en }}</h4>
+
+                <p lang="ta">
+                  {{ item.title?.ta }}
+                </p>
+
+                <p>{{ item.description?.en }}</p>
+
+                <p lang="ta">
+                  {{ item.description?.ta }}
+                </p>
+
+                <a
+                  *ngIf="item.linkUrl"
+                  [href]="item.linkUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Open Link
+                </a>
+
+              </div>
+
+            </div>
+
+            <div *ngSwitchDefault>
+              Preview is not available for this content type.
+            </div>
+
+          </div>
+
+          <!-- ==================================
+               NEW: SAVED BLOCK ACTION BUTTONS
+               EDIT MODE ONLY
+          =================================== -->
+
+          <div
+            *ngIf="isEditMode"
+            class="builder-block-actions"
+          >
+
+            <!-- EDIT -->
+
+            <button
+              type="button"
+              class="btn outline builder-action-edit"
+              (click)="editPageBlock(block)"
+              [disabled]="
+                !block._id ||
+                blockActionInProgress ||
+                loadingSelectedPage
+              "
+              title="Edit this content block"
+            >
+              <i class="fa-solid fa-pen"></i>
+              Edit
+            </button>
+
+            <!-- SHOW / HIDE -->
+
+            <button
+              type="button"
+              class="btn outline builder-action-visibility"
+              (click)="togglePageBlockVisibility(block)"
+              [disabled]="
+                !block._id ||
+                blockActionInProgress ||
+                loadingSelectedPage
+              "
+              [attr.title]="
+                block.enabled
+                  ? 'Hide this content block'
+                  : 'Show this content block'
+              "
+            >
+              <i
+                [class]="
+                  block.enabled
+                    ? 'fa-solid fa-eye-slash'
+                    : 'fa-solid fa-eye'
+                "
+              ></i>
+
+              {{
+                changingVisibilityBlockId === block._id
+                  ? 'Updating...'
+                  : block.enabled
+                    ? 'Hide'
+                    : 'Show'
+              }}
+            </button>
+
+            <!-- MOVE UP -->
+
+            <button
+              type="button"
+              class="btn outline builder-action-order"
+              (click)="movePageBlock(block, -1)"
+              [disabled]="
+                !canMoveBlockUp(block) ||
+                blockActionInProgress ||
+                loadingSelectedPage
+              "
+              title="Move content up"
+            >
+              <i class="fa-solid fa-arrow-up"></i>
+              Up
+            </button>
+
+            <!-- MOVE DOWN -->
+
+            <button
+              type="button"
+              class="btn outline builder-action-order"
+              (click)="movePageBlock(block, 1)"
+              [disabled]="
+                !canMoveBlockDown(block) ||
+                blockActionInProgress ||
+                loadingSelectedPage
+              "
+              title="Move content down"
+            >
+              <i class="fa-solid fa-arrow-down"></i>
+              Down
+            </button>
+
+            <!-- DELETE -->
+
+            <button
+              type="button"
+              class="btn outline builder-action-delete"
+              (click)="deletePageBlock(block)"
+              [disabled]="
+                !block._id ||
+                blockActionInProgress ||
+                loadingSelectedPage
+              "
+              title="Delete this content block"
+            >
+              <i class="fa-solid fa-trash"></i>
+
+              {{
+                deletingBlockId === block._id
+                  ? 'Deleting...'
+                  : 'Delete'
+              }}
+            </button>
+
+          </div>
+
+        </article>
+
+      </div>
+
+    </section>
+
+  </ng-container>
+
+</div>

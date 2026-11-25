@@ -1,64 +1,460 @@
-/* admin-shell — section layout and responsive styles */
-.admin-layout {
-  min-height:100vh;display:grid;grid-template-columns:255px minmax(0,1fr);background:radial-gradient(ellipse at 90% 2%,#33101f,#0a0e17 55%)
+
+/* ==========================================
+   MAKKAL VALIMAI - ADMIN SHELL
+   Professional Newsroom Design
+   Desktop / Common Styles
+========================================== */
+
+:host {
+  display: block;
+
+  --admin-primary: #1e4e96;
+  --admin-primary-dark: #112d59;
+  --admin-red: #cb2940;
+  --admin-bg: #eef3f9;
+  --admin-white: #ffffff;
+  --admin-text: #172b4d;
+  --admin-muted: #70819c;
+  --admin-border: #dfe7f1;
 }
+
+/* MAIN LAYOUT */
+
+.admin-layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 270px minmax(0, 1fr);
+  background: var(--admin-bg);
+}
+
+.admin-layout,
+.admin-layout * {
+  box-sizing: border-box;
+}
+
+/* ==========================================
+   SIDEBAR
+========================================== */
 
 .admin-sidebar {
-  background:#070d17;border-right:1px solid #b41b3869;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;overflow:auto
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(55, 117, 210, 0.23),
+      transparent 45%
+    ),
+    linear-gradient(
+      180deg,
+      #102f60 0%,
+      #0b2247 55%,
+      #07172f 100%
+    );
+
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 5px 0 25px rgba(15, 35, 70, 0.08);
+
+  scrollbar-width: thin;
+  scrollbar-color: #47658e transparent;
 }
+
+/* ==========================================
+   ADMIN BRAND
+========================================== */
 
 .admin-brand {
-  padding:1.3rem;display:flex;flex-direction:column;align-items:center;gap:.45rem;border-bottom:1px solid #ffffff26
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 26px 15px 22px;
+  gap: 12px;
+
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.admin-brand img {
-  width:84px;height:84px;object-fit:contain;background:white;border-radius:50%
+.brand-logo {
+  width: 88px;
+  height: 88px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 6px;
+  border-radius: 50%;
+  background: #ffffff;
+
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.18);
 }
 
-.admin-brand b {
-  font-size:1.05rem
+.brand-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
 }
 
-.admin-brand small {
-  font-size:.55rem;letter-spacing:.15em;color:#ff8094
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  text-align: center;
 }
 
-.admin-sidebar nav {
-  display:grid;padding:1rem .6rem;gap:.3rem
+.brand-text b {
+  color: #ffffff;
+  font-family: "Noto Sans Tamil", sans-serif;
+  font-size: 19px;
+  font-weight: 750;
+  line-height: 1.5;
 }
 
-.admin-sidebar nav a,.sidebar-foot a,.sidebar-foot button {
-  font-size:.77rem;color:#d9dce7;padding:.8rem .7rem;border-radius:8px;display:flex;gap:.7rem;align-items:center;border:0;background:transparent;text-align:left
+.brand-text small {
+  color: #ff9aaa;
+  font-family: "Poppins", sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
 }
 
-.admin-sidebar nav a:hover,.admin-sidebar nav a.active {
-  color:#fff;background:linear-gradient(90deg,#bd0d28,#451323)
+/* ==========================================
+   NAVIGATION
+========================================== */
+
+.admin-nav {
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+  padding: 18px 12px 22px;
 }
 
-.admin-sidebar nav i {
-  width:20px;text-align:center
+.nav-group-title {
+  margin: 17px 10px 6px;
+
+  color: #8eacd4;
+  font-family: "Poppins", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
 }
+
+.nav-group-title:first-child {
+  margin-top: 0;
+}
+
+.admin-sidebar .nav-item {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+  width: 100%;
+  min-height: 46px;
+
+  padding: 11px 12px;
+
+  color: #dce8f8;
+  background: transparent;
+  border: 1px solid transparent;
+  border-left: 3px solid transparent;
+  border-radius: 10px;
+
+  text-decoration: none;
+  font-family: "Poppins", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.admin-sidebar .nav-item:hover {
+  background: rgba(255, 255, 255, 0.09);
+  color: #ffffff;
+  transform: translateX(2px);
+}
+
+.admin-sidebar .nav-item.active {
+  background: rgba(65, 127, 218, 0.26);
+  border-color: rgba(255, 255, 255, 0.1);
+  border-left-color: #ff536b;
+
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.nav-icon {
+  width: 31px;
+  height: 31px;
+  min-width: 31px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.07);
+
+  color: #b7d2f5;
+  font-size: 14px;
+}
+
+.nav-item.active .nav-icon {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+.nav-label {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ==========================================
+   SIDEBAR FOOTER
+========================================== */
 
 .sidebar-foot {
-  margin-top:auto;border-top:1px solid #ffffff2b;padding:.7rem
+  display: flex;
+  flex-direction: column;
+
+  gap: 7px;
+  margin-top: auto;
+  padding: 15px 12px 20px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.sidebar-foot button {
-  width:100%
+.sidebar-foot .sidebar-public-link,
+.sidebar-foot .sidebar-logout {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  width: 100%;
+  min-height: 43px;
+  padding: 11px 13px;
+
+  border: 1px solid transparent;
+  border-radius: 9px;
+
+  color: #e8effa;
+  background: rgba(255, 255, 255, 0.06);
+
+  font-family: "Poppins", sans-serif;
+  font-size: 12px;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+
+  transition: background 0.2s ease;
 }
+
+.sidebar-foot .sidebar-public-link:hover {
+  background: rgba(255, 255, 255, 0.13);
+}
+
+.sidebar-foot .sidebar-logout {
+  color: #ffb8c2;
+  background: rgba(203, 41, 64, 0.12);
+}
+
+.sidebar-foot .sidebar-logout:hover {
+  color: #ffffff;
+  background: var(--admin-red);
+}
+
+.sidebar-foot i {
+  width: 17px;
+  text-align: center;
+}
+
+/* ==========================================
+   MAIN ADMIN CONTENT
+========================================== */
 
 .admin-main {
-  padding:1.1rem 1.5rem;min-width:0
+  min-width: 0;
+  min-height: 100vh;
+
+  padding: 25px 28px;
+
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(44, 103, 195, 0.08),
+      transparent 42%
+    ),
+    #eef3f9;
+
+  color: var(--admin-text);
 }
 
+/* ==========================================
+   TOPBAR
+========================================== */
+
 .admin-topbar {
-  display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.3rem
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  gap: 18px;
+  padding: 21px 25px;
+  margin-bottom: 24px;
+
+  background: #ffffff;
+  border: 1px solid var(--admin-border);
+  border-radius: 15px;
+
+  box-shadow: 0 5px 22px rgba(20, 49, 88, 0.045);
+}
+
+.topbar-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.admin-topbar .eyebrow {
+  color: var(--admin-red);
+  font-family: "Poppins", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.7px;
 }
 
 .admin-topbar h2 {
-  margin:.3rem 0
+  margin: 0;
+
+  color: #132f5b;
+  font-family: "Poppins", "Noto Sans Tamil", sans-serif;
+  font-size: clamp(20px, 2vw, 26px);
+  font-weight: 700;
+  line-height: 1.35;
 }
 
-.admin-topbar>div:last-child {
-  display:flex;align-items:center;gap:.75rem
+.topbar-description {
+  margin: 0;
+  color: var(--admin-muted);
+  font-family: "Poppins", sans-serif;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* ==========================================
+   TOPBAR ACTIONS
+========================================== */
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.admin-topbar .admin-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 9px 12px;
+  border-radius: 8px;
+
+  background: #fff2f3;
+  border: 1px solid #ffdce1;
+
+  color: #c42e47;
+  font-family: "Poppins", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.admin-topbar .public-site-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+  min-height: 39px;
+  padding: 9px 15px;
+
+  background: #1e4e96;
+  border: 1px solid #1e4e96;
+  border-radius: 9px;
+
+  color: #ffffff;
+  font-family: "Poppins", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.admin-topbar .public-site-btn:hover {
+  background: #163c75;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* ==========================================
+   ROUTER CONTENT AREA
+========================================== */
+
+.admin-content {
+  min-width: 0;
+  width: 100%;
+}
+
+/* ==========================================
+   ACCESSIBILITY
+========================================== */
+
+.admin-sidebar a:focus-visible,
+.admin-sidebar button:focus-visible,
+.admin-topbar a:focus-visible {
+  outline: 3px solid #67a8ff;
+  outline-offset: 3px;
+}
+
+/* REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-sidebar .nav-item,
+  .sidebar-foot a,
+  .sidebar-foot button,
+  .admin-topbar .public-site-btn {
+    transition: none;
+  }
+
+  .admin-sidebar .nav-item:hover,
+  .admin-topbar .public-site-btn:hover {
+    transform: none;
+  }
 }

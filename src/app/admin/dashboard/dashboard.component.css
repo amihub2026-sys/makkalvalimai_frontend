@@ -1,20 +1,525 @@
-/* dashboard — section layout and responsive styles */
-.stat-grid {
-  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.9rem;margin-bottom:1rem
+
+/* ==========================================
+   MAKKAL VALIMAI - ADMIN DASHBOARD
+   Desktop / Common Styles
+========================================== */
+
+:host {
+  display: block;
+  min-width: 0;
+
+  --dash-blue: #1e4e96;
+  --dash-dark-blue: #17365f;
+  --dash-red: #cb2940;
+  --dash-text: #20314c;
+  --dash-muted: #70819c;
+  --dash-border: #e0e8f2;
+  --dash-white: #ffffff;
 }
+
+.dashboard-page {
+  width: 100%;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  color: var(--dash-text);
+  font-family: "Poppins", "Noto Sans Tamil", sans-serif;
+}
+
+.dashboard-page,
+.dashboard-page * {
+  box-sizing: border-box;
+}
+
+/* ==========================================
+   DASHBOARD INTRO
+========================================== */
+
+.dashboard-intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 8px 2px;
+}
+
+.dashboard-eyebrow,
+.panel-eyebrow {
+  display: block;
+
+  color: var(--dash-red);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.7px;
+}
+
+.dashboard-intro h3 {
+  margin: 7px 0;
+  color: var(--dash-dark-blue);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.dashboard-intro p {
+  margin: 0;
+
+  color: var(--dash-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.dashboard-create-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  min-height: 43px;
+  padding: 11px 18px;
+
+  color: #ffffff;
+  background: var(--dash-blue);
+  border-radius: 10px;
+
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+
+  box-shadow: 0 5px 15px rgba(30, 78, 150, 0.13);
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.dashboard-create-btn:hover {
+  color: #ffffff;
+  background: #163c75;
+  transform: translateY(-2px);
+}
+
+/* ==========================================
+   LOADING AND ERROR MESSAGES
+========================================== */
+
+.dashboard-message {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 14px 18px;
+  border-radius: 10px;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.loading-message {
+  background: #e9f2ff;
+  border: 1px solid #c9defb;
+  color: #1d559b;
+}
+
+.error-message {
+  background: #fff0f2;
+  border: 1px solid #ffced6;
+  color: #b5233c;
+}
+
+/* ==========================================
+   STATISTICS GRID
+========================================== */
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  width: 100%;
+}
+
+/* STATISTICS CARD */
 
 .stat {
-  padding:1.25rem;display:grid;gap:.5rem
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  min-width: 0;
+  min-height: 185px;
+  padding: 21px;
+
+  background: var(--dash-white);
+  border: 1px solid var(--dash-border);
+  border-top: 3px solid var(--stat-accent, #1e4e96);
+  border-radius: 14px;
+
+  color: var(--dash-text);
+  text-decoration: none;
+
+  box-shadow: 0 5px 20px rgba(20, 49, 88, 0.045);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
-.stat i {
-  font-size:1.3rem;color:#ff4e65
+.stat:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(20, 49, 88, 0.1);
+  color: var(--dash-text);
 }
 
-.stat b {
-  font-size:1.8rem
+.stat-news {
+  --stat-accent: #2865b0;
+  --stat-soft: #eaf3ff;
 }
 
-.stat span {
-  font-size:.77rem;color:#ccd2dd
+.stat-pending {
+  --stat-accent: #db9331;
+  --stat-soft: #fff5e5;
+}
+
+.stat-solved {
+  --stat-accent: #23966b;
+  --stat-soft: #e8f8f0;
+}
+
+.stat-alerts {
+  --stat-accent: #cb2940;
+  --stat-soft: #fff0f3;
+}
+
+/* CARD TOP SECTION */
+
+.stat-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  margin-bottom: 8px;
+}
+
+.stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+
+  background: var(--stat-soft);
+  border-radius: 12px;
+
+  color: var(--stat-accent);
+  font-size: 19px;
+}
+
+.stat-arrow {
+  color: #a1afc3;
+  font-size: 12px;
+  transition: color 0.2s ease;
+}
+
+.stat:hover .stat-arrow {
+  color: var(--stat-accent);
+}
+
+.stat > b {
+  color: #18365f;
+  font-size: 32px;
+  font-weight: 750;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+  color: #334a6b;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.stat > small {
+  color: var(--dash-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* ==========================================
+   DASHBOARD BOTTOM GRID
+========================================== */
+
+.dashboard-bottom-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+
+  gap: 20px;
+  width: 100%;
+}
+
+.dashboard-panel {
+  min-width: 0;
+
+  padding: 24px;
+
+  background: var(--dash-white);
+  border: 1px solid var(--dash-border);
+  border-radius: 15px;
+
+  box-shadow: 0 5px 20px rgba(20, 49, 88, 0.04);
+}
+
+.panel-heading {
+  margin-bottom: 22px;
+}
+
+.panel-heading h3 {
+  margin: 7px 0;
+
+  color: var(--dash-dark-blue);
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.panel-heading p {
+  margin: 0;
+
+  color: var(--dash-muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* ==========================================
+   QUICK ACTIONS
+========================================== */
+
+.quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quick-action {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  min-width: 0;
+  padding: 13px;
+
+  background: #f7faff;
+  border: 1px solid #e9eff7;
+  border-radius: 11px;
+
+  color: var(--dash-text);
+  text-decoration: none;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.quick-action:hover {
+  background: #eef5ff;
+  border-color: #c9dcf6;
+  color: var(--dash-text);
+  transform: translateX(3px);
+}
+
+.quick-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+
+  background: #e7f0ff;
+  border-radius: 10px;
+
+  color: var(--dash-blue);
+  font-size: 16px;
+}
+
+.quick-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+
+  min-width: 0;
+}
+
+.quick-text b {
+  color: #223f66;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.quick-text small {
+  color: var(--dash-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.quick-action > i:last-child {
+  color: #9babc0;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+/* ==========================================
+   MAKKAL PROBLEMS WORKFLOW
+========================================== */
+
+.workflow-list {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+
+  padding: 3px 0;
+}
+
+.workflow-item {
+  position: relative;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+
+  padding: 0 0 25px;
+}
+
+.workflow-item:not(:last-child)::before {
+  content: "";
+
+  position: absolute;
+  top: 38px;
+  bottom: 3px;
+  left: 18px;
+
+  width: 2px;
+  background: #dbe5f2;
+}
+
+.workflow-item:last-child {
+  padding-bottom: 5px;
+}
+
+.workflow-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+
+  background: #e8f1fd;
+  border: 1px solid #d5e4f8;
+  border-radius: 50%;
+
+  color: var(--dash-blue);
+  font-size: 13px;
+  font-weight: 700;
+
+  z-index: 1;
+}
+
+.solved-number {
+  color: #ffffff;
+  background: #23966b;
+  border-color: #23966b;
+}
+
+.workflow-item > div {
+  flex: 1;
+  min-width: 0;
+  padding-top: 2px;
+}
+
+.workflow-item b {
+  color: #294368;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.workflow-item p {
+  margin: 5px 0 0;
+
+  color: var(--dash-muted);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+/* WORKFLOW ACTION */
+
+.workflow-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  width: 100%;
+  margin-top: 20px;
+  padding: 13px 16px;
+
+  background: #eaf2ff;
+  border: 1px solid #d2e2f9;
+  border-radius: 10px;
+
+  color: var(--dash-blue);
+  font-size: 12px;
+  font-weight: 650;
+  text-decoration: none;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.workflow-action:hover {
+  background: var(--dash-blue);
+  color: #ffffff;
+}
+
+/* ==========================================
+   KEYBOARD ACCESSIBILITY
+========================================== */
+
+.dashboard-page a:focus-visible {
+  outline: 3px solid #5898ed;
+  outline-offset: 3px;
+}
+
+/* ==========================================
+   REDUCED MOTION
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-page a {
+    transition: none;
+  }
+
+  .dashboard-page a:hover {
+    transform: none;
+  }
 }

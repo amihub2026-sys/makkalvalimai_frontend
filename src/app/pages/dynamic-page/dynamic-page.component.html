@@ -1,0 +1,509 @@
+
+<!-- ==========================================
+     MAKKAL VALIMAI
+     PUBLIC DYNAMIC PAGE
+========================================== -->
+
+<main class="mv-dynamic-page">
+
+  <!-- ======================================
+       LOADING STATE
+  ======================================= -->
+
+  <section
+    *ngIf="loading"
+    class="mv-dynamic-state"
+    role="status"
+  >
+    <div class="mv-loading-spinner"></div>
+
+    <h2>Loading Page...</h2>
+
+    <p>
+      பக்கம் ஏற்றப்படுகிறது...
+    </p>
+  </section>
+
+  <!-- ======================================
+       ERROR STATE
+  ======================================= -->
+
+  <section
+    *ngIf="!loading && errorMessage"
+    class="mv-dynamic-state mv-error-state"
+    role="alert"
+  >
+    <div class="mv-state-icon">
+      <i class="fa-solid fa-circle-exclamation"></i>
+    </div>
+
+    <h2>Page Unavailable</h2>
+
+    <p>{{ errorMessage }}</p>
+  </section>
+
+  <!-- ======================================
+       PUBLISHED WEBSITE PAGE
+  ======================================= -->
+
+  <ng-container
+    *ngIf="!loading && !errorMessage && page as currentPage"
+  >
+
+    <!-- PAGE HEADER -->
+
+    <header class="mv-dynamic-header">
+
+      <div class="mv-dynamic-container">
+
+        <div class="mv-dynamic-header-content">
+
+          <div class="mv-dynamic-title-group">
+
+            <span class="mv-dynamic-eyebrow">
+              MAKKAL VALIMAI
+            </span>
+
+            <h1>
+              {{ pageTitle }}
+            </h1>
+
+          </div>
+
+          <!-- LANGUAGE SWITCH -->
+
+          <div
+            class="mv-language-switch"
+            role="group"
+            aria-label="Page language"
+          >
+
+            <button
+              type="button"
+              [class.active]="language === 'ta'"
+              [attr.aria-pressed]="language === 'ta'"
+              (click)="setLanguage('ta')"
+            >
+              தமிழ்
+            </button>
+
+            <button
+              type="button"
+              [class.active]="language === 'en'"
+              [attr.aria-pressed]="language === 'en'"
+              (click)="setLanguage('en')"
+            >
+              English
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </header>
+
+    <!-- ====================================
+         PAGE CONTENT
+    ===================================== -->
+
+    <section class="mv-dynamic-content">
+
+      <div
+        class="mv-dynamic-container"
+        [attr.lang]="language"
+      >
+
+        <!-- EMPTY CONTENT -->
+
+        <div
+          *ngIf="blocks.length === 0"
+          class="mv-dynamic-state"
+        >
+          <h2>
+            {{
+              language === 'ta'
+                ? 'உள்ளடக்கம் இல்லை'
+                : 'No content available'
+            }}
+          </h2>
+        </div>
+
+        <!-- ALL PUBLISHED BLOCKS -->
+
+        <div
+          class="mv-content-blocks"
+          *ngIf="blocks.length > 0"
+        >
+
+          <article
+            *ngFor="
+              let block of blocks;
+              trackBy: trackByBlock
+            "
+            class="mv-content-block"
+            [ngClass]="'mv-block-' + block.rendererType"
+          >
+
+            <ng-container [ngSwitch]="block.rendererType">
+
+              <!-- ============================
+                   HEADING
+              ============================= -->
+
+              <div
+                *ngSwitchCase="'heading'"
+                class="mv-heading-block"
+                [ngSwitch]="headingLevel(block)"
+              >
+
+                <h1 *ngSwitchCase="1">
+                  {{ blockText(block) }}
+                </h1>
+
+                <h2 *ngSwitchCase="2">
+                  {{ blockText(block) }}
+                </h2>
+
+                <h3 *ngSwitchCase="3">
+                  {{ blockText(block) }}
+                </h3>
+
+                <h4 *ngSwitchCase="4">
+                  {{ blockText(block) }}
+                </h4>
+
+                <h5 *ngSwitchCase="5">
+                  {{ blockText(block) }}
+                </h5>
+
+                <h6 *ngSwitchCase="6">
+                  {{ blockText(block) }}
+                </h6>
+
+              </div>
+
+              <!-- ============================
+                   TEXT EDITOR
+              ============================= -->
+
+              <div
+                *ngSwitchCase="'text'"
+                class="mv-text-block"
+              >
+
+                <p>
+                  {{ blockText(block) }}
+                </p>
+
+              </div>
+
+              <!-- ============================
+                   IMAGE / SPECIAL BANNER
+              ============================= -->
+
+              <figure
+                *ngSwitchCase="'image'"
+                class="mv-image-block"
+              >
+
+                <img
+                  *ngIf="mediaUrl(block.content.url)"
+                  [src]="mediaUrl(block.content.url)"
+                  [alt]="blockAlt(block)"
+                  loading="lazy"
+                />
+
+                <figcaption
+                  *ngIf="blockCaption(block)"
+                >
+                  {{ blockCaption(block) }}
+                </figcaption>
+
+              </figure>
+
+              <!-- ============================
+                   VIDEO
+              ============================= -->
+
+              <div
+                *ngSwitchCase="'video'"
+                class="mv-video-block"
+              >
+
+                <video
+                  *ngIf="mediaUrl(block.content.url)"
+                  [src]="mediaUrl(block.content.url)"
+                  controls
+                  preload="metadata"
+                  playsinline
+                ></video>
+
+                <p
+                  *ngIf="blockCaption(block)"
+                  class="mv-media-caption"
+                >
+                  {{ blockCaption(block) }}
+                </p>
+
+              </div>
+
+              <!-- ============================
+                   AUDIO
+              ============================= -->
+
+              <div
+                *ngSwitchCase="'audio'"
+                class="mv-audio-block"
+              >
+
+                <div class="mv-audio-heading">
+                  <i class="fa-solid fa-volume-high"></i>
+
+                  <span>
+                    {{
+                      language === 'ta'
+                        ? 'ஒலி பதிவு'
+                        : 'Audio'
+                    }}
+                  </span>
+                </div>
+
+                <audio
+                  *ngIf="mediaUrl(block.content.url)"
+                  [src]="mediaUrl(block.content.url)"
+                  controls
+                  preload="metadata"
+                ></audio>
+
+                <p
+                  *ngIf="blockCaption(block)"
+                  class="mv-media-caption"
+                >
+                  {{ blockCaption(block) }}
+                </p>
+
+              </div>
+
+              <!-- ============================
+                   IMAGE GALLERY
+              ============================= -->
+
+              <div
+                *ngSwitchCase="'gallery'"
+                class="mv-gallery-block"
+              >
+
+                <div class="mv-gallery-grid">
+
+                  <figure
+                    *ngFor="
+                      let item of blockItems(block);
+                      trackBy: trackByItem
+                    "
+                    class="mv-gallery-item"
+                  >
+
+                    <img
+                      *ngIf="mediaUrl(item.url)"
+                      [src]="mediaUrl(item.url)"
+                      [alt]="localize(item.alt)"
+                      loading="lazy"
+                    />
+
+                    <figcaption
+                      *ngIf="localize(item.caption)"
+                    >
+                      {{ localize(item.caption) }}
+                    </figcaption>
+
+                  </figure>
+
+                </div>
+
+              </div>
+
+              <!-- ============================
+                   CONTENT CARDS
+              ============================= -->
+
+              <div
+                *ngSwitchCase="'cards'"
+                class="mv-cards-block"
+              >
+
+                <div class="mv-cards-grid">
+
+                  <div
+                    *ngFor="
+                      let item of blockItems(block);
+                      trackBy: trackByItem
+                    "
+                    class="mv-public-card"
+                  >
+
+                    <!-- =================================
+                         CARD IMAGE
+                    ================================= -->
+
+                    <div
+                      *ngIf="item.imageUrl && mediaUrl(item.imageUrl)"
+                      class="mv-public-card-image"
+                      [class.mv-team-card-image]="block.toolKey === 'team-members'"
+                    >
+
+                      <!-- TEAM MEMBERS:
+                           CLICK TO OPEN FULL PHOTO -->
+
+                      <button
+                        *ngIf="block.toolKey === 'team-members'; else regularCardImage"
+                        type="button"
+                        class="mv-team-photo-trigger"
+                        (click)="openTeamPhoto(item.imageUrl, localize(item.title))"
+                        [attr.aria-label]="'View full photo of ' + localize(item.title)"
+                        [attr.title]="'View full photo of ' + localize(item.title)"
+                      >
+
+                        <img
+                          [src]="mediaUrl(item.imageUrl)"
+                          [alt]="localize(item.title)"
+                          loading="lazy"
+                        />
+
+                        <span
+                          class="mv-team-photo-hint"
+                          aria-hidden="true"
+                        >
+                          <i class="fa-solid fa-expand"></i>
+                          View Full Photo
+                        </span>
+
+                      </button>
+
+                      <!-- NORMAL CARD IMAGE:
+                           KEEP EXISTING BEHAVIOR -->
+
+                      <ng-template #regularCardImage>
+
+                        <img
+                          [src]="mediaUrl(item.imageUrl)"
+                          [alt]="localize(item.title)"
+                          loading="lazy"
+                        />
+
+                      </ng-template>
+
+                    </div>
+
+                    <!-- =================================
+                         CARD CONTENT
+                    ================================= -->
+
+                    <div class="mv-public-card-body">
+
+                      <h3>
+                        {{ localize(item.title) }}
+                      </h3>
+
+                      <p
+                        *ngIf="localize(item.description)"
+                      >
+                        {{ localize(item.description) }}
+                      </p>
+
+                      <a
+                        *ngIf="
+                          item.linkUrl &&
+                          cardLink(item.linkUrl)
+                        "
+                        [href]="cardLink(item.linkUrl)"
+                        class="mv-public-card-link"
+                        rel="noopener noreferrer"
+                      >
+
+                        {{
+                          language === 'ta'
+                            ? 'மேலும் அறிய'
+                            : 'Learn More'
+                        }}
+
+                        <i
+                          class="fa-solid fa-arrow-right"
+                          aria-hidden="true"
+                        ></i>
+
+                      </a>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              <!-- ============================
+                   UNKNOWN RENDERER
+              ============================= -->
+
+              <ng-container *ngSwitchDefault>
+              </ng-container>
+
+            </ng-container>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </ng-container>
+
+  <!-- ==========================================
+       TEAM MEMBER FULL PHOTO POPUP
+       ONLY FOR TEAM MEMBERS TOOL
+  ========================================== -->
+
+  <div
+    *ngIf="selectedTeamPhotoUrl as fullPhoto"
+    class="mv-team-photo-overlay"
+  >
+
+    <div
+      class="mv-team-photo-dialog"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="selectedTeamPhotoAlt || 'Full team member photo'"
+    >
+
+      <!-- CLOSE BUTTON -->
+
+      <button
+        type="button"
+        class="mv-team-photo-close"
+        (click)="closeTeamPhoto()"
+        aria-label="Close full photo"
+      >
+
+        <i
+          class="fa-solid fa-xmark"
+          aria-hidden="true"
+        ></i>
+
+      </button>
+
+      <!-- FULL ORIGINAL PHOTO -->
+
+      <img
+        [src]="fullPhoto"
+        [alt]="selectedTeamPhotoAlt"
+      />
+
+    </div>
+
+  </div>
+
+</main>

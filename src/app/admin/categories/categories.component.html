@@ -1,14 +1,616 @@
+
+<!-- ==========================================
+     MAKKAL VALIMAI
+     NEWS CATEGORY MANAGEMENT
+========================================== -->
+
 <div class="categories-page">
-  <div class="page-heading"><div><span class="eyebrow">MAKKAL VALIMAI NEWSROOM</span>
-  <h1>News categories</h1><p>Article types currently accepted by the existing Node.js API.</p></div></div>
-  <section class="panel">
-    <h2>Backend-supported article types</h2>
-    <p class="muted">These names classify articles in MongoDB; article titles, images, descriptions and publication status are always read from the API. Category creation/editing is unavailable because the current backend has no category-management endpoints. No fake save button is provided.</p>
-    <div class="category-list">
-      <div class="category-item" *ngFor="let category of categories">
-        <div class="category-info"><strong>{{ category.name.ta }}</strong><span>{{ category.name.en }}</span><small>{{ category.slug }}</small></div>
-        <span class="status">Supported</span>
-      </div>
+
+  <!-- PAGE HEADER -->
+  <section class="categories-header">
+
+    <div class="categories-heading">
+      <span class="section-eyebrow">
+        NEWSROOM MANAGEMENT
+      </span>
+
+      <h2>News Categories</h2>
+
+      <p>
+        Create and manage bilingual news categories
+        for the Makkal Valimai website.
+      </p>
     </div>
+
+    <button
+      type="button"
+      class="add-category-btn"
+      (click)="newCategory()"
+      [disabled]="saving || !!deletingSlug"
+    >
+      <i class="fa-solid fa-plus"></i>
+      Add New Category
+    </button>
+
   </section>
+
+  <!-- MESSAGES -->
+  <div
+    *ngIf="error"
+    class="category-message error-message"
+    role="alert"
+  >
+    <i class="fa-solid fa-circle-exclamation"></i>
+    <span>{{ error }}</span>
+  </div>
+
+  <div
+    *ngIf="message"
+    class="category-message success-message"
+    role="status"
+  >
+    <i class="fa-solid fa-circle-check"></i>
+    <span>{{ message }}</span>
+  </div>
+
+  <!-- MANAGEMENT LAYOUT -->
+  <div class="categories-layout">
+
+    <!-- ======================================
+         CREATE / EDIT CATEGORY FORM
+    ======================================= -->
+    <section class="category-form-panel">
+
+      <div class="panel-header">
+
+        <div class="panel-icon">
+          <i class="fa-solid fa-layer-group"></i>
+        </div>
+
+        <div>
+          <h3>
+            {{
+              editingSlug
+                ? 'Edit News Category'
+                : 'Create News Category'
+            }}
+          </h3>
+
+          <p>
+            {{
+              editingSlug
+                ? 'Update the selected category details.'
+                : 'Add a new bilingual news category.'
+            }}
+          </p>
+        </div>
+
+      </div>
+
+      <form
+        class="category-form"
+        (ngSubmit)="saveCategory()"
+        #categoryForm="ngForm"
+      >
+
+        <!-- CATEGORY SLUG -->
+        <div class="form-group">
+
+          <label for="categorySlug">
+            Category Slug
+            <span class="required">*</span>
+          </label>
+
+          <input
+            id="categorySlug"
+            type="text"
+            name="slug"
+            [(ngModel)]="draft.slug"
+            placeholder="Example: local-news"
+            maxlength="80"
+            pattern="[a-z0-9]+(-[a-z0-9]+)*"
+            required
+            [readonly]="!!editingSlug"
+            [disabled]="saving || !!deletingSlug"
+          />
+
+          <small class="field-help">
+            Lowercase English letters, numbers and
+            hyphens only. Cannot be changed after creation.
+          </small>
+
+        </div>
+
+        <!-- TAMIL NAME -->
+        <div class="form-group">
+
+          <label for="categoryTamil">
+            Tamil Category Name
+            <span class="required">*</span>
+          </label>
+
+          <input
+            id="categoryTamil"
+            type="text"
+            name="nameTa"
+            [(ngModel)]="draft.name.ta"
+            placeholder="உள்ளூர் செய்திகள்"
+            maxlength="120"
+            required
+            [disabled]="saving || !!deletingSlug"
+          />
+
+        </div>
+
+        <!-- ENGLISH NAME -->
+        <div class="form-group">
+
+          <label for="categoryEnglish">
+            English Category Name
+            <span class="required">*</span>
+          </label>
+
+          <input
+            id="categoryEnglish"
+            type="text"
+            name="nameEn"
+            [(ngModel)]="draft.name.en"
+            placeholder="Local News"
+            maxlength="120"
+            required
+            [disabled]="saving || !!deletingSlug"
+          />
+
+        </div>
+
+        <!-- SORT ORDER -->
+        <div class="form-group">
+
+          <label for="categoryOrder">
+            Display Order
+          </label>
+
+          <input
+            id="categoryOrder"
+            type="number"
+            name="sortOrder"
+            [(ngModel)]="draft.sortOrder"
+            min="0"
+            step="1"
+            required
+            [disabled]="saving || !!deletingSlug"
+          />
+
+          <small class="field-help">
+            Categories with smaller numbers appear first.
+          </small>
+
+        </div>
+
+        <!-- ======================================
+             NEW: HEADER TYPE
+        ======================================= -->
+        <div class="form-group">
+
+          <label for="categoryHeaderType">
+            Header Type
+            <span class="required">*</span>
+          </label>
+
+          <select
+            id="categoryHeaderType"
+            name="headerType"
+            [(ngModel)]="draft.headerType"
+            [disabled]="saving || !!deletingSlug"
+            required
+          >
+            <option value="main">
+              Main Header
+            </option>
+
+            <option value="more">
+              More Dropdown
+            </option>
+
+            <option value="about">
+              About Us Dropdown
+            </option>
+
+            <option value="hidden">
+              Do Not Show in Header
+            </option>
+          </select>
+
+          <small class="field-help">
+            Choose where this category should appear
+            in the public website navigation.
+          </small>
+
+          <small
+            class="field-help"
+            *ngIf="draft.headerType === 'main'"
+          >
+            This category will be assigned to the
+            main navigation bar.
+          </small>
+
+          <small
+            class="field-help"
+            *ngIf="draft.headerType === 'more'"
+          >
+            This category will be assigned to the
+            More dropdown.
+          </small>
+
+          <small
+            class="field-help"
+            *ngIf="draft.headerType === 'about'"
+          >
+            This category will be assigned to the
+            About Us dropdown.
+          </small>
+
+          <small
+            class="field-help"
+            *ngIf="draft.headerType === 'hidden'"
+          >
+            This category will be hidden from the
+            website header without being deleted.
+          </small>
+
+        </div>
+
+        <!-- CATEGORY SETTINGS -->
+        <div class="category-settings">
+
+          <h4>Category Settings</h4>
+
+          <!-- ACTIVE -->
+          <label class="setting-item">
+
+            <input
+              type="checkbox"
+              name="active"
+              [(ngModel)]="draft.active"
+              [disabled]="saving || !!deletingSlug"
+            />
+
+            <span class="setting-content">
+              <b>Active Category</b>
+              <small>
+                Allow this category to be selected
+                for new articles.
+              </small>
+            </span>
+
+          </label>
+
+          <!-- SHOW IN MENU -->
+          <label class="setting-item">
+
+            <input
+              type="checkbox"
+              name="showInMenu"
+              [(ngModel)]="draft.showInMenu"
+              [disabled]="saving || !!deletingSlug"
+            />
+
+            <span class="setting-content">
+              <b>Show in Website Menu</b>
+              <small>
+                Make this category eligible for
+                public navigation.
+              </small>
+            </span>
+
+          </label>
+
+          <!-- VERIFIED SOURCE -->
+          <label class="setting-item">
+
+            <input
+              type="checkbox"
+              name="requiresVerifiedSource"
+              [(ngModel)]="draft.requiresVerifiedSource"
+              [disabled]="saving || !!deletingSlug"
+            />
+
+            <span class="setting-content">
+              <b>Require Verified Source</b>
+              <small>
+                Require a verified source before
+                publishing articles in this category.
+              </small>
+            </span>
+
+          </label>
+
+        </div>
+
+        <!-- FORM ACTIONS -->
+        <div class="category-form-actions">
+
+          <button
+            type="submit"
+            class="save-category-btn"
+            [disabled]="
+              saving ||
+              !!deletingSlug ||
+              categoryForm.invalid
+            "
+          >
+            <i
+              [class]="
+                saving
+                  ? 'fa-solid fa-spinner fa-spin'
+                  : 'fa-solid fa-floppy-disk'
+              "
+            ></i>
+
+            {{
+              saving
+                ? 'Saving...'
+                : editingSlug
+                  ? 'Update Category'
+                  : 'Save Category'
+            }}
+          </button>
+
+          <button
+            type="button"
+            class="reset-category-btn"
+            (click)="newCategory()"
+            [disabled]="saving || !!deletingSlug"
+          >
+            <i class="fa-solid fa-rotate-left"></i>
+            Clear
+          </button>
+
+        </div>
+
+      </form>
+
+    </section>
+
+    <!-- ======================================
+         SAVED CATEGORY LIST
+    ======================================= -->
+    <section class="category-list-panel">
+
+      <div class="panel-header">
+
+        <div class="panel-icon">
+          <i class="fa-solid fa-list"></i>
+        </div>
+
+        <div>
+          <h3>Saved Categories</h3>
+          <p>
+            Categories stored in MongoDB.
+          </p>
+        </div>
+
+        <span class="category-count">
+          {{ categories.length }}
+        </span>
+
+      </div>
+
+      <!-- LOADING -->
+      <div
+        class="category-loading"
+        *ngIf="loading"
+        role="status"
+      >
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        Loading categories...
+      </div>
+
+      <!-- EMPTY STATE -->
+      <div
+        class="category-empty"
+        *ngIf="!loading && categories.length === 0"
+      >
+        <i class="fa-solid fa-folder-open"></i>
+        <h4>No Categories Found</h4>
+        <p>
+          Create your first news category using
+          the form.
+        </p>
+      </div>
+
+      <!-- CATEGORY TABLE -->
+      <div
+        class="category-table-wrapper"
+        *ngIf="!loading && categories.length > 0"
+      >
+
+        <table class="category-table">
+
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th>Category</th>
+              <th>Status</th>
+              <th>Menu</th>
+              <th>Header Type</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr
+              *ngFor="let category of categories"
+              [class.selected-row]="
+                editingSlug === category.slug
+              "
+            >
+
+              <!-- ORDER -->
+              <td>
+                <span class="order-badge">
+                  {{ category.sortOrder }}
+                </span>
+              </td>
+
+              <!-- CATEGORY NAME -->
+              <td>
+
+                <div class="category-name-cell">
+
+                  <strong>
+                    {{ category.name.ta }}
+                  </strong>
+
+                  <span>
+                    {{ category.name.en }}
+                  </span>
+
+                  <small>
+                    {{ category.slug }}
+                  </small>
+
+                  <span
+                    class="verified-badge"
+                    *ngIf="category.requiresVerifiedSource"
+                  >
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Verified source required
+                  </span>
+
+                </div>
+
+              </td>
+
+              <!-- STATUS -->
+              <td>
+
+                <span
+                  class="status-badge"
+                  [class.status-active]="category.active"
+                  [class.status-inactive]="!category.active"
+                >
+                  <i
+                    [class]="
+                      category.active
+                        ? 'fa-solid fa-circle-check'
+                        : 'fa-solid fa-circle-minus'
+                    "
+                  ></i>
+
+                  {{
+                    category.active
+                      ? 'Active'
+                      : 'Inactive'
+                  }}
+                </span>
+
+              </td>
+
+              <!-- MENU VISIBILITY -->
+              <td>
+
+                <span
+                  class="menu-badge"
+                  [class.menu-visible]="
+                    category.showInMenu &&
+                    category.headerType !== 'hidden'
+                  "
+                >
+                  {{
+                    !category.showInMenu ||
+                    category.headerType === 'hidden'
+                      ? 'Hidden'
+                      : 'Visible'
+                  }}
+                </span>
+
+              </td>
+
+              <!-- HEADER TYPE -->
+              <td>
+
+                <span class="menu-badge">
+                  {{
+                    category.headerType === 'main'
+                      ? 'Main Header'
+                      : category.headerType === 'about'
+                        ? 'About Us'
+                        : category.headerType === 'hidden'
+                          ? 'Hidden'
+                          : 'More Dropdown'
+                  }}
+                </span>
+
+              </td>
+
+              <!-- ACTIONS -->
+              <td>
+
+                <div class="category-row-actions">
+
+                  <button
+                    type="button"
+                    class="edit-btn"
+                    (click)="editCategory(category)"
+                    [disabled]="saving || !!deletingSlug"
+                    [attr.aria-label]="
+                      'Edit ' + category.name.en
+                    "
+                    title="Edit Category"
+                  >
+                    <i class="fa-solid fa-pen"></i>
+                    Edit
+                  </button>
+
+                  <button
+                    type="button"
+                    class="delete-btn"
+                    (click)="deleteCategory(category)"
+                    [disabled]="saving || !!deletingSlug"
+                    [attr.aria-label]="
+                      'Delete ' + category.name.en
+                    "
+                    title="Delete Category"
+                  >
+                    <i
+                      [class]="
+                        deletingSlug === category.slug
+                          ? 'fa-solid fa-spinner fa-spin'
+                          : 'fa-solid fa-trash'
+                      "
+                    ></i>
+                    Delete
+                  </button>
+
+                </div>
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+      <!-- INFORMATION -->
+      <div class="category-info-note">
+        <i class="fa-solid fa-circle-info"></i>
+
+        <p>
+          Categories already used by news articles
+          or drafts cannot be deleted. First delete
+          all linked news articles, then delete the
+          category. Disabling or hiding a category
+          does not delete its news.
+        </p>
+      </div>
+
+    </section>
+
+  </div>
+
 </div>

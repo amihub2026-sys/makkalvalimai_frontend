@@ -3,14 +3,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
+
 import {
   Article,
   Issue,
   PublicAlert,
   OpinionPoll,
   Ad,
-  Snapshot
+  Snapshot,
+  NewsCategory
 } from '../core/models';
+
 
 import { environment } from '../../environments/environment';
 
@@ -31,6 +34,104 @@ export interface MediaUploadResponse {
 export interface IssueModerationDetails {
   resolution?: string;
   afterPhoto?: string;
+}
+
+export interface NavigationItem {
+  _id?: string;
+
+  key: string;
+
+  name: {
+    ta: string;
+    en: string;
+  };
+
+  type: 'page' | 'category' | 'dropdown';
+
+  path: string;
+  categorySlug: string;
+  parentKey: string | null;
+
+  active: boolean;
+  sortOrder: number;
+
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+// ==========================================
+// EDITING TOOLS MANAGEMENT
+// ==========================================
+
+export interface EditingTool {
+  _id?: string;
+
+  key: string;
+
+  label: {
+    ta: string;
+    en: string;
+  };
+
+  rendererType:
+    | 'heading'
+    | 'text'
+    | 'image'
+    | 'video'
+    | 'audio'
+      | 'gallery'
+      | 'cards';
+
+  icon: string;
+  iconUrl?: string;
+
+  active: boolean;
+  sortOrder: number;
+
+  archivedAt?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface DynamicPageBlock {
+  _id?: string;
+  toolKey: string;
+  rendererType: EditingTool['rendererType'];
+  sortOrder: number;
+  enabled: boolean;
+  content: unknown;
+}
+
+export interface DynamicPageBlockInput {
+  toolKey: string;
+  sortOrder?: number;
+  enabled?: boolean;
+  content: unknown;
+}
+
+// ==========================================
+// DYNAMIC COMMON PAGE BUILDER
+// ==========================================
+
+
+export interface DynamicPage {
+  _id?: string;
+
+  slug: string;
+
+  title: {
+    ta: string;
+    en: string;
+  };
+
+  status: 'draft' | 'published';
+
+  blocks?: DynamicPageBlock[];
+
+  archivedAt?: string | null;
+
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 @Injectable({
@@ -192,8 +293,502 @@ export class NewsApiService {
     this.csrfToken = '';
   }
 
-  // The unchanged backend has no category CRUD routes. Its article-kind
-  // values are defined in core/article-categories.ts instead.
+ 
+  // ==========================================
+  // ADMIN NEWS CATEGORY CRUD
+  // ==========================================
+
+  // GET ALL CATEGORIES
+  adminCategories(): Promise<NewsCategory[]> {
+    return firstValueFrom(
+      this.http.get<NewsCategory[]>(
+        `${this.base}/admin/categories`,
+        { withCredentials: true }
+      )
+    );
+  }
+
+  // CREATE OR UPDATE CATEGORY
+  async upsertCategory(
+    category: NewsCategory
+  ): Promise<NewsCategory> {
+
+    await this.restoreSession();
+
+   
+const payload = {
+  name: category.name,
+  active: category.active,
+  showInMenu: category.showInMenu,
+
+  // Save the Header Type selected by Admin.
+  // Preserve existing settings until the
+  // dropdown is added to the form.
+  ...(category.headerType
+    ? { headerType: category.headerType }
+    : {}),
+
+  sortOrder: category.sortOrder,
+  requiresVerifiedSource:
+    category.requiresVerifiedSource
+};
+
+
+    const response = await firstValueFrom(
+      this.http.put<{
+        success: boolean;
+        message: string;
+        category: NewsCategory;
+      }>(
+        `${this.base}/admin/categories/${encodeURIComponent(category.slug)}`,
+        payload,
+        this.adminOptions()
+      )
+    );
+
+    if (!response?.success || !response.category) {
+      throw new Error('Unable to save news category.');
+    }
+
+    return response.category;
+  }
+
+  // DELETE CATEGORY
+  async deleteCategory(slug: string): Promise<void> {
+
+    await this.restoreSession();
+
+    const response = await firstValueFrom(
+      this.http.delete<{
+        success: boolean;
+        deleted: boolean;
+        message: string;
+        slug: string;
+      }>(
+        `${this.base}/admin/categories/${encodeURIComponent(slug)}`,
+        this.adminOptions()
+      )
+    );
+
+    if (!response?.success || !response.deleted) {
+      throw new Error('Unable to delete news category.');
+    }
+  }
+
+  // ==========================================
+  // DYNAMIC HEADER NAVIGATION API
+  // ==========================================
+
+  // PUBLIC - GET ENABLED NAVIGATION ITEMS
+
+  async publicNavigation(): Promise<NavigationItem[]> {
+
+    const response = await firstValueFrom(
+      this.http.get<{
+        success: boolean;
+        items: NavigationItem[];
+      }>(
+        `${this.base}/public/navigation`
+      )
+    );
+
+    if (!response?.success || !Array.isArray(response.items)) {
+      throw new Error('Unable to load public navigation.');
+    }
+
+    return response.items;
+  }
+
+  // ADMIN - GET ALL NAVIGATION ITEMS
+
+  async adminNavigation(): Promise<NavigationItem[]> {
+
+    const response = await firstValueFrom(
+      this.http.get<{
+        success: boolean;
+        items: NavigationItem[];
+      }>(
+        `${this.base}/admin/navigation`,
+        { withCredentials: true }
+      )
+    );
+
+    if (!response?.success || !Array.isArray(response.items)) {
+      throw new Error('Unable to load admin navigation.');
+    }
+
+    return response.items;
+  }
+
+  // ADMIN - CREATE OR UPDATE NAVIGATION ITEM
+
+  async upsertNavigation(
+    item: NavigationItem
+  ): Promise<NavigationItem> {
+
+    await this.restoreSession();
+
+    const payload = {
+      name: item.name,
+      type: item.type,
+      path: item.path,
+      categorySlug: item.categorySlug,
+      parentKey: item.parentKey,
+      active: item.active,
+      sortOrder: item.sortOrder
+    };
+
+    const response = await firstValueFrom(
+      this.http.put<{
+        success: boolean;
+        message: string;
+        item: NavigationItem;
+      }>(
+        `${this.base}/admin/navigation/${encodeURIComponent(item.key)}`,
+        payload,
+        this.adminOptions()
+      )
+    );
+
+    if (!response?.success || !response.item) {
+      throw new Error('Unable to save navigation item.');
+    }
+
+    return response.item;
+  }
+
+  // ADMIN - DELETE NAVIGATION ITEM
+
+  async deleteNavigation(key: string): Promise<void> {
+
+    await this.restoreSession();
+
+    const response = await firstValueFrom(
+      this.http.delete<{
+        success: boolean;
+        deleted: boolean;
+        key: string;
+      }>(
+        `${this.base}/admin/navigation/${encodeURIComponent(key)}`,
+        this.adminOptions()
+      )
+    );
+
+    if (!response?.success || !response.deleted) {
+      throw new Error('Unable to delete navigation item.');
+    }
+  }
+
+// ==========================================
+// ADMIN EDITING TOOLS MANAGEMENT
+// ==========================================
+// ==========================================
+// GET AVAILABLE RENDERER OPTIONS
+// ==========================================
+
+async getRendererOptions(): Promise<{
+  value: EditingTool['rendererType'];
+  label: string;
+}[]> {
+
+  const response = await firstValueFrom(
+    this.http.get<{
+      success: boolean;
+      items: {
+        value: EditingTool['rendererType'];
+        label: string;
+      }[];
+    }>(
+      `${this.base}/admin/editing-tools/renderer-options`,
+      { withCredentials: true }
+    )
+  );
+
+  if (!response?.success || !Array.isArray(response.items)) {
+    throw new Error('Unable to load renderer options.');
+  }
+
+  return response.items;
+}
+// Get all editing tools from MongoDB
+async adminEditingTools(): Promise<EditingTool[]> {
+
+  const response = await firstValueFrom(
+    this.http.get<{
+      success: boolean;
+      items: EditingTool[];
+    }>(
+      `${this.base}/admin/editing-tools`,
+      { withCredentials: true }
+    )
+  );
+
+  if (!response?.success || !Array.isArray(response.items)) {
+    throw new Error('Unable to load editing tools.');
+  }
+
+  return response.items;
+}
+// ==========================================
+// ACTIVE EDITING TOOLS FOR COMMON PAGE BUILDER
+// ==========================================
+
+async getActiveEditingTools(): Promise<EditingTool[]> {
+
+  const response = await firstValueFrom(
+    this.http.get<{
+      success: boolean;
+      items: EditingTool[];
+    }>(
+      `${this.base}/admin/editing-tools/active`,
+      { withCredentials: true }
+    )
+  );
+
+  if (!response?.success || !Array.isArray(response.items)) {
+    throw new Error('Unable to load active editing tools.');
+  }
+
+  return response.items;
+}
+// ==========================================
+// CREATE OR UPDATE EDITING TOOL
+// ==========================================
+
+async upsertEditingTool(
+  tool: EditingTool
+): Promise<EditingTool> {
+
+  await this.restoreSession();
+
+const payload = {
+  label: tool.label,
+  rendererType: tool.rendererType,
+  icon: tool.icon,
+  iconUrl: tool.iconUrl,
+  active: tool.active,
+  sortOrder: tool.sortOrder
+};
+
+  const response = await firstValueFrom(
+    this.http.put<{
+      success: boolean;
+      message: string;
+      item: EditingTool;
+    }>(
+      `${this.base}/admin/editing-tools/${encodeURIComponent(tool.key)}`,
+      payload,
+      this.adminOptions()
+    )
+  );
+
+  if (!response?.success || !response.item) {
+    throw new Error('Unable to save editing tool.');
+  }
+
+  return response.item;
+}
+// ==========================================
+// ARCHIVE EDITING TOOL
+// ==========================================
+
+async archiveEditingTool(key: string): Promise<void> {
+
+  await this.restoreSession();
+
+  const response = await firstValueFrom(
+    this.http.delete<{
+      success: boolean;
+      archived: boolean;
+      key: string;
+    }>(
+      `${this.base}/admin/editing-tools/${encodeURIComponent(key)}`,
+      this.adminOptions()
+    )
+  );
+
+  if (!response?.success || !response.archived) {
+    throw new Error('Unable to archive editing tool.');
+  }
+}
+// ==========================================
+// RESTORE ARCHIVED EDITING TOOL
+// ==========================================
+
+async restoreEditingTool(key: string): Promise<EditingTool> {
+
+  await this.restoreSession();
+
+  const response = await firstValueFrom(
+    this.http.patch<{
+      success: boolean;
+      message: string;
+      item: EditingTool;
+    }>(
+      `${this.base}/admin/editing-tools/${encodeURIComponent(key)}/restore`,
+      {},
+      this.adminOptions()
+    )
+  );
+
+  if (!response?.success || !response.item) {
+    throw new Error('Unable to restore editing tool.');
+  }
+
+  return response.item;
+}
+// ==========================================
+// DYNAMIC COMMON PAGE BUILDER API
+// ==========================================
+
+// GET ALL DYNAMIC PAGES FROM MONGODB
+
+async adminDynamicPages(): Promise<DynamicPage[]> {
+
+  const response = await firstValueFrom(
+    this.http.get<{
+      success: boolean;
+      items: DynamicPage[];
+    }>(
+      `${this.base}/admin/dynamic-pages`,
+      { withCredentials: true }
+    )
+  );
+
+  if (
+    !response?.success ||
+    !Array.isArray(response.items)
+  ) {
+    throw new Error(
+      'Unable to load dynamic pages.'
+    );
+  }
+
+  return response.items;
+}
+// ==========================================
+// CREATE NEW DYNAMIC PAGE
+// ==========================================
+
+async createDynamicPage(
+  page: Pick<DynamicPage, 'slug' | 'title'>
+): Promise<DynamicPage> {
+
+  // Restore Admin session and CSRF token.
+  await this.restoreSession();
+
+  const payload = {
+    slug: page.slug.trim().toLowerCase(),
+    title: {
+      ta: page.title.ta.trim(),
+      en: page.title.en.trim()
+    }
+  };
+
+  const response = await firstValueFrom(
+    this.http.post<{
+      success: boolean;
+      message: string;
+      item: DynamicPage;
+    }>(
+      `${this.base}/admin/dynamic-pages`,
+      payload,
+      this.adminOptions()
+    )
+  );
+
+  if (!response?.success || !response.item) {
+    throw new Error(
+      'Unable to create dynamic page.'
+    );
+  }
+
+  return response.item;
+}
+
+// ==========================================
+// GET ONE DYNAMIC PAGE WITH CONTENT BLOCKS
+// ==========================================
+
+async adminDynamicPage(slug: string): Promise<DynamicPage> {
+  const response = await firstValueFrom(
+    this.http.get<{
+      success: boolean;
+      item: DynamicPage;
+    }>(
+      `${this.base}/admin/dynamic-pages/${encodeURIComponent(slug)}`,
+      { withCredentials: true }
+    )
+  );
+
+  if (!response?.success || !response.item) {
+    throw new Error('Unable to load dynamic page.');
+  }
+
+  return response.item;
+}
+
+// ==========================================
+// ADD CONTENT BLOCK TO DYNAMIC PAGE
+// ==========================================
+
+async addDynamicPageBlock(
+  slug: string,
+  block: DynamicPageBlockInput
+): Promise<DynamicPageBlock> {
+  await this.restoreSession();
+
+  const response = await firstValueFrom(
+    this.http.post<{
+      success: boolean;
+      message: string;
+      pageSlug: string;
+      block: DynamicPageBlock;
+    }>(
+      `${this.base}/admin/dynamic-pages/${encodeURIComponent(slug)}/blocks`,
+      block,
+      this.adminOptions()
+    )
+  );
+
+  if (!response?.success || !response.block) {
+    throw new Error('Unable to add content block.');
+  }
+
+  return response.block;
+}
+
+// ==========================================
+// DELETE CONTENT BLOCK FROM DYNAMIC PAGE
+// ==========================================
+
+async deleteDynamicPageBlock(
+  slug: string,
+  blockId: string
+): Promise<void> {
+
+  // Restore Admin session and CSRF token.
+  await this.restoreSession();
+
+  const response = await firstValueFrom(
+    this.http.delete<{
+      success: boolean;
+      message: string;
+      pageSlug: string;
+      blockId: string;
+      deleted: boolean;
+    }>(
+      `${this.base}/admin/dynamic-pages/${encodeURIComponent(slug)}/blocks/${encodeURIComponent(blockId)}`,
+      this.adminOptions()
+    )
+  );
+
+  if (!response?.success || !response.deleted) {
+    throw new Error(
+      'Unable to delete content block.'
+    );
+  }
+}
 
   // ==========================================
   // ADMIN NEWS ARTICLES
@@ -347,11 +942,16 @@ export class NewsApiService {
     if (!response || typeof response.url !== 'string') {
       throw new Error('The media API returned an invalid response.');
     }
-    // Persist the backend-issued URL as-is. /api/public/media/:id is the
-    // exact value accepted by its safeUrl validator; localhost:5000 is NOT.
-    if (!response.url.startsWith('/api/public/media/') && !/^https:\/\//.test(response.url)) {
-      throw new Error('The media API returned an unsupported file location.');
-    }
+   
+if (
+  !response.url.startsWith('/api/public/media/') &&
+  !/^https?:\/\//.test(response.url)
+) {
+  throw new Error(
+    'The media API returned an unsupported file location.'
+  );
+}
+
     return { id: response.id, kind: response.kind, url: response.url };
   }
 

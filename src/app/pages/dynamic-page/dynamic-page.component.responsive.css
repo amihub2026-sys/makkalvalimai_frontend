@@ -1,0 +1,366 @@
+
+/* ==========================================
+   MAKKAL VALIMAI
+   PUBLIC DYNAMIC PAGE - RESPONSIVE CSS
+   ========================================== */
+
+/* ==========================================
+   TABLET - 1024px AND BELOW
+========================================== */
+
+@media (max-width: 1024px) {
+
+  .mv-dynamic-container {
+    width: min(100% - 36px, 1000px);
+  }
+
+  .mv-dynamic-header {
+    padding: 38px 0;
+  }
+
+  .mv-dynamic-content {
+    padding: 32px 0 55px;
+  }
+
+  .mv-content-block {
+    padding: 26px;
+  }
+
+  .mv-gallery-grid,
+  .mv-cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+}
+
+/* ==========================================
+   SMALL TABLET - 768px AND BELOW
+========================================== */
+
+@media (max-width: 768px) {
+
+  .mv-dynamic-header {
+    padding: 32px 0;
+  }
+
+  .mv-dynamic-header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .mv-dynamic-title-group h1 {
+    font-size: 30px;
+  }
+
+  .mv-language-switch {
+    align-self: flex-start;
+  }
+
+  .mv-dynamic-content {
+    padding: 25px 0 45px;
+  }
+
+  .mv-content-blocks {
+    gap: 18px;
+  }
+
+  .mv-content-block {
+    padding: 22px;
+    border-radius: 12px;
+  }
+
+  .mv-text-block p {
+    font-size: 15px;
+    line-height: 1.85;
+  }
+
+  .mv-heading-block h2 {
+    font-size: 25px;
+  }
+
+  .mv-image-block img,
+  .mv-video-block video {
+    max-height: 480px;
+  }
+
+}
+
+/* ==========================================
+   MOBILE - 600px AND BELOW
+========================================== */
+
+@media (max-width: 600px) {
+
+  .mv-dynamic-page {
+    min-height: 60vh;
+  }
+
+  .mv-dynamic-container {
+    width: calc(100% - 28px);
+  }
+
+  /* PAGE HEADER */
+
+  .mv-dynamic-header {
+    padding: 26px 0;
+  }
+
+  .mv-dynamic-header::before {
+    width: 4px;
+  }
+
+  .mv-dynamic-header::after {
+    width: 220px;
+    height: 220px;
+    right: -85px;
+    top: -85px;
+    border-width: 32px;
+  }
+
+  .mv-dynamic-header-content {
+    gap: 16px;
+  }
+
+  .mv-dynamic-eyebrow {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+
+  .mv-dynamic-title-group h1 {
+    font-size: 25px;
+    line-height: 1.4;
+  }
+
+  /* LANGUAGE SWITCH */
+
+  .mv-language-switch {
+    width: auto;
+    max-width: 100%;
+    padding: 4px;
+    border-radius: 10px;
+  }
+
+  .mv-language-switch button {
+    min-height: 36px;
+    padding: 8px 13px;
+    font-size: 12px;
+  }
+
+  /* CONTENT LAYOUT */
+
+  .mv-dynamic-content {
+    padding: 18px 0 38px;
+  }
+
+  .mv-content-blocks {
+    gap: 14px;
+  }
+
+  .mv-content-block {
+    padding: 18px 16px;
+    border-radius: 11px;
+  }
+
+  /* HEADINGS */
+
+  .mv-heading-block {
+    padding-left: 13px;
+    border-left-width: 3px;
+  }
+
+  .mv-heading-block h1 {
+    font-size: 26px;
+  }
+
+  .mv-heading-block h2 {
+    font-size: 23px;
+  }
+
+  .mv-heading-block h3 {
+    font-size: 21px;
+  }
+
+  .mv-heading-block h4 {
+    font-size: 19px;
+  }
+
+  .mv-heading-block h5 {
+    font-size: 17px;
+  }
+
+  .mv-heading-block h6 {
+    font-size: 15px;
+  }
+
+  /* PARAGRAPHS */
+
+  .mv-text-block p {
+    font-size: 14px;
+    line-height: 1.9;
+  }
+
+  /* IMAGE BANNERS */
+
+  .mv-block-image {
+    padding: 7px;
+  }
+
+  .mv-image-block img {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    border-radius: 8px;
+  }
+
+  .mv-image-block figcaption {
+    padding: 12px 10px 4px;
+    font-size: 12px;
+  }
+
+  /* VIDEO */
+
+  .mv-video-block video {
+    width: 100%;
+    max-height: none;
+    border-radius: 8px;
+  }
+
+  /* AUDIO */
+
+  .mv-audio-block {
+    padding: 4px 0;
+  }
+
+  .mv-audio-heading {
+    font-size: 15px;
+    gap: 9px;
+    margin-bottom: 12px;
+  }
+
+  .mv-audio-heading i {
+    width: 35px;
+    height: 35px;
+    border-radius: 9px;
+  }
+
+  .mv-audio-block audio {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* GALLERY */
+
+  .mv-gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .mv-gallery-item {
+    border-radius: 9px;
+  }
+
+  .mv-gallery-item figcaption {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  /* CARDS */
+
+  .mv-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .mv-public-card {
+    border-radius: 11px;
+  }
+
+  .mv-public-card-body {
+    padding: 16px;
+    gap: 9px;
+  }
+
+  .mv-public-card-body h3 {
+    font-size: 17px;
+  }
+
+  .mv-public-card-body p {
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  .mv-public-card-link {
+    font-size: 13px;
+  }
+
+  /* LOADING / ERROR */
+
+  .mv-dynamic-state {
+    min-height: 260px;
+    padding: 35px 18px;
+  }
+
+  .mv-dynamic-state h2 {
+    font-size: 21px;
+  }
+
+  .mv-dynamic-state p {
+    font-size: 13px;
+  }
+
+}
+
+/* ==========================================
+   SMALL MOBILE - 380px AND BELOW
+========================================== */
+
+@media (max-width: 380px) {
+
+  .mv-dynamic-container {
+    width: calc(100% - 24px);
+  }
+
+  .mv-dynamic-title-group h1 {
+    font-size: 22px;
+  }
+
+  .mv-content-block {
+    padding: 15px 12px;
+  }
+
+  .mv-heading-block h2 {
+    font-size: 21px;
+  }
+
+  .mv-text-block p {
+    font-size: 13px;
+  }
+
+  .mv-gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mv-language-switch button {
+    padding: 8px 11px;
+  }
+
+}
+
+/* ==========================================
+   REDUCED MOTION
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .mv-public-card {
+    transition: none;
+  }
+
+  .mv-public-card:hover {
+    transform: none;
+  }
+
+}

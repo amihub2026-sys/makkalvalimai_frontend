@@ -1,61 +1,317 @@
 
-<div class="stat-grid">
+<!-- MAKKAL VALIMAI ADMIN DASHBOARD -->
 
-  <a routerLink="/admin/articles" class="stat glass">
-    <i class="fa-solid fa-newspaper"></i>
-    <b>{{ totalArticles ?? '—' }}</b>
-    <span>News Articles</span>
-  </a>
+<div class="dashboard-page">
 
-  <a routerLink="/admin/reports" class="stat glass">
-    <i class="fa-solid fa-clock"></i>
-    <b>{{ pendingCount ?? '—' }}</b>
-    <span>Awaiting Approval</span>
-  </a>
+  <!-- DASHBOARD INTRO -->
+  <section class="dashboard-intro">
+    <div>
+      <span class="dashboard-eyebrow">
+        NEWSROOM OVERVIEW
+      </span>
 
-  <a routerLink="/admin/reports" class="stat glass">
-    <i class="fa-solid fa-circle-check"></i>
-    <b>{{ solvedCount ?? '—' }}</b>
-    <span>Resolved Reports</span>
-  </a>
+      <h3>Newsroom at a Glance</h3>
 
-  <a routerLink="/admin/alerts" class="stat glass">
-    <i class="fa-solid fa-bell"></i>
-    <b>{{ alertsCount ?? '—' }}</b>
-    <span>Public Alerts</span>
-  </a>
+      <p>
+        Manage news articles, citizen problems,
+        public alerts and newsroom activities.
+      </p>
+    </div>
 
-</div>
+    <a
+      routerLink="/admin/articles"
+      class="dashboard-create-btn"
+    >
+      <i class="fa-solid fa-plus"></i>
+      Manage News
+    </a>
+  </section>
 
-<div class="panel glass">
-
-  <h2>Newsroom workflow</h2>
-
-  <p>
-    Public issue → Pending → Admin verification →
-    Approved → Public Issues.
-    Verified resolution → Problems Solved.
-  </p>
-
-  <p>
-    Articles have unique URLs, separate Tamil and
-    English content, optional MP3 files and
-    timestamps for archive filtering.
-  </p>
-
-  <p>
-    <b>Dashboard data:</b>
-    Connected to the authenticated Node.js and
-    MongoDB APIs. Other admin features are
-    being integrated.
-  </p>
-
-  <p *ngIf="loading">
+  <!-- LOADING / ERROR STATUS -->
+  <div
+    class="dashboard-message loading-message"
+    *ngIf="loading"
+    role="status"
+  >
+    <i class="fa-solid fa-spinner fa-spin"></i>
     Loading dashboard statistics...
-  </p>
+  </div>
 
-  <p *ngIf="error" role="alert">
+  <div
+    class="dashboard-message error-message"
+    *ngIf="error"
+    role="alert"
+  >
+    <i class="fa-solid fa-triangle-exclamation"></i>
     {{ error }}
-  </p>
+  </div>
+
+  <!-- STATISTICS CARDS -->
+  <section
+    class="stat-grid"
+    aria-label="Dashboard statistics"
+  >
+
+    <!-- TOTAL NEWS -->
+    <a
+      routerLink="/admin/articles"
+      class="stat stat-news"
+    >
+      <div class="stat-top">
+        <span class="stat-icon">
+          <i class="fa-solid fa-newspaper"></i>
+        </span>
+
+        <i class="fa-solid fa-arrow-up-right-from-square stat-arrow"></i>
+      </div>
+
+      <b>{{ totalArticles ?? '—' }}</b>
+
+      <span class="stat-label">
+        News Articles
+      </span>
+
+      <small>Manage news content</small>
+    </a>
+
+    <!-- PENDING PROBLEMS -->
+    <a
+      routerLink="/admin/reports"
+      class="stat stat-pending"
+    >
+      <div class="stat-top">
+        <span class="stat-icon">
+          <i class="fa-solid fa-clock"></i>
+        </span>
+
+        <i class="fa-solid fa-arrow-up-right-from-square stat-arrow"></i>
+      </div>
+
+      <b>{{ pendingCount ?? '—' }}</b>
+
+      <span class="stat-label">
+        Awaiting Approval
+      </span>
+
+      <small>Review citizen reports</small>
+    </a>
+
+    <!-- SOLVED PROBLEMS -->
+    <a
+      routerLink="/admin/reports"
+      class="stat stat-solved"
+    >
+      <div class="stat-top">
+        <span class="stat-icon">
+          <i class="fa-solid fa-circle-check"></i>
+        </span>
+
+        <i class="fa-solid fa-arrow-up-right-from-square stat-arrow"></i>
+      </div>
+
+      <b>{{ solvedCount ?? '—' }}</b>
+
+      <span class="stat-label">
+        Problems Solved
+      </span>
+
+      <small>View resolved reports</small>
+    </a>
+
+    <!-- PUBLIC ALERTS -->
+    <a
+      routerLink="/admin/alerts"
+      class="stat stat-alerts"
+    >
+      <div class="stat-top">
+        <span class="stat-icon">
+          <i class="fa-solid fa-bell"></i>
+        </span>
+
+        <i class="fa-solid fa-arrow-up-right-from-square stat-arrow"></i>
+      </div>
+
+      <b>{{ alertsCount ?? '—' }}</b>
+
+      <span class="stat-label">
+        Published Alerts
+      </span>
+
+      <small>Manage public alerts</small>
+    </a>
+
+  </section>
+
+  <!-- MANAGEMENT SECTIONS -->
+  <div class="dashboard-bottom-grid">
+
+    <!-- QUICK ACTIONS -->
+    <section class="dashboard-panel">
+
+      <div class="panel-heading">
+        <span class="panel-eyebrow">
+          MANAGEMENT
+        </span>
+
+        <h3>Quick Actions</h3>
+
+        <p>
+          Access your frequently used newsroom tools.
+        </p>
+      </div>
+
+      <div class="quick-actions">
+
+        <a routerLink="/admin/articles" class="quick-action">
+          <span class="quick-icon">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </span>
+
+          <span class="quick-text">
+            <b>News Management</b>
+            <small>Create and edit news articles</small>
+          </span>
+
+          <i class="fa-solid fa-chevron-right"></i>
+        </a>
+
+        <a routerLink="/admin/categories" class="quick-action">
+          <span class="quick-icon">
+            <i class="fa-solid fa-layer-group"></i>
+          </span>
+
+          <span class="quick-text">
+            <b>News Categories</b>
+            <small>View existing news categories</small>
+          </span>
+
+          <i class="fa-solid fa-chevron-right"></i>
+        </a>
+
+        <a routerLink="/admin/reports" class="quick-action">
+          <span class="quick-icon">
+            <i class="fa-solid fa-clipboard-check"></i>
+          </span>
+
+          <span class="quick-text">
+            <b>Makkal Problems</b>
+            <small>Review and manage public issues</small>
+          </span>
+
+          <i class="fa-solid fa-chevron-right"></i>
+        </a>
+
+        <a routerLink="/admin/audio" class="quick-action">
+          <span class="quick-icon">
+            <i class="fa-solid fa-headphones"></i>
+          </span>
+
+          <span class="quick-text">
+            <b>Section Audio</b>
+            <small>Manage Tamil and English MP3</small>
+          </span>
+
+          <i class="fa-solid fa-chevron-right"></i>
+        </a>
+
+        <a routerLink="/admin/alerts" class="quick-action">
+          <span class="quick-icon">
+            <i class="fa-solid fa-bell"></i>
+          </span>
+
+          <span class="quick-text">
+            <b>Public Alerts</b>
+            <small>Manage public announcements</small>
+          </span>
+
+          <i class="fa-solid fa-chevron-right"></i>
+        </a>
+
+        <a routerLink="/admin/appearance" class="quick-action">
+          <span class="quick-icon">
+            <i class="fa-solid fa-palette"></i>
+          </span>
+
+          <span class="quick-text">
+            <b>Website Appearance</b>
+            <small>Header, footer and headlines</small>
+          </span>
+
+          <i class="fa-solid fa-chevron-right"></i>
+        </a>
+
+      </div>
+
+    </section>
+
+    <!-- PUBLIC ISSUE WORKFLOW -->
+    <section class="dashboard-panel">
+
+      <div class="panel-heading">
+        <span class="panel-eyebrow">
+          CITIZEN SERVICES
+        </span>
+
+        <h3>Makkal Problems Workflow</h3>
+
+        <p>
+          Track citizen problems from reporting
+          through verified resolution.
+        </p>
+      </div>
+
+      <div class="workflow-list">
+
+        <div class="workflow-item">
+          <span class="workflow-number">1</span>
+
+          <div>
+            <b>Problem Reported</b>
+            <p>Citizen submits a public issue.</p>
+          </div>
+        </div>
+
+        <div class="workflow-item">
+          <span class="workflow-number">2</span>
+
+          <div>
+            <b>Pending Review</b>
+            <p>Admin checks the submitted report.</p>
+          </div>
+        </div>
+
+        <div class="workflow-item">
+          <span class="workflow-number">3</span>
+
+          <div>
+            <b>Approved Problem</b>
+            <p>Approved issues appear on the public website.</p>
+          </div>
+        </div>
+
+        <div class="workflow-item">
+          <span class="workflow-number solved-number">
+            <i class="fa-solid fa-check"></i>
+          </span>
+
+          <div>
+            <b>Problem Solved</b>
+            <p>Verified resolutions appear in Problems Solved.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <a
+        routerLink="/admin/reports"
+        class="workflow-action"
+      >
+        Manage Public Reports
+        <i class="fa-solid fa-arrow-right"></i>
+      </a>
+
+    </section>
+
+  </div>
 
 </div>

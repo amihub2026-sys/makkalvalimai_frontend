@@ -124,18 +124,44 @@ export const routes: Routes = [
           import('./pages/about-contact/about-contact.component')
             .then(m => m.AboutComponent)
       },
-      {
-        path: 'search',
-        loadComponent: () =>
-          import('./pages/search/search.component')
-            .then(m => m.SearchComponent)
-      },
-      {
-        path: 'news/:slug',
-        loadComponent: () =>
-          import('./pages/article-detail/article-detail.component')
-            .then(m => m.ArticleDetailComponent)
-      }
+    
+{
+  // PUBLIC DYNAMIC PAGES CREATED BY ADMIN
+  path: 'pages/:slug',
+  loadComponent: () =>
+    import('./pages/dynamic-page/dynamic-page.component')
+      .then(m => m.DynamicPageComponent)
+},
+
+{
+  path: 'search',
+  loadComponent: () =>
+    import('./pages/search/search.component')
+      .then(m => m.SearchComponent)
+},
+
+// ==========================================
+// DYNAMIC NEWS CATEGORY PAGE
+// ==========================================
+
+{
+  path: 'category/:slug',
+  loadComponent: () =>
+    import('./pages/madurai-news/madurai-news.component')
+      .then(m => m.MaduraiNewsComponent)
+},
+
+// ==========================================
+// SINGLE NEWS ARTICLE PAGE
+// ==========================================
+
+{
+  path: 'news/:slug',
+  loadComponent: () =>
+    import('./pages/article-detail/article-detail.component')
+      .then(m => m.ArticleDetailComponent)
+}
+
     ]
   },
 
@@ -187,7 +213,7 @@ export const routes: Routes = [
             .then(m => m.ArticlesAdminComponent)
       },
 
-      // Backend-supported category types (read-only)
+      // NEWS CATEGORIES
       {
         path: 'categories',
         loadComponent: () =>
@@ -195,6 +221,28 @@ export const routes: Routes = [
             .then(m => m.CategoriesAdminComponent)
       },
 
+      // DYNAMIC HEADER MENU MANAGEMENT - NEW
+      {
+        path: 'navigation',
+        loadComponent: () =>
+          import('./admin/navigation/navigation.component')
+            .then(m => m.NavigationAdminComponent)
+      },
+// ==========================================
+// EDITING TOOLS MANAGEMENT
+// ==========================================
+{
+  path: 'editing-tools',
+  loadComponent: () =>
+    import('./admin/editing-tools/editing-tools.component')
+      .then(m => m.EditingToolsComponent)
+},
+{
+  path: 'page-builder',
+  loadComponent: () =>
+    import('./admin/page-builder/page-builder.component')
+      .then(m => m.PageBuilderComponent)
+},
       // PUBLIC ISSUE REPORTS
       {
         path: 'reports',
@@ -202,6 +250,7 @@ export const routes: Routes = [
           import('./admin/reports/reports.component')
             .then(m => m.ReportsAdminComponent)
       },
+
 
       // AUDIO MANAGEMENT
       {
