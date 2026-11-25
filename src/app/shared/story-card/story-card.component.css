@@ -253,3 +253,41 @@
   margin-top: 8px;
   flex-shrink: 0;
 }
+
+/* ==========================================
+   FIX NEWS CARD HEIGHT AND ALIGNMENT
+========================================== */
+
+:host {
+  display: block;
+  height: 100%;
+  min-width: 0;
+}
+
+/* Equal card heights */
+.story-card.glass {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* Keep images aligned */
+.story-photo {
+  width: 100%;
+  flex-shrink: 0;
+  aspect-ratio: 16 / 9;
+}
+
+/* Allow content to fill card */
+.story-card .story-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Keep action buttons at bottom */
+.story-card .card-actions {
+  margin-top: auto;
+  padding-top: 10px;
+}
