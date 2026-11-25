@@ -12,15 +12,17 @@
   box-shadow: 0 5px 20px #00182b4a;
 }
 
+
 .mast-inner {
   max-width: 1460px;
   margin: auto;
   padding: 12px 22px;
-  min-height: 87px;
+  min-height: 145px;
   display: flex;
   align-items: center;
   gap: 18px;
 }
+
 
 .brand {
   display: flex;
@@ -498,4 +500,323 @@
 
 .mobile-search-form .btn {
   font-size: 0.71rem;
+}
+
+/* ==========================================
+   MAKKAL VALIMAI
+   FIRST VISIT NOTIFICATION SOUND POPUP
+========================================== */
+
+.mv-sound-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+  padding: 16px;
+
+  background: rgba(3, 20, 43, 0.72);
+  backdrop-filter: blur(5px);
+}
+
+.mv-sound-popup {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 420px;
+  max-height: 90dvh;
+  overflow-y: auto;
+
+  border: 1px solid #c3d8ee;
+  border-radius: 16px;
+
+  background: #ffffff;
+  color: #173353;
+
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.3);
+}
+
+.mv-sound-popup-header {
+  padding: 26px 20px 22px;
+  background: linear-gradient(
+    130deg,
+    #06336a,
+    #075998
+  );
+
+  text-align: center;
+  color: #ffffff;
+}
+
+.mv-sound-popup-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 15px;
+
+  background: #ffffff20;
+  border: 1px solid #ffffff45;
+  border-radius: 50%;
+
+  color: #ffffff;
+  font-size: 26px;
+}
+
+.mv-sound-popup-header h2 {
+  margin: 0;
+
+  color: #ffffff;
+  font-size: 21px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.mv-sound-popup-header p {
+  margin: 10px 0 0;
+
+  color: #c8e5ff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.mv-sound-popup-body {
+  padding: 24px 22px;
+  text-align: center;
+}
+
+.mv-sound-popup-body > p {
+  margin: 0 0 22px;
+
+  color: #405b77;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.mv-sound-popup-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+}
+
+.mv-sound-popup-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  min-height: 45px;
+  padding: 10px;
+
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mv-sound-not-now {
+  background: #edf3fa;
+  border: 1px solid #c9d9e9;
+  color: #173b60;
+}
+
+.mv-sound-not-now:hover {
+  background: #dfeaf6;
+}
+
+.mv-sound-allow {
+  background: #d41234;
+  border: 1px solid #d41234;
+  color: #ffffff;
+}
+
+.mv-sound-allow:hover {
+  background: #ad0e2b;
+}
+
+.mv-sound-popup-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.mv-sound-popup-body small {
+  display: block;
+  margin-top: 17px;
+
+  color: #70849a;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.mv-sound-popup-body .mv-sound-error {
+  color: #b42335;
+  font-size: 12px;
+}
+
+/* MOBILE */
+
+@media (max-width: 480px) {
+  .mv-sound-overlay {
+    padding: 12px;
+  }
+
+  .mv-sound-popup {
+    max-width: 365px;
+    border-radius: 13px;
+  }
+
+  .mv-sound-popup-header {
+    padding: 22px 15px;
+  }
+
+  .mv-sound-popup-header h2 {
+    font-size: 18px;
+  }
+
+  .mv-sound-popup-body {
+    padding: 19px 16px;
+  }
+
+  .mv-sound-popup-actions {
+    gap: 8px;
+  }
+
+  .mv-sound-popup-actions button {
+    padding: 9px 6px;
+    font-size: 12px;
+  }
+}
+
+
+/* ==========================================
+   MAKKAL VALIMAI - DESKTOP BRANDING
+========================================== */
+
+/* Round logo and title together */
+
+.mast-inner > .brand {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+
+  flex: 0 1 auto;
+  width: auto;
+  max-width: 420px;
+  min-width: 0;
+  overflow: visible;
+}
+
+/* Circular logo */
+
+.mast-inner .brand > img.brand-logo {
+  display: block;
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+
+  object-fit: contain;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+/* Tamil title group */
+
+.mast-inner .brand .brand-wordmark {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 1 auto;
+  width: 310px;
+  min-width: 0;
+
+  margin: 0;
+  padding: 0;
+  gap: 0;
+  overflow: visible;
+}
+
+/* English heading at top-right */
+
+.mast-inner .brand .brand-wordmark-en {
+  position: absolute;
+  top: 3px;
+  right: 49px;
+  z-index: 1;
+
+  display: block;
+  width: auto;
+  margin: 0;
+  padding: 0;
+
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Tamil PNG with complete pen nib */
+
+.mast-inner .brand .brand-wordmark img.brand-title {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-width: 0;
+  max-height: none;
+
+  margin: 0;
+  padding: 0;
+
+  flex-shrink: 1;
+  object-fit: contain;
+
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Yellow Tamil tagline */
+
+.mast-inner .brand .brand-wordmark-tagline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+
+  width: 100%;
+  margin: 0;
+  padding: 0;
+
+  color: #ffe600;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+  white-space: nowrap;
+  text-shadow: 0 1px 3px #001b39;
+}
+
+/* Yellow decorative lines */
+
+.mast-inner .brand .brand-wordmark-tagline::before,
+.mast-inner .brand .brand-wordmark-tagline::after {
+  content: "";
+  display: block;
+  width: 12px;
+  height: 2px;
+  flex: 0 0 12px;
+  background: #ffe600;
 }

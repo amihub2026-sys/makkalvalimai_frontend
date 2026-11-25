@@ -1,3 +1,554 @@
-/* alerts page — edit this file to change this page without touching others.
-   Layout tokens (.glass, .panel, .container, .btn) live in src/styles.css. */
-:host { display: block; min-width: 0; }
+
+/* MAKKAL VALIMAI - PUBLIC ALERTS ADMIN */
+
+:host {
+  display: block;
+  min-width: 0;
+}
+
+/* MAIN PAGE */
+
+.admin-columns.alert-admin-page {
+  display: block !important;
+  width: 100%;
+  min-width: 0;
+}
+
+.alert-list-panel {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.alert-page-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.alert-page-heading h2,
+.alert-page-heading h3 {
+  margin: 0;
+}
+
+.alert-page-heading p {
+  margin: 6px 0 0;
+}
+
+.alert-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 18px 0;
+}
+
+.alert-record-count {
+  opacity: 0.88;
+  font-size: 14px;
+}
+
+.alert-empty {
+  padding: 30px 16px;
+}
+
+/* SAVED ALERT RECORDS */
+
+.alert-record-list {
+  display: grid;
+  gap: 12px;
+}
+
+.alert-record {
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid rgba(120, 160, 200, 0.3);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.alert-record-summary {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.alert-record-copy {
+  min-width: 0;
+}
+
+.alert-record-copy strong {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.alert-record-copy small {
+  display: block;
+  margin-top: 5px;
+  opacity: 0.85;
+  overflow-wrap: anywhere;
+}
+
+.alert-record-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+/* READ-ONLY ALERT DETAILS */
+
+.alert-record-preview {
+  margin-top: 20px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(120, 160, 200, 0.35);
+  border-radius: 12px;
+}
+
+.alert-record-preview p {
+  overflow-wrap: anywhere;
+}
+
+.alert-preview-text {
+  white-space: pre-line;
+  line-height: 1.7;
+}
+
+/* ==========================================
+   MODAL POPUP
+========================================== */
+
+dialog.alert-editor-dialog {
+  position: fixed;
+  box-sizing: border-box;
+  width: min(960px, calc(100vw - 32px));
+  max-width: none;
+  max-height: min(90dvh, 940px);
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #cbd8e7;
+  border-radius: 16px;
+  background: #ffffff;
+  color: #173353;
+  box-shadow: 0 24px 80px rgba(4, 23, 49, 0.35);
+}
+
+dialog.alert-editor-dialog::backdrop {
+  background: rgba(4, 20, 44, 0.68);
+}
+
+.alert-editor-form {
+  display: flex;
+  flex-direction: column;
+  max-height: min(90dvh, 940px);
+  min-height: 0;
+  margin: 0;
+}
+
+/* FIXED HEADER */
+
+.alert-editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  flex: none;
+  padding: 18px 24px;
+  background: #0b3968;
+  color: #ffffff;
+}
+
+.alert-editor-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #a4c8ea;
+}
+
+.alert-editor-header h2 {
+  margin: 5px 0;
+  font-size: 23px;
+  line-height: 1.25;
+  color: #ffffff;
+}
+
+.alert-editor-header p {
+  margin: 0;
+  font-size: 13px;
+  color: #d7e9fa;
+}
+
+.alert-dialog-close {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 37px;
+  height: 37px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  background: rgba(255, 255, 255, 0.09);
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.alert-dialog-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* SCROLLABLE BODY */
+
+.alert-editor-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 20px 24px;
+  overscroll-behavior: contain;
+}
+
+.alert-form-section {
+  padding: 0 0 19px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #e1e8f0;
+}
+
+.alert-form-section h3 {
+  margin: 0 0 15px;
+  font-size: 16px;
+  color: #0b3968;
+}
+
+.alert-form-section h3 span {
+  color: #667b91;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* FORM FIELDS */
+
+.alert-editor-body .form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.alert-editor-body label {
+  display: block;
+  min-width: 0;
+  color: #183b60;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.alert-editor-body input:not([type='checkbox']),
+.alert-editor-body textarea,
+.alert-editor-body select {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  margin-top: 7px;
+  padding: 11px 12px;
+  border: 1px solid #c4d1e0;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #193956;
+  font: inherit;
+}
+
+.alert-editor-body textarea {
+  resize: vertical;
+  min-height: 94px;
+}
+
+.alert-editor-body input:focus-visible,
+.alert-editor-body select:focus-visible,
+.alert-editor-body textarea:focus-visible,
+.alert-dialog-close:focus-visible {
+  outline: 3px solid #7bbcf1;
+  outline-offset: 2px;
+}
+
+.alert-source-field {
+  margin-top: 15px;
+}
+
+.alert-form-hint {
+  margin: 10px 0 0;
+  color: #58718a;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* AUDIO RECORDING SECTIONS */
+
+.alert-voice-grid {
+  align-items: start;
+}
+
+.alert-audio-section {
+  min-width: 0;
+  padding: 14px;
+  background: #f2f6fb;
+  border-radius: 12px;
+  border: 1px solid #dce5ee;
+}
+
+.alert-audio-section h4 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: #0b3968;
+}
+
+.alert-saved-audio {
+  margin-top: 14px;
+}
+
+.alert-saved-audio p {
+  margin: 0 0 8px;
+  font-size: 12px;
+}
+
+.alert-saved-audio .btn {
+  margin-top: 9px;
+}
+
+/* PUBLISH CONTROL */
+
+.alert-publish-section {
+  background: #eff5fc;
+  border: 1px solid #d7e3f0;
+  padding: 14px 16px;
+  border-radius: 10px;
+}
+
+.alert-publish-section .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.alert-publish-section .checkbox-label input {
+  width: 18px;
+  height: 18px;
+  accent-color: #c91a3d;
+}
+
+.alert-publish-section p {
+  margin: 7px 0 0;
+  font-size: 12px;
+  color: #58718a;
+}
+
+/* FIXED FOOTER */
+
+.alert-editor-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: none;
+  gap: 12px;
+  padding: 14px 24px;
+  border-top: 1px solid #d9e3ee;
+  background: #ffffff;
+}
+
+.alert-save-hint {
+  color: #6d7f90;
+  font-size: 12px;
+}
+
+.alert-editor-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* POPUP RESPONSIVENESS */
+
+@media (max-width: 700px) {
+  .alert-editor-body .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .alert-editor-header {
+    padding: 14px 16px;
+  }
+
+  .alert-editor-body {
+    padding: 16px;
+  }
+
+  .alert-editor-footer {
+    padding: 12px 16px;
+  }
+
+  .alert-editor-header h2 {
+    font-size: 19px;
+  }
+}
+
+@media (max-width: 480px) {
+  dialog.alert-editor-dialog {
+    width: calc(100vw - 12px);
+    max-height: 96dvh;
+    border-radius: 12px;
+  }
+
+  .alert-editor-form {
+    max-height: 96dvh;
+  }
+
+  .alert-record-summary {
+    flex-direction: column;
+  }
+
+  .alert-editor-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .alert-editor-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .alert-editor-buttons .btn {
+    min-height: 44px;
+  }
+
+  .alert-save-hint {
+    font-size: 11px;
+  }
+}
+
+/* ==========================================
+   PUBLIC ALERTS - READABILITY FIX
+   High contrast, professional admin UI
+========================================== */
+
+/* Record count on dark panel */
+
+.alert-record-count {
+  color: #eaf3ff !important;
+  opacity: 1 !important;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* White alert cards */
+
+.alert-record {
+  background: #ffffff !important;
+  border: 1px solid #d9e4ef !important;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0, 20, 50, 0.08);
+
+  padding: 18px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.alert-record:hover {
+  border-color: #83b0d7 !important;
+  box-shadow: 0 6px 18px rgba(0, 20, 50, 0.13);
+}
+
+/* English title */
+
+.alert-record-copy strong {
+  color: #102f54 !important;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+/* Tamil title and record information */
+
+.alert-record-copy small {
+  color: #50647b !important;
+  opacity: 1 !important;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* CRUD action buttons */
+
+.alert-record-actions .btn {
+  background: #edf4fb !important;
+  color: #123e6c !important;
+  border: 1px solid #c8d9e9 !important;
+  font-weight: 600;
+}
+
+.alert-record-actions .btn:hover {
+  background: #d9eafa !important;
+  border-color: #8cb7db !important;
+}
+
+/* Delete button */
+
+.alert-record-actions .btn.danger {
+  background: #fff1f2 !important;
+  color: #b42335 !important;
+  border-color: #fecdd3 !important;
+}
+
+.alert-record-actions .btn.danger:hover {
+  background: #ffe1e5 !important;
+}
+
+/* Published status */
+
+.alert-record .chip.green {
+  color: #047857 !important;
+  background: #d1fae5 !important;
+  border: 1px solid #6ee7b7 !important;
+  font-weight: 700;
+}
+
+/* Draft status */
+
+.alert-record .chip.warning {
+  color: #92400e !important;
+  background: #fef3c7 !important;
+  border: 1px solid #fcd34d !important;
+  font-weight: 700;
+}
+
+/* Read-only detail panel */
+
+.alert-record-preview {
+  background: #ffffff !important;
+  color: #173353 !important;
+}
+
+.alert-record-preview h3,
+.alert-record-preview strong {
+  color: #102f54 !important;
+}
+
+.alert-record-preview p {
+  color: #405871 !important;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .alert-record {
+    padding: 14px;
+  }
+
+  .alert-record-copy strong {
+    font-size: 15px;
+  }
+
+  .alert-record-copy small {
+    font-size: 12px;
+  }
+}

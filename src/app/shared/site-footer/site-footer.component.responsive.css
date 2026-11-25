@@ -1,10 +1,101 @@
-/* Mobile/tablet for site-footer */
-@media(max-width:650px){
-.site-footer{margin-bottom:65px}
-.footer-content{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;padding:27px 16px}
-.footer-brand{grid-column:1/-1}
-.footer-content h4{font-size:.78rem}
-.footer-content a{font-size:.71rem}
-.footer-bottom{padding:13px 15px;flex-wrap:wrap}
-.footer-sponsored{margin:0 12px 20px}
+
+/* ==========================================
+   MAKKAL VALIMAI - MOBILE FOOTER FIX
+========================================== */
+
+@media (max-width: 650px) {
+
+  /* Leave space for fixed bottom navigation */
+
+  :host {
+    display: block;
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
+    background: #032c58;
+  }
+
+  /* Footer background */
+
+  .site-footer {
+    background-position: center center;
+    background-size: cover;
+  }
+
+  /* Make background subtle for text readability */
+
+  .site-footer::before {
+    background: rgba(2, 27, 57, 0.84);
+  }
+
+  /* Compact layout */
+
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 12px;
+    padding: 15px 14px;
+  }
+
+  /* Brand section */
+
+  .footer-brand-head {
+    gap: 9px;
+  }
+
+  .footer-brand-head img {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+  }
+
+  .footer-brand-title h3 {
+    font-size: 16px;
+    line-height: 1.25;
+  }
+
+  .footer-brand-title span {
+    font-size: 9px;
+  }
+
+  .footer-brand > p {
+    margin: 7px 0 0;
+    font-size: 11px;
+    line-height: 1.55;
+  }
+
+  /* Contact section */
+
+  .footer-contact {
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.18);
+  }
+
+  .footer-contact h4 {
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+
+  .footer-contact p {
+    margin-bottom: 6px;
+    font-size: 11px;
+  }
+
+  .footer-contact a {
+    font-size: 11px;
+  }
+
+  /* Copyright */
+
+  .footer-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 3px;
+    padding: 9px 12px;
+    font-size: 10px;
+    text-align: center;
+  }
 }

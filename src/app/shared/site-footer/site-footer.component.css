@@ -1,30 +1,224 @@
-:host{display:block;min-width:0}
-.site-footer{background:linear-gradient(125deg,#032c58,#06447c);border-top:2px solid #397fba;background-position:center;background-size:cover;position:relative}
 
-.footer-content{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.1fr;gap:32px;max-width:1390px;margin:auto;padding:35px 20px}
+/* ==========================================
+   MAKKAL VALIMAI - COMPACT FOOTER
+   DESKTOP STYLING
+========================================== */
 
-.footer-brand img{width:60px;height:60px;object-fit:contain;background:#fff;border-radius:50%;margin-bottom:12px}
+:host {
+  display: block;
+  min-width: 0;
+}
 
-.footer-brand h3{color:#fff;font-size:1.05rem}
+/* FOOTER BACKGROUND */
 
-.footer-content h4{font-size:.87rem;color:#fff;border-left:3px solid #fa2645;padding-left:9px;margin-bottom:14px}
+.site-footer {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
 
-.footer-content p{font-size:.75rem;line-height:1.8;color:#bbd8ef}
+  background-color: #032c58;
+  background-image: linear-gradient(125deg, #032c58, #06447c);
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
 
-.footer-content a{display:block;color:#c6e6ff;font-size:.74rem;margin:8px 0}
+  border-top: 2px solid #397fba;
+}
 
-.footer-content a:hover{color:#fff}
+/* DARK OVERLAY FOR TEXT READABILITY */
 
-.footer-admin{color:#ff8c99!important}
+.site-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
 
-.footer-sponsored{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:9px;max-width:1000px;margin:0 auto 20px;padding:9px;border:1px solid #5fa0d5;border-radius:10px;color:#fff;background:#10548a}
+  background: linear-gradient(
+    90deg,
+    rgba(2, 22, 44, 0.78) 0%,
+    rgba(3, 30, 60, 0.74) 55%,
+    rgba(2, 22, 44, 0.82) 100%
+  );
+}
 
-.footer-sponsored>span{grid-column:1/-1;font-size:.55rem;letter-spacing:.15em;color:#b4d7f0}
+/* FOOTER CONTENT ABOVE OVERLAY */
 
-.footer-sponsored img{width:min(270px,40vw);max-height:100px;object-fit:contain}
+.footer-content,
+.footer-bottom {
+  position: relative;
+  z-index: 1;
+}
 
-.footer-sponsored b{font-size:.9rem}
+/* MAIN FOOTER LAYOUT */
 
-.footer-bottom{display:flex;justify-content:space-between;gap:10px;padding:13px max(20px,calc((100vw - 1360px)/2));border-top:1px solid #78a7ce37;font-size:.68rem;color:#b0d3ec;background:#01244b}
+.footer-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(240px, 0.7fr);
+  align-items: center;
 
-.footer-bottom span{color:#e5eff9}
+  column-gap: 60px;
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 22px 24px;
+
+  box-sizing: border-box;
+}
+
+/* BRAND SECTION */
+
+.footer-brand {
+  min-width: 0;
+}
+
+.footer-brand-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ROUND LOGO */
+
+.footer-brand-head img {
+  width: 54px;
+  height: 54px;
+  flex: 0 0 54px;
+
+  object-fit: contain;
+
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 2px 9px rgba(0, 0, 0, 0.28);
+}
+
+/* BRAND TITLE */
+
+.footer-brand-title {
+  min-width: 0;
+}
+
+.footer-brand-title h3 {
+  margin: 0;
+
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.35;
+
+  text-shadow: 0 2px 7px rgba(0, 0, 0, 0.65);
+}
+
+.footer-brand-title span {
+  display: block;
+  margin-top: 2px;
+
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* BRAND DESCRIPTION */
+
+.footer-brand > p {
+  max-width: 620px;
+  margin: 10px 0 0;
+
+  color: #f0f7ff;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.7;
+
+  overflow-wrap: anywhere;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+}
+
+/* CONTACT SECTION */
+
+.footer-contact {
+  min-width: 0;
+}
+
+.footer-contact h4 {
+  margin: 0 0 12px;
+  padding-left: 11px;
+
+  border-left: 3px solid #ff2946;
+
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.3;
+
+  text-shadow: 0 2px 7px rgba(0, 0, 0, 0.65);
+}
+
+/* LOCATION */
+
+.footer-contact p {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin: 0 0 10px;
+
+  color: #f1f8ff;
+  font-size: 13px;
+  line-height: 1.6;
+
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.75);
+}
+
+.footer-contact p i {
+  color: #ff4863;
+  flex-shrink: 0;
+}
+
+/* CONTACT LINK */
+
+.footer-contact a {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+
+  width: fit-content;
+  margin: 0;
+
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.75);
+}
+
+.footer-contact a i {
+  color: #ff4863;
+}
+
+.footer-contact a:hover {
+  color: #ffe600;
+}
+
+/* COPYRIGHT BAR */
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 11px max(24px, calc((100vw - 1250px) / 2));
+
+  background: rgba(1, 22, 46, 0.9);
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+
+  color: #eaf4ff;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.footer-bottom span {
+  color: #eaf4ff;
+}

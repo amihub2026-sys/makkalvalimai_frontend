@@ -405,3 +405,148 @@
     border-radius: 6px;
   }
 }
+
+/* NEW MAKKAL VALIMAI TITLE IMAGE */
+
+.brand img.brand-title {
+  display: block;
+  width: clamp(125px, 20vw, 290px);
+  height: auto;
+  max-width: 100%;
+  max-height: 65px;
+  min-width: 0;
+  object-fit: contain;
+  flex: 0 1 auto;
+
+  /* Remove circular styling from title image */
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+  .brand img.brand-title {
+    width: clamp(120px, 36vw, 155px);
+    height: auto;
+    max-height: 40px;
+  }
+}
+
+@media (max-width: 380px) {
+  .brand img.brand-title {
+    width: 120px;
+    height: auto;
+  }
+}
+
+/* ==========================================
+   MAKKAL VALIMAI BRAND - RESPONSIVE
+========================================== */
+
+/* TABLET */
+
+@media (max-width: 950px) {
+.mast-inner {
+  min-height: 0;
+}
+  .mast-inner > .brand {
+    flex: 1 1 auto;
+    max-width: none;
+    gap: 6px;
+  }
+
+  .mast-inner .brand > img.brand-logo {
+    width: 46px;
+    height: 46px;
+    flex-basis: 46px;
+  }
+
+  .mast-inner .brand .brand-wordmark {
+    width: clamp(160px, 26vw, 225px);
+    gap: 3px;
+  }
+
+  .mast-inner .brand .brand-wordmark-en {
+    font-size: 10px;
+  }
+
+  .mast-inner .brand .brand-wordmark img.brand-title {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    padding-top: 4px;
+  }
+
+  .mast-inner .brand .brand-wordmark-tagline {
+    font-size: 9px;
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+
+  .mast-inner > .brand {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: none;
+    gap: 4px;
+  }
+
+  .mast-inner .brand > img.brand-logo {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+  }
+
+  .mast-inner .brand .brand-wordmark {
+    width: clamp(110px, 32vw, 155px);
+    gap: 1px;
+  }
+
+  .mast-inner .brand .brand-wordmark-en {
+    font-size: 7px;
+    letter-spacing: 0;
+  }
+
+  .mast-inner .brand .brand-wordmark img.brand-title {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    padding-top: 2px;
+  }
+
+  .mast-inner .brand .brand-wordmark-tagline {
+    font-size: 7px;
+    gap: 2px;
+  }
+
+  .mast-inner .brand .brand-wordmark-tagline::before,
+  .mast-inner .brand .brand-wordmark-tagline::after {
+    width: 5px;
+    height: 1px;
+    flex-basis: 5px;
+  }
+}
+
+/* SMALL MOBILE */
+
+@media (max-width: 380px) {
+
+  .mast-inner .brand > img.brand-logo {
+    width: 29px;
+    height: 29px;
+    flex-basis: 29px;
+  }
+
+  .mast-inner .brand .brand-wordmark {
+    width: 108px;
+  }
+
+  .mast-inner .brand .brand-wordmark-en,
+  .mast-inner .brand .brand-wordmark-tagline {
+    font-size: 6px;
+  }
+}

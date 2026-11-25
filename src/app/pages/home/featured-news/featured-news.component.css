@@ -166,3 +166,78 @@
 .right-stories{gap:.7rem}
 
 .right-stories .story-card{border-radius:9px}
+
+/* ==========================================
+   MAKKAL VALIMAI - FEATURED NEWS WHITE THEME
+========================================== */
+
+/* Featured card */
+
+.lead-story.glass {
+  border: 1px solid #dbe7f2;
+  border-radius: 14px;
+  background-color: #ffffff;
+  box-shadow: 0 6px 22px rgba(0, 20, 50, 0.12);
+}
+
+/* When article has no image */
+
+.lead-story.glass:not(.has-image) {
+  background: #ffffff !important;
+  color: #12385e;
+}
+
+/* White card headline */
+
+.lead-story:not(.has-image) .hero-text {
+  color: #12385e;
+  text-shadow: none;
+}
+
+.lead-story:not(.has-image) .hero-text h1 {
+  color: #102f51;
+  text-shadow: none;
+}
+
+.lead-story:not(.has-image) .hero-text .eyebrow {
+  color: #637991;
+  text-shadow: none;
+}
+
+.lead-story:not(.has-image) .hero-text p {
+  color: #455c74;
+  text-shadow: none;
+}
+
+/* When article has an image */
+
+.lead-story.has-image .hero-text,
+.lead-story.has-image .hero-text h1 {
+  color: #ffffff;
+}
+
+.lead-story.has-image .hero-text p,
+.lead-story.has-image .hero-text .eyebrow {
+  color: #ecf4ff;
+}
+
+/* Red headline label */
+
+.hero-tag {
+  background: #ed1234;
+  color: #ffffff;
+  border-radius: 8px;
+}
+
+/* Carousel controls */
+
+.carousel-control button {
+  background: #123d67;
+  color: #ffffff;
+  border: 1px solid #6e96bc;
+}
+
+.carousel-control button:hover {
+  background: #e50935;
+  color: #ffffff;
+}

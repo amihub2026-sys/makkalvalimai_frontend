@@ -1,107 +1,87 @@
 
-import {
-  Component,
-  OnInit
-} from '@angular/core';
-
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-import {
-  HttpClient,
-  HttpErrorResponse
-} from '@angular/common/http';
-
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
 import { ContentService } from '../../services/content.service';
-import { MediaService } from '../../services/media.service';
 import { NewsApiService } from '../../services/news-api.service';
-
-import {
-  PublicAlert,
-  uid,
-  istDay
-} from '../../core/models';
-
-import {
-  AudioPlayerComponent
-} from '../../shared/audio-player/audio-player.component';
-
+import { PublicAlert, uid, istDay } from '../../core/models';
+import { AudioPlayerComponent } from '../../shared/audio-player/audio-player.component';
+import { AudioRecorderComponent } from '../../shared/audio-recorder/audio-recorder.component';
 import { environment } from '../../../environments/environment';
 
-// ==========================================
-// CREATE BLANK PUBLIC ALERT
-// ==========================================
+type AudioLanguage = 'ta' | 'en';
 
 function blank(): PublicAlert {
   return {
     id: uid('alert'),
-
-    title: {
-      ta: '',
-      en: ''
-    },
-
-    body: {
-      ta: '',
-      en: ''
-    },
-
+    title: { ta: '', en: '' },
+    body: { ta: '', en: '' },
     area: 'Madurai district',
     type: 'other',
-
     effectiveDate: istDay(),
-
-    expiresAt: istDay(
-      new Date(Date.now() + 7 * 86400000)
-    ),
-
+    expiresAt: istDay(new Date(Date.now() + 7 * 86400000)),
     source: '',
     published: false,
-
-    audio: {
-      ta: '',
-      en: ''
-    }
+    audio: { ta: '', en: '' }
   };
 }
 
 @Component({
   selector: 'app-admin-alerts',
   standalone: true,
-
   imports: [
     CommonModule,
     FormsModule,
-    AudioPlayerComponent
+    AudioPlayerComponent,
+    AudioRecorderComponent
   ],
-
   templateUrl: './alerts.component.html',
-  styleUrls: ['./alerts.component.css', './alerts.component.responsive.css']
+  styleUrls: [
+    './alerts.component.css',
+    './alerts.component.responsive.css'
+  ]
 })
 export class AdminAlertsComponent implements OnInit {
-
-  // ==========================================
-  // ALERT DATA
-  // ==========================================
+  @ViewChild('editorDialog') editorDialog?: ElementRef<HTMLDialogElement>;
+  @ViewChild('tamilHeading') tamilHeading?: ElementRef<HTMLInputElement>;
 
   draft: PublicAlert = blank();
-
-  // All alerts from MongoDB, including drafts
   alerts: PublicAlert[] = [];
+  viewedAlert: PublicAlert | null = null;
+
+  editorOpen = false;
+  private originalDraft = '';
 
   error = '';
+  listError = '';
   message = '';
 
   loading = false;
   saving = false;
   deleting = false;
-  uploadingAudio = false;
+
+  private recorderWorking: Record<AudioLanguage, boolean> = {
+    ta: false,
+    en: false
+  };
+
+  get uploadingAudio(): boolean {
+    return this.recorderWorking.ta || this.recorderWorking.en;
+  }
+
+  get busy(): boolean {
+    return this.loading || this.saving || this.deleting || this.uploadingAudio;
+  }
+
+  get isEditingSavedAlert(): boolean {
+    return this.alerts.some(alert => alert.id === this.draft.id);
+  }
 
   constructor(
     public store: ContentService,
-    public media: MediaService,
     private api: NewsApiService,
     private http: HttpClient
   ) {}
@@ -111,344 +91,295 @@ export class AdminAlertsComponent implements OnInit {
   }
 
   // ==========================================
-  // LOAD ALL ADMIN ALERTS FROM MONGODB
+  // LOAD ALERTS
   // ==========================================
 
   async loadAlerts(): Promise<void> {
+    if (this.loading) return;
 
     this.loading = true;
-    this.error = '';
+    this.listError = '';
 
     try {
-
       await this.api.restoreSession();
 
       const result = await firstValueFrom(
         this.http.get<PublicAlert[]>(
           `${environment.apiBaseUrl}/admin/alerts`,
-          {
-            withCredentials: true
-          }
+          { withCredentials: true }
         )
       );
 
+      if (!Array.isArray(result)) {
+        throw new Error('The alerts API did not return a list.');
+      }
+
       this.alerts = result;
-
     } catch (error) {
-
-      this.error = this.getError(error);
-
+      // Keep previously loaded alerts and show a real error instead of 0 records.
+      this.listError = this.getError(error);
     } finally {
-
       this.loading = false;
-
     }
   }
 
-  // ==========================================
-  // EDIT EXISTING ALERT
-  // ==========================================
-
-  clone(a: PublicAlert): PublicAlert {
-
-    this.error = '';
-    this.message = '';
-
-    const copied = structuredClone(a);
-
-    copied.audio ??= {
-      ta: '',
-      en: ''
-    };
-
+  clone(alert: PublicAlert): PublicAlert {
+    const copied = structuredClone(alert);
+    copied.audio ??= { ta: '', en: '' };
+    copied.effectiveDate = String(copied.effectiveDate || '').slice(0, 10);
+    copied.expiresAt = String(copied.expiresAt || '').slice(0, 10);
     return copied;
   }
 
   // ==========================================
-  // NEW ALERT
+  // VIEW ALERT
+  // ==========================================
+
+  viewAlert(alert: PublicAlert): void {
+    if (this.busy) return;
+    this.viewedAlert = this.clone(alert);
+  }
+
+  closeAlertView(): void {
+    this.viewedAlert = null;
+  }
+
+  // ==========================================
+  // NEW ALERT POPUP
   // ==========================================
 
   newAlert(): void {
-
-    if (this.saving || this.uploadingAudio) {
-      return;
-    }
-
+    if (this.busy) return;
     this.draft = blank();
-
+    this.viewedAlert = null;
     this.error = '';
     this.message = '';
+    this.openEditor();
   }
 
   // ==========================================
-  // TAMIL / ENGLISH MP3 FILE UPLOAD
+  // EDIT ALERT POPUP
   // ==========================================
 
-  async audio(
-    event: Event,
-    lang: 'ta' | 'en'
-  ): Promise<void> {
-
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-
-    input.value = '';
-
-    if (!file || this.saving || this.uploadingAudio) {
-      return;
-    }
-
+  editAlert(alert: PublicAlert): void {
+    if (this.busy) return;
+    this.draft = this.clone(alert);
+    this.viewedAlert = null;
     this.error = '';
     this.message = '';
+    this.openEditor();
+  }
 
-    // MP3 validation
-    if (
-      file.type !== 'audio/mpeg' &&
-      !/\.mp3$/i.test(file.name)
-    ) {
+  private openEditor(): void {
+    this.originalDraft = JSON.stringify(this.draft);
+    this.editorOpen = true;
 
-      this.error = 'Only MP3 audio files are supported.';
-      return;
+    // The *ngIf dialog is inserted after Angular finishes this event.
+    setTimeout(() => {
+      const dialog = this.editorDialog?.nativeElement;
+      if (!dialog || !this.editorOpen) return;
 
-    }
-
-    if (
-      file.size <= 0 ||
-      file.size > 20 * 1024 * 1024
-    ) {
-
-      this.error =
-        'MP3 file must be under 20 MB.';
-
-      return;
-
-    }
-
-    this.uploadingAudio = true;
-
-    try {
-
-      // Upload directly to Node.js backend
-      const result = await this.api.uploadMedia(file);
-
-      if (result.kind !== 'audio') {
-
-        throw new Error(
-          'The uploaded file was not recognized as audio.'
-        );
-
+      try {
+        if (!dialog.open) dialog.showModal();
+        this.tamilHeading?.nativeElement.focus();
+      } catch (error) {
+        this.editorOpen = false;
+        this.listError = this.getError(error);
       }
-
-      // Store the backend MP3 URL
-      this.draft.audio ??= {
-        ta: '',
-        en: ''
-      };
-
-      this.draft.audio[lang] = result.url;
-
-      this.message =
-        lang === 'ta'
-          ? 'Tamil MP3 uploaded successfully.'
-          : 'English MP3 uploaded successfully.';
-
-    } catch (error) {
-
-      this.error = this.getError(error);
-
-    } finally {
-
-      this.uploadingAudio = false;
-
-    }
+    });
   }
 
   // ==========================================
-  // SAVE ALERT TO MONGODB
+  // CLOSE POPUP
+  // ==========================================
+
+  closeEditor(): void {
+    if (this.busy) return;
+
+    const changed = JSON.stringify(this.draft) !== this.originalDraft;
+
+    if (
+      changed &&
+      !window.confirm('Close this alert? Unsaved changes will be lost.')
+    ) {
+      return;
+    }
+
+    this.finishEditor();
+  }
+
+  onEditorCancel(event: Event): void {
+    // Handle Esc through the same unsaved-changes confirmation.
+    event.preventDefault();
+    this.closeEditor();
+  }
+
+  private finishEditor(): void {
+    const dialog = this.editorDialog?.nativeElement;
+    if (dialog?.open) dialog.close();
+    this.editorOpen = false;
+    this.originalDraft = '';
+  }
+
+  // ==========================================
+  // AUDIO RECORDING
+  // ==========================================
+
+  recorderWorkingStatus(lang: AudioLanguage): boolean {
+    return this.recorderWorking[lang];
+  }
+
+  onRecorderWorking(lang: AudioLanguage, working: boolean): void {
+    this.recorderWorking[lang] = working;
+  }
+
+  onRecordedAudio(lang: AudioLanguage, url: string): void {
+    if (!url?.trim()) {
+      this.error = 'The upload did not return an audio URL.';
+      return;
+    }
+
+    this.draft.audio ??= { ta: '', en: '' };
+    this.draft.audio[lang] = url;
+    this.error = '';
+    this.message = `${lang === 'ta' ? 'Tamil' : 'English'} audio uploaded. Save the alert to attach it.`;
+  }
+
+  removeAudio(lang: AudioLanguage): void {
+    if (this.busy) return;
+    this.draft.audio ??= { ta: '', en: '' };
+    this.draft.audio[lang] = '';
+    this.message = 'Audio removed from the form. Save to update the record.';
+  }
+
+  // ==========================================
+  // SAVE / UPDATE ALERT
   // ==========================================
 
   async save(): Promise<void> {
-
-    if (this.saving || this.uploadingAudio) {
-      return;
-    }
+    if (this.busy || !this.editorOpen) return;
 
     this.error = '';
     this.message = '';
 
-    // Both languages required
     if (
-      !this.draft.title.en.trim() ||
       !this.draft.title.ta.trim() ||
-      !this.draft.body.en.trim() ||
+      !this.draft.title.en.trim() ||
       !this.draft.body.ta.trim() ||
+      !this.draft.body.en.trim() ||
       !this.draft.source.trim()
     ) {
-
-      this.error =
-        'Both languages and official source are required.';
-
+      this.error = 'Tamil/English headings, notices and source are required.';
       return;
     }
 
     if (!this.draft.area.trim()) {
-
       this.error = 'Alert location is required.';
       return;
-
     }
 
-    if (
-      !this.draft.effectiveDate ||
-      !this.draft.expiresAt
-    ) {
-
-      this.error =
-        'Effective date and expiry date are required.';
-
+    if (!this.draft.effectiveDate || !this.draft.expiresAt) {
+      this.error = 'Effective and expiry dates are required.';
       return;
     }
 
-    if (
-      this.draft.expiresAt < this.draft.effectiveDate
-    ) {
-
-      this.error =
-        'Expiry date must not be earlier than the effective date.';
-
+    if (String(this.draft.expiresAt) <= String(this.draft.effectiveDate)) {
+      this.error = 'Expiry date must be later than the effective date.';
       return;
-
     }
 
     this.saving = true;
 
     try {
-
-      // Restore admin session and CSRF token
       await this.api.restoreSession();
 
-      // Existing Node.js endpoint:
-      // PUT /api/admin/alerts/:id
       const saved = await this.api.upsertAlert(
         structuredClone(this.draft)
       );
 
-      // Update the editor only after saving
       this.draft = this.clone(saved);
 
-      // Reload admin alerts from MongoDB
       await this.loadAlerts();
 
-      // Refresh published website content
       try {
-
         await this.store.refreshFromBackend();
-
       } catch {
-
-        // Alert was saved even if public refresh fails.
-
+        // Saving has already succeeded; public refresh may be retried later.
       }
 
-      this.message = saved.published
-        ? 'Public alert published successfully.'
-        : 'Public alert saved as draft successfully.';
+      this.finishEditor();
 
-      this.error = '';
+      this.message = saved.published
+        ? 'Alert saved and published successfully.'
+        : 'Alert saved as a draft successfully.';
 
     } catch (error) {
-
       this.error = this.getError(error);
-
     } finally {
-
       this.saving = false;
-
     }
   }
 
   // ==========================================
-  // DELETE ALERT FROM MONGODB
+  // DELETE ALERT
   // ==========================================
 
-  async remove(): Promise<void> {
+  async deleteAlert(alert: PublicAlert): Promise<void> {
+    if (this.busy) return;
 
-    if (this.saving || this.deleting) {
+    if (!this.alerts.some(item => item.id === alert.id)) {
+      this.listError = 'The selected alert is not in the saved records.';
       return;
     }
 
-    this.error = '';
-    this.message = '';
+    const title = alert.title.en || alert.title.ta || 'this alert';
 
-    const id = this.draft.id;
-
-    // If this is an unsaved draft, clear it.
-    const exists = this.alerts.some(
-      alert => alert.id === id
-    );
-
-    if (!exists) {
-
-      this.newAlert();
-      return;
-
-    }
-
-    const confirmed = window.confirm(
-      'Are you sure you want to delete this public alert?'
-    );
-
-    if (!confirmed) {
-      return;
-    }
+    if (!window.confirm(`Permanently delete "${title}"?`)) return;
 
     this.deleting = true;
+    this.listError = '';
+    this.message = '';
 
     try {
-
       const session = await this.api.restoreSession();
 
-      // Existing Node.js endpoint:
-      // DELETE /api/admin/alerts/:id
       await firstValueFrom(
         this.http.delete(
-          `${environment.apiBaseUrl}/admin/alerts/${encodeURIComponent(id)}`,
+          `${environment.apiBaseUrl}/admin/alerts/${encodeURIComponent(alert.id)}`,
           {
             withCredentials: true,
-            headers: {
-              'X-CSRF-Token': session.csrfToken
-            }
+            headers: { 'X-CSRF-Token': session.csrfToken }
           }
         )
       );
 
-      this.draft = blank();
+      if (this.draft.id === alert.id) this.draft = blank();
+      if (this.viewedAlert?.id === alert.id) this.viewedAlert = null;
+      if (this.editorOpen) this.finishEditor();
 
       await this.loadAlerts();
 
       try {
-
         await this.store.refreshFromBackend();
-
       } catch {
-
-        // Deletion has already succeeded.
-
+        // Deletion already succeeded.
       }
 
-      this.error = '';
-      this.message =
-        'Public alert deleted successfully.';
-
+      this.message = 'Alert deleted successfully.';
     } catch (error) {
-
-      this.error = this.getError(error);
-
+      this.listError = this.getError(error);
     } finally {
-
       this.deleting = false;
-
     }
+  }
+
+  async remove(): Promise<void> {
+    if (this.busy) return;
+
+    const selected = this.alerts.find(alert => alert.id === this.draft.id);
+
+    if (selected) await this.deleteAlert(selected);
+    else this.closeEditor();
   }
 
   // ==========================================
@@ -456,38 +387,14 @@ export class AdminAlertsComponent implements OnInit {
   // ==========================================
 
   private getError(error: unknown): string {
-
     if (error instanceof HttpErrorResponse) {
+      const message = error.error?.error || error.error?.message;
 
-      const message =
-        error.error?.error ||
-        error.error?.message;
-
-      if (typeof message === 'string') {
-        return message;
-      }
-
-      if (Array.isArray(message)) {
-        return JSON.stringify(message);
-      }
-
-      if (error.status === 0) {
-
-        return 'Cannot connect to the Node.js backend.';
-
-      }
-
-      if (error.status === 401) {
-
-        return 'Admin session expired. Please log in again.';
-
-      }
-
-      if (error.status === 403) {
-
-        return 'Access denied or invalid CSRF token.';
-
-      }
+      if (typeof message === 'string') return message;
+      if (Array.isArray(message)) return JSON.stringify(message);
+      if (error.status === 0) return 'Cannot connect to the Node.js backend.';
+      if (error.status === 401) return 'Admin session expired. Please log in again.';
+      if (error.status === 403) return 'Access denied or invalid CSRF token.';
 
       return `Backend request failed (${error.status}).`;
     }

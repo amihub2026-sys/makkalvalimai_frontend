@@ -27,3 +27,29 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* MOBILE NEWS CARDS - SINGLE COLUMN */
+
+@media (max-width: 650px) {
+
+  .home-section .card-grid,
+  .home-two .card-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 12px;
+  }
+
+  .home-two {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .home-section .section-title h2 {
+    font-size: 1.1rem;
+    line-height: 1.4;
+  }
+
+  .home-section .section-title a {
+    white-space: nowrap;
+  }
+}

@@ -1,4 +1,724 @@
-/* Responsive rules for alerts; isolated from common/desktop CSS. */
-@media (max-width: 640px) {
-  :host { width: 100%; }
+
+/* ==========================================
+   MAKKAL VALIMAI - ADMIN PUBLIC ALERTS
+   RESPONSIVE CSS
+
+   Features:
+   - Alert list
+   - New / Edit popup
+   - View / Edit / Delete buttons
+   - Tamil / English recording
+   - Mobile and tablet support
+========================================== */
+
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+/* ==========================================
+   GENERAL LAYOUT SAFETY
+========================================== */
+
+.admin-columns.alert-admin-page,
+.alert-list-panel,
+.alert-record-list,
+.alert-record,
+.alert-record-copy,
+.alert-record-preview {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.admin-columns.alert-admin-page {
+  display: block !important;
+  width: 100%;
+}
+
+.alert-record-copy strong,
+.alert-record-copy small,
+.alert-record-preview p {
+  overflow-wrap: anywhere;
+}
+
+/* ==========================================
+   DESKTOP / SMALL LAPTOP
+   1200px AND BELOW
+========================================== */
+
+@media (max-width: 1200px) {
+
+  .alert-list-panel {
+    padding: 20px;
+  }
+
+  .alert-page-heading {
+    gap: 14px;
+  }
+
+  .alert-record-list {
+    gap: 12px;
+  }
+
+  .alert-record {
+    padding: 14px;
+  }
+
+  dialog.alert-editor-dialog {
+    width: min(920px, calc(100vw - 32px));
+  }
+
+  .alert-editor-header,
+  .alert-editor-body,
+  .alert-editor-footer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .alert-editor-body .form-grid {
+    gap: 14px;
+  }
+
+}
+
+/* ==========================================
+   TABLET
+   992px AND BELOW
+========================================== */
+
+@media (max-width: 992px) {
+
+  .alert-list-panel {
+    width: 100%;
+    padding: 18px;
+  }
+
+  .alert-page-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .alert-page-heading h2 {
+    font-size: 21px;
+  }
+
+  .alert-record {
+    padding: 15px;
+  }
+
+  .alert-record-summary {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .alert-record-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* Popup */
+
+  dialog.alert-editor-dialog {
+    width: calc(100vw - 40px);
+    max-height: 90dvh;
+  }
+
+  .alert-editor-form {
+    max-height: 90dvh;
+  }
+
+  .alert-editor-header h2 {
+    font-size: 21px;
+  }
+
+  .alert-editor-body .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .alert-audio-section {
+    padding: 12px;
+  }
+
+}
+
+/* ==========================================
+   SMALL TABLET
+   768px AND BELOW
+========================================== */
+
+@media (max-width: 768px) {
+
+  .alert-list-panel {
+    padding: 16px;
+    border-radius: 13px;
+  }
+
+  .alert-page-heading h2 {
+    font-size: 19px;
+  }
+
+  .alert-page-heading p {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .alert-toolbar {
+    gap: 10px;
+    margin: 16px 0;
+  }
+
+  .alert-record {
+    padding: 13px;
+    border-radius: 10px;
+  }
+
+  .alert-record-copy strong {
+    font-size: 15px;
+  }
+
+  .alert-record-copy small {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .alert-record-actions .btn {
+    min-height: 40px;
+  }
+
+  /* Popup */
+
+  dialog.alert-editor-dialog {
+    width: calc(100vw - 24px);
+    max-height: 94dvh;
+    border-radius: 13px;
+  }
+
+  .alert-editor-form {
+    max-height: 94dvh;
+  }
+
+  .alert-editor-header {
+    padding: 16px;
+  }
+
+  .alert-editor-body {
+    padding: 16px;
+  }
+
+  .alert-editor-footer {
+    padding: 13px 16px;
+  }
+
+  .alert-editor-header h2 {
+    font-size: 19px;
+  }
+
+  .alert-editor-header p {
+    font-size: 12px;
+  }
+
+  .alert-editor-body .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .alert-form-section {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+  }
+
+  .alert-form-section h3 {
+    font-size: 15px;
+  }
+
+  .alert-audio-section {
+    padding: 12px;
+  }
+
+}
+
+/* ==========================================
+   MOBILE
+   600px AND BELOW
+========================================== */
+
+@media (max-width: 600px) {
+
+  /* Main admin page */
+
+  .admin-columns.alert-admin-page {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .alert-list-panel {
+    padding: 14px 12px;
+    border-radius: 12px;
+  }
+
+  /* Page heading */
+
+  .alert-page-heading {
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .alert-page-heading h2 {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.4;
+  }
+
+  .alert-page-heading p {
+    margin-top: 5px;
+    font-size: 12px;
+  }
+
+  .alert-page-heading > .btn {
+    min-height: 40px;
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+
+  /* Alert toolbar */
+
+  .alert-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .alert-record-count {
+    font-size: 12px;
+  }
+
+  .alert-toolbar .btn {
+    min-height: 38px;
+    font-size: 12px;
+  }
+
+  /* Alert list */
+
+  .alert-record-list {
+    gap: 10px;
+  }
+
+  .alert-record {
+    padding: 12px;
+    border-radius: 10px;
+  }
+
+  .alert-record-summary {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .alert-record-copy {
+    width: 100%;
+  }
+
+  .alert-record-copy strong {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .alert-record-copy small {
+    font-size: 12px;
+  }
+
+  .alert-record-summary .chip {
+    align-self: flex-start;
+    font-size: 10px;
+  }
+
+  /* CRUD buttons */
+
+  .alert-record-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+    margin-top: 12px;
+  }
+
+  .alert-record-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 41px;
+
+    padding: 8px 5px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  /* View details */
+
+  .alert-record-preview {
+    padding: 13px;
+    margin-top: 15px;
+    border-radius: 10px;
+  }
+
+  .alert-record-preview h3 {
+    font-size: 16px;
+  }
+
+  .alert-record-preview p {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .alert-preview-text {
+    white-space: pre-line;
+  }
+
+  /* ========================================
+     NEW / EDIT ALERT POPUP
+  ======================================== */
+
+  dialog.alert-editor-dialog {
+    width: calc(100vw - 12px);
+    max-width: none;
+    max-height: 96dvh;
+
+    margin: auto;
+    padding: 0;
+
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .alert-editor-form {
+    display: flex;
+    flex-direction: column;
+
+    min-height: 0;
+    max-height: 96dvh;
+  }
+
+  /* Popup header */
+
+  .alert-editor-header {
+    flex: 0 0 auto;
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .alert-editor-eyebrow {
+    font-size: 9px;
+    letter-spacing: 0.09em;
+  }
+
+  .alert-editor-header h2 {
+    margin: 5px 0;
+    font-size: 18px;
+    line-height: 1.3;
+  }
+
+  .alert-editor-header p {
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  .alert-dialog-close {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    flex-shrink: 0;
+  }
+
+  /* Scroll only inside form */
+
+  .alert-editor-body {
+    flex: 1 1 auto;
+    min-height: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 14px;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .alert-form-section {
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+  }
+
+  .alert-form-section h3 {
+    margin-bottom: 12px;
+    font-size: 15px;
+  }
+
+  /* Form fields */
+
+  .alert-editor-body .form-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .alert-editor-body label {
+    min-width: 0;
+    font-size: 13px;
+  }
+
+  .alert-editor-body input:not([type="checkbox"]),
+  .alert-editor-body select,
+  .alert-editor-body textarea {
+    display: block;
+
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    box-sizing: border-box;
+    padding: 10px 11px;
+
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  .alert-editor-body input,
+  .alert-editor-body select {
+    min-height: 43px;
+  }
+
+  .alert-editor-body textarea {
+    min-height: 105px;
+    resize: vertical;
+    line-height: 1.6;
+  }
+
+  .alert-editor-body input[type="date"] {
+    min-width: 0;
+  }
+
+  /* Audio recorders */
+
+  .alert-voice-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .alert-audio-section {
+    min-width: 0;
+    width: 100%;
+
+    padding: 12px;
+    border-radius: 10px;
+
+    overflow-wrap: anywhere;
+  }
+
+  .alert-audio-section h4 {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  .alert-audio-section app-audio-recorder,
+  .alert-audio-section app-audio-player {
+    display: block;
+
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .alert-saved-audio {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .alert-saved-audio .btn {
+    width: 100%;
+    min-height: 40px;
+  }
+
+  /* Publication */
+
+  .alert-publish-section {
+    padding: 12px;
+    border-radius: 9px;
+  }
+
+  .alert-publish-section .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .alert-publish-section p {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  /* Fixed popup footer */
+
+  .alert-editor-footer {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 9px;
+    padding: 11px 14px;
+
+    border-top: 1px solid #d9e3ee;
+  }
+
+  .alert-save-hint {
+    font-size: 11px;
+  }
+
+  .alert-editor-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .alert-editor-buttons .btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    min-width: 0;
+    width: 100%;
+    min-height: 44px;
+
+    font-size: 13px;
+    padding: 9px;
+  }
+
+  /* Messages */
+
+  .form-error,
+  .success-message {
+    overflow-wrap: anywhere;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+}
+
+/* ==========================================
+   VERY SMALL MOBILE
+   380px AND BELOW
+========================================== */
+
+@media (max-width: 380px) {
+
+  .alert-list-panel {
+    padding: 12px 10px;
+  }
+
+  .alert-page-heading h2 {
+    font-size: 17px;
+  }
+
+  .alert-page-heading > .btn {
+    font-size: 11px;
+    padding: 8px;
+  }
+
+  .alert-record {
+    padding: 10px;
+  }
+
+  .alert-record-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .alert-record-actions .btn {
+    font-size: 13px;
+  }
+
+  dialog.alert-editor-dialog {
+    width: calc(100vw - 8px);
+    max-height: 98dvh;
+  }
+
+  .alert-editor-form {
+    max-height: 98dvh;
+  }
+
+  .alert-editor-header {
+    padding: 11px;
+  }
+
+  .alert-editor-body {
+    padding: 11px;
+  }
+
+  .alert-editor-footer {
+    padding: 10px 11px;
+  }
+
+  .alert-editor-header h2 {
+    font-size: 16px;
+  }
+
+  .alert-editor-buttons {
+    gap: 7px;
+  }
+
+  .alert-editor-buttons .btn {
+    font-size: 12px;
+    min-height: 43px;
+  }
+
+}
+
+/* ==========================================
+   SHORT MOBILE SCREENS
+========================================== */
+
+@media (max-height: 650px) and (max-width: 768px) {
+
+  dialog.alert-editor-dialog {
+    max-height: 98dvh;
+  }
+
+  .alert-editor-form {
+    max-height: 98dvh;
+  }
+
+  .alert-editor-header {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .alert-editor-footer {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+}
+
+/* ==========================================
+   ACCESSIBILITY
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .alert-record,
+  .alert-record-actions .btn,
+  .alert-dialog-close {
+    transition: none !important;
+  }
+
 }

@@ -1,7 +1,16 @@
 <div class="container home">
-  <div class="home-status" *ngIf="store.loading()" role="status">Loading the latest news from Makkal Valimai…</div>
-  <div class="home-status error" *ngIf="store.loadError()" role="alert">{{store.loadError()}} Please check the API connection and refresh.</div>
-  <div class="home-status" *ngIf="!store.loading() && !store.loadError() && !store.published().length">No published news is available yet. Please check back soon.</div>
+  <div class="home-status" *ngIf="store.loading()" role="status">
+    Loading the latest news from Makkal Valimai…
+  </div>
+  <div class="home-status error" *ngIf="store.loadError()" role="alert">
+    {{ store.loadError() }} Please check the API connection and refresh.
+  </div>
+  <div
+    class="home-status"
+    *ngIf="!store.loading() && !store.loadError() && !store.published().length"
+  >
+    No published news is available yet. Please check back soon.
+  </div>
   <app-home-top-ad />
   <app-home-featured-news />
   <app-home-sidebar-ad />

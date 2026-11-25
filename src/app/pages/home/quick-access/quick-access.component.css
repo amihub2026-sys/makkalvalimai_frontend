@@ -63,3 +63,47 @@
 .home-categories{gap:.7rem}
 
 .category-spot{border-radius:12px}
+
+/* ==========================================
+   MAKKAL VALIMAI - WHITE QUICK ACCESS CARDS
+========================================== */
+
+.home-categories .category-spot.glass {
+  background: #ffffff !important;
+  background-image: none !important;
+  color: #12365b !important;
+
+  border: 1px solid #dce6f0;
+  border-bottom: 3px solid #e50935;
+  border-radius: 12px;
+
+  box-shadow: 0 4px 14px rgba(0, 20, 45, 0.12);
+}
+
+/* Red icons */
+
+.home-categories .category-spot i {
+  color: #e50935 !important;
+}
+
+/* Dark-blue category headings */
+
+.home-categories .category-spot b {
+  color: #12365b !important;
+  font-weight: 800;
+}
+
+/* Grey description and counts */
+
+.home-categories .category-spot span {
+  color: #64748b !important;
+}
+
+/* Hover effect */
+
+.home-categories .category-spot:hover {
+  background: #f1f7fd !important;
+  color: #12365b !important;
+  border-bottom-color: #e50935;
+  transform: translateY(-3px);
+}

@@ -10,7 +10,35 @@ import {PreferencesService} from '../../../services/preferences.service';
 @Component({selector:'app-home-category-news',standalone:true,imports:[CommonModule,RouterLink,StoryCardComponent],templateUrl:'./category-news.component.html',styleUrls:['./category-news.component.css','./category-news.component.responsive.css']})
 export class HomeCategoryNewsComponent {
   constructor(public store:ContentService,public prefs:PreferencesService,public media:MediaService){}
-  readonly madurai = computed(() => this.store.published().filter(a => a.kind === 'madurai').slice(0,4));
-  readonly crime = computed(() => this.store.published().filter(a => a.kind === 'crime').slice(0,3));
-  readonly achievements = computed(() => this.store.published().filter(a => a.kind === 'achievement').slice(0,3));
+ 
+readonly madurai = computed(() =>
+  this.store.published()
+    .filter(a =>
+      ['madurai', 'madurai-news', 'local-news'].includes(
+        String(a.kind ?? '').trim().toLowerCase()
+      )
+    )
+    .slice(0, 4)
+);
+
+readonly crime = computed(() =>
+  this.store.published()
+    .filter(a =>
+      ['crime', 'crime-news'].includes(
+        String(a.kind ?? '').trim().toLowerCase()
+      )
+    )
+    .slice(0, 3)
+);
+
+readonly achievements = computed(() =>
+  this.store.published()
+    .filter(a =>
+      ['achievement', 'achievements'].includes(
+        String(a.kind ?? '').trim().toLowerCase()
+      )
+    )
+    .slice(0, 3)
+);
+
 }

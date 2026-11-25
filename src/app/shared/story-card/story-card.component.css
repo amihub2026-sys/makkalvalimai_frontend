@@ -1,34 +1,255 @@
-/* story-card — section layout and responsive styles */
-.story-card {
-  overflow:hidden;min-width:0
+
+/* ==========================================
+   MAKKAL VALIMAI - STORY CARD
+   WHITE NEWS CARD DESIGN
+========================================== */
+
+:host {
+  display: block;
+  min-width: 0;
 }
 
+/* MAIN CARD */
+
+.story-card.glass {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+
+  background: #ffffff !important;
+  background-image: none !important;
+  color: #12365b;
+
+  border: 1px solid #dce6f0;
+  border-radius: 12px;
+
+  box-shadow: 0 4px 15px rgba(0, 22, 52, 0.12);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.story-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 22, 52, 0.16);
+}
+
+/* NEWS IMAGE */
+
 .story-photo {
-  display:block;overflow:hidden;aspect-ratio:16/9
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: #eaf2fa;
 }
 
 .story-photo img {
-  width:100%;height:100%;object-fit:cover;transition:transform .3s
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  transition: transform 0.3s ease;
 }
 
-.story-card:hover img {
-  transform:scale(1.04)
+.story-card:hover .story-photo img {
+  transform: scale(1.04);
 }
+
+/* WHEN NEWS IMAGE IS MISSING */
+
+.story-no-photo {
+  display: flex;
+  width: 100%;
+  height: 100%;
+
+  align-items: center;
+  justify-content: center;
+
+  background: #edf4fb;
+  color: #3377ae;
+  font-size: 2rem;
+}
+
+/* NEWS CONTENT */
 
 .story-info {
-  padding:.85rem 1rem;display:grid;gap:.55rem
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.85rem 1rem;
+
+  background: #ffffff;
+  color: #12365b;
 }
 
-.story-heading {
-  font-weight:850;line-height:1.45;font-size:.94rem
+/* CATEGORY AND LOCATION */
+
+.story-info .eyebrow {
+  color: #43759d !important;
+
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.5;
 }
+
+/* NEWS HEADING */
+
+.story-info .story-heading {
+  color: #103456 !important;
+
+  font-size: 0.94rem;
+  font-weight: 850;
+  line-height: 1.5;
+
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.story-info .story-heading:hover {
+  color: #d40f32 !important;
+}
+
+/* PUBLISHED DATE */
+
+.story-info .date {
+  color: #60768c !important;
+
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+.story-info .date i {
+  color: #467da8;
+  margin-right: 4px;
+}
+
+/* BUTTON AREA */
 
 .card-actions {
-  display:flex;align-items:center;justify-content:space-between;gap:.65rem
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+
+  padding-top: 8px;
+  border-top: 1px solid #e7edf4;
 }
 
-.share {
-  border:1px solid #14bb75;border-radius:9px;padding:.38rem .55rem;color:#63e5a1;font-size:1.08rem
+/* READ MORE LINK */
+
+.story-info .tiny-link {
+  color: #d50d30 !important;
+
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-decoration: none;
 }
 
-.story-no-photo {display:flex;width:100%;height:100%;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d4778,#032a52);color:#bed9ee;font-size:2rem;}
+.story-info .tiny-link:hover {
+  color: #a90024 !important;
+}
+
+/* WHATSAPP BUTTON */
+
+.story-info .share {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0.38rem 0.55rem;
+
+  border: 1px solid #a8e7c9;
+  border-radius: 9px;
+
+  background: #eafbf2;
+  color: #078653 !important;
+  font-size: 1.08rem;
+}
+
+.story-info .share:hover {
+  background: #d1f5e3;
+  border-color: #19b76e;
+}
+
+/* ==========================================
+   STORY CARD - WHITE TEXT BACKGROUND
+========================================== */
+
+/* Main card */
+.story-card.glass {
+  background: #ffffff !important;
+  border: 1px solid #dbe6f0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Image section - unchanged */
+.story-card .story-photo {
+  background: #eaf2fa;
+}
+
+/* WHITE BACKGROUND BELOW IMAGE */
+.story-card.glass .story-info {
+  position: relative;
+  z-index: 1;
+  background: #ffffff !important;
+  background-image: none !important;
+  color: #12365b !important;
+  text-shadow: none !important;
+}
+
+/* News category and area */
+.story-card .story-info .eyebrow {
+  color: #52718f !important;
+}
+
+/* News headline */
+.story-card .story-info .story-heading {
+  color: #102f50 !important;
+  text-shadow: none !important;
+  font-weight: 800;
+}
+
+/* Published date */
+.story-card .story-info .date {
+  color: #64748b !important;
+}
+
+/* Divider */
+.story-card .story-info .card-actions {
+  border-top: 1px solid #e2e8f0;
+}
+
+/* Read More */
+.story-card .story-info .tiny-link {
+  color: #e50935 !important;
+}
+
+/* WhatsApp button */
+.story-card .story-info .share {
+  color: #07945c !important;
+  background: #eafbf2;
+}
+
+/* FIX: RIGHT SIDE NEWS CARD CONTENT CUT OFF */
+
+:host-context(.right-stories) .story-card {
+  height: auto !important;
+  min-height: 230px !important;
+  max-height: none !important;
+}
+
+:host-context(.right-stories) .story-info {
+  min-height: 230px;
+  height: auto !important;
+  box-sizing: border-box;
+  align-content: center;
+  padding: 14px 16px;
+}
+
+:host-context(.right-stories) .card-actions {
+  margin-top: 8px;
+  flex-shrink: 0;
+}

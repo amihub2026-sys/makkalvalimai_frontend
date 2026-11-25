@@ -1,308 +1,615 @@
 
 <!-- MAKKAL VALIMAI - PUBLIC ALERTS ADMIN -->
-<div class="admin-columns">
 
-  <!-- LEFT: ALERTS FROM MONGODB -->
-  <section class="panel glass">
-    <div class="section-title">
-      <h2>Public Notices</h2>
+<div class="admin-columns alert-admin-page">
+
+  <!-- Main page: records only, no long form below the list -->
+
+  <section class="panel glass alert-list-panel">
+
+    <header class="alert-page-heading">
+      <div>
+        <h2>Public Notices</h2>
+        <p class="muted">
+          Create, review and manage public alerts.
+        </p>
+      </div>
+
       <button
         type="button"
         class="btn btn-red"
         (click)="newAlert()"
-        [disabled]="saving || deleting || uploadingAudio"
+        [disabled]="busy"
       >
-        <i class="fa-solid fa-plus"></i> New Alert
+        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+        New Alert
       </button>
-    </div>
+    </header>
 
-    <p class="muted">Manage public notices saved in MongoDB.</p>
+    <div class="alert-toolbar">
+      <span class="alert-record-count">
+        {{ alerts.length }} saved alerts
+      </span>
 
-    <div class="moderation-actions">
       <button
         type="button"
         class="btn outline small"
         (click)="loadAlerts()"
-        [disabled]="loading || saving || deleting || uploadingAudio"
-      >
-        <i class="fa-solid fa-rotate" [class.fa-spin]="loading"></i>
-        {{ loading ? 'Loading...' : 'Refresh Alerts' }}
-      </button>
-      <span class="muted">{{ alerts.length }} saved alerts</span>
-    </div>
-
-    <p class="muted" *ngIf="loading" role="status">
-      <i class="fa-solid fa-spinner fa-spin"></i> Loading alerts from MongoDB...
-    </p>
-
-    <div class="empty-state" *ngIf="!loading && alerts.length === 0">
-      <i class="fa-solid fa-bell"></i>
-      <h3>No public alerts yet</h3>
-      <p class="muted">Select New Alert to create your first public notice.</p>
-    </div>
-
-    <div class="admin-list">
-      <button
-        *ngFor="let a of alerts"
-        type="button"
-        class="admin-list-item"
-        (click)="draft = clone(a)"
-        [disabled]="saving || deleting || uploadingAudio"
-        [class.active]="draft.id === a.id"
-      >
-        <span>
-          <b>{{ a.title.en || a.title.ta || 'Untitled Alert' }}</b>
-          <small>
-            {{ a.area }} · {{ a.published ? 'Published' : 'Draft' }}
-            · {{ a.effectiveDate }}
-          </small>
-          <small *ngIf="a.title.ta">{{ a.title.ta }}</small>
-        </span>
-        <span
-          class="chip"
-          [class.green]="a.published"
-          [class.warning]="!a.published"
-        >
-          {{ a.published ? 'LIVE' : 'DRAFT' }}
-        </span>
-      </button>
-    </div>
-  </section>
-
-  <!-- RIGHT: CREATE / EDIT ALERT -->
-  <form class="panel glass editor-form" (ngSubmit)="save()">
-    <div class="section-title">
-      <h2>Madurai Public Alert</h2>
-      <span
-        class="chip"
-        [class.green]="draft.published"
-        [class.warning]="!draft.published"
-      >
-        {{ draft.published ? 'Publish selected' : 'Draft' }}
-      </span>
-    </div>
-
-    <p class="muted">Enter verified information in Tamil and English.</p>
-
-    <div class="form-grid">
-      <label>
-        Tamil Heading *
-        <input
-          type="text"
-          name="ta"
-          [(ngModel)]="draft.title.ta"
-          required
-          placeholder="தமிழ் அறிவிப்பு தலைப்பு"
-          [disabled]="saving || deleting || uploadingAudio"
-        />
-      </label>
-
-      <label>
-        English Heading *
-        <input
-          type="text"
-          name="en"
-          [(ngModel)]="draft.title.en"
-          required
-          placeholder="Public notice heading"
-          [disabled]="saving || deleting || uploadingAudio"
-        />
-      </label>
-    </div>
-
-    <div class="form-grid">
-      <label>
-        தமிழ் அறிவிப்பு *
-        <textarea
-          name="bodyta"
-          [(ngModel)]="draft.body.ta"
-          rows="5"
-          required
-          placeholder="அறிவிப்பின் முழு விவரங்கள்"
-          [disabled]="saving || deleting || uploadingAudio"
-        ></textarea>
-      </label>
-
-      <label>
-        English Notice *
-        <textarea
-          name="bodyen"
-          [(ngModel)]="draft.body.en"
-          rows="5"
-          required
-          placeholder="Complete details of the public notice"
-          [disabled]="saving || deleting || uploadingAudio"
-        ></textarea>
-      </label>
-    </div>
-
-    <div class="form-grid">
-      <label>
-        Alert Type *
-        <select
-          name="type"
-          [(ngModel)]="draft.type"
-          required
-          [disabled]="saving || deleting || uploadingAudio"
-        >
-          <option value="water">Water Supply</option>
-          <option value="electricity">Electricity</option>
-          <option value="traffic">Traffic</option>
-          <option value="rain">Rain / Weather</option>
-          <option value="other">Other</option>
-        </select>
-      </label>
-
-      <label>
-        Area / Location *
-        <input
-          type="text"
-          name="area"
-          [(ngModel)]="draft.area"
-          required
-          placeholder="Madurai district"
-          [disabled]="saving || deleting || uploadingAudio"
-        />
-      </label>
-
-      <label>
-        Effective Date *
-        <input
-          type="date"
-          name="effective"
-          [(ngModel)]="draft.effectiveDate"
-          required
-          [disabled]="saving || deleting || uploadingAudio"
-        />
-      </label>
-
-      <label>
-        Expires On *
-        <input
-          type="date"
-          name="expiry"
-          [(ngModel)]="draft.expiresAt"
-          required
-          [disabled]="saving || deleting || uploadingAudio"
-        />
-      </label>
-    </div>
-
-    <label>
-      Official Source / Verification *
-      <input
-        type="text"
-        name="source"
-        [(ngModel)]="draft.source"
-        required
-        placeholder="Official notice, department or verified source"
-        [disabled]="saving || deleting || uploadingAudio"
-      />
-    </label>
-    <p class="muted">Check the source and dates before publishing.</p>
-
-    <div class="form-grid">
-      <div>
-        <label>
-          Tamil MP3 (Optional)
-          <input
-            type="file"
-            accept=".mp3,audio/mpeg"
-            (change)="audio($event, 'ta')"
-            [disabled]="saving || deleting || uploadingAudio"
-          />
-        </label>
-        <div *ngIf="draft.audio.ta">
-          <app-audio-player [src]="draft.audio.ta" />
-          <button
-            type="button"
-            class="btn outline small"
-            (click)="draft.audio.ta = ''"
-            [disabled]="saving || deleting || uploadingAudio"
-          >
-            Remove Tamil Audio
-          </button>
-        </div>
-        <p class="muted" *ngIf="!draft.audio.ta">No Tamil MP3 selected.</p>
-      </div>
-
-      <div>
-        <label>
-          English MP3 (Optional)
-          <input
-            type="file"
-            accept=".mp3,audio/mpeg"
-            (change)="audio($event, 'en')"
-            [disabled]="saving || deleting || uploadingAudio"
-          />
-        </label>
-        <div *ngIf="draft.audio.en">
-          <app-audio-player [src]="draft.audio.en" />
-          <button
-            type="button"
-            class="btn outline small"
-            (click)="draft.audio.en = ''"
-            [disabled]="saving || deleting || uploadingAudio"
-          >
-            Remove English Audio
-          </button>
-        </div>
-        <p class="muted" *ngIf="!draft.audio.en">No English MP3 selected.</p>
-      </div>
-    </div>
-
-    <p *ngIf="uploadingAudio" class="muted" role="status">
-      <i class="fa-solid fa-spinner fa-spin"></i> Uploading MP3 to backend...
-    </p>
-
-    <label class="checkbox-label">
-      <input
-        type="checkbox"
-        name="published"
-        [(ngModel)]="draft.published"
-        [disabled]="saving || deleting || uploadingAudio"
-      />
-      Publish Alert
-    </label>
-    <p class="muted">
-      {{ draft.published
-        ? 'This alert is marked for publication. Verify its content and dates before saving.'
-        : 'This alert remains a draft until you choose to publish it.' }}
-    </p>
-
-    <p class="form-error" *ngIf="error" role="alert">
-      <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
-    </p>
-    <p class="success-message" *ngIf="message" role="status">
-      <i class="fa-solid fa-circle-check"></i> {{ message }}
-    </p>
-
-    <div class="moderation-actions">
-      <button
-        type="submit"
-        class="btn btn-red"
-        [disabled]="saving || deleting || uploadingAudio"
+        [disabled]="busy"
       >
         <i
-          class="fa-solid"
-          [class.fa-spinner]="saving"
-          [class.fa-spin]="saving"
-          [class.fa-floppy-disk]="!saving"
+          class="fa-solid fa-rotate"
+          [class.fa-spin]="loading"
+          aria-hidden="true"
         ></i>
-        {{ saving ? 'Saving Alert...' : (draft.published ? 'Save & Publish' : 'Save Draft') }}
-      </button>
-
-      <!-- The remove() method checks whether the selected alert is saved. -->
-      <button
-        *ngIf="alerts.length > 0"
-        type="button"
-        class="btn outline danger"
-        (click)="remove()"
-        [disabled]="saving || deleting || uploadingAudio"
-      >
-        <i class="fa-solid fa-trash"></i>
-        {{ deleting ? 'Deleting...' : 'Delete / Clear' }}
+        {{ loading ? 'Loading...' : 'Refresh Alerts' }}
       </button>
     </div>
-  </form>
+
+    <p *ngIf="listError" class="form-error" role="alert">
+      {{ listError }}
+    </p>
+
+    <p *ngIf="message" class="success-message" role="status">
+      {{ message }}
+    </p>
+
+    <p *ngIf="loading" class="muted" role="status">
+      Loading saved alerts...
+    </p>
+
+    <!-- EMPTY STATE -->
+
+    <div
+      *ngIf="!loading && !listError && alerts.length === 0"
+      class="empty-state alert-empty"
+    >
+      <i class="fa-solid fa-bell" aria-hidden="true"></i>
+      <h3>No public alerts yet</h3>
+      <p class="muted">
+        Click New Alert to create your first notice.
+      </p>
+    </div>
+
+    <!-- ALERT RECORDS -->
+
+    <div
+      class="admin-list alert-record-list"
+      *ngIf="alerts.length > 0"
+    >
+
+      <article
+        *ngFor="let a of alerts"
+        class="alert-record"
+      >
+
+        <div class="alert-record-summary">
+          <div class="alert-record-copy">
+            <strong>
+              {{ a.title.en || a.title.ta || 'Untitled Alert' }}
+            </strong>
+
+            <small lang="ta" *ngIf="a.title.ta">
+              {{ a.title.ta }}
+            </small>
+
+            <small>
+              {{ a.area }} ·
+              {{ a.effectiveDate | date:'dd MMM yyyy' }}
+            </small>
+          </div>
+
+          <span
+            class="chip"
+            [class.green]="a.published"
+            [class.warning]="!a.published"
+          >
+            {{ a.published ? 'PUBLISHED' : 'DRAFT' }}
+          </span>
+        </div>
+
+        <!-- CRUD ACTIONS -->
+
+        <div class="alert-record-actions">
+
+          <button
+            type="button"
+            class="btn outline small"
+            (click)="viewAlert(a)"
+            [disabled]="busy"
+          >
+            <i class="fa-solid fa-eye" aria-hidden="true"></i>
+            View
+          </button>
+
+          <button
+            type="button"
+            class="btn outline small"
+            (click)="editAlert(a)"
+            [disabled]="busy"
+          >
+            <i class="fa-solid fa-pen" aria-hidden="true"></i>
+            Edit
+          </button>
+
+          <button
+            type="button"
+            class="btn outline small danger"
+            (click)="deleteAlert(a)"
+            [disabled]="busy"
+          >
+            <i class="fa-solid fa-trash" aria-hidden="true"></i>
+            Delete
+          </button>
+
+        </div>
+      </article>
+    </div>
+
+    <!-- READ-ONLY VIEW: KEPT AS EXISTING BEHAVIOR -->
+
+    <section
+      *ngIf="viewedAlert as selected"
+      class="alert-record-preview"
+      aria-label="Saved alert details"
+    >
+
+      <div class="alert-page-heading">
+        <h3>Alert Details</h3>
+
+        <button
+          type="button"
+          class="btn outline small"
+          (click)="closeAlertView()"
+        >
+          Close
+        </button>
+      </div>
+
+      <p>
+        <strong>English:</strong>
+        {{ selected.title.en }}
+      </p>
+
+      <p lang="ta">
+        <strong>Tamil:</strong>
+        {{ selected.title.ta }}
+      </p>
+
+      <p class="alert-preview-text">
+        {{ selected.body.en }}
+      </p>
+
+      <p class="alert-preview-text" lang="ta">
+        {{ selected.body.ta }}
+      </p>
+
+      <p><strong>Area:</strong> {{ selected.area }}</p>
+      <p><strong>Type:</strong> {{ selected.type }}</p>
+
+      <p>
+        <strong>Effective:</strong>
+        {{ selected.effectiveDate | date:'dd MMM yyyy' }}
+      </p>
+
+      <p>
+        <strong>Expires:</strong>
+        {{ selected.expiresAt | date:'dd MMM yyyy' }}
+      </p>
+
+      <p><strong>Source:</strong> {{ selected.source }}</p>
+
+      <p>
+        <strong>Status:</strong>
+        {{ selected.published ? 'Published' : 'Draft' }}
+      </p>
+
+      <div *ngIf="selected.audio?.ta">
+        <strong>Tamil recording</strong>
+        <app-audio-player [src]="selected.audio!.ta" />
+      </div>
+
+      <div *ngIf="selected.audio?.en">
+        <strong>English recording</strong>
+        <app-audio-player [src]="selected.audio!.en" />
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-red"
+        (click)="editAlert(selected)"
+        [disabled]="busy"
+      >
+        Edit This Alert
+      </button>
+
+    </section>
+  </section>
 </div>
+
+<!-- ==========================================
+     NEW / EDIT ALERT POPUP
+========================================== -->
+
+<dialog
+  *ngIf="editorOpen"
+  #editorDialog
+  class="alert-editor-dialog"
+  aria-labelledby="alert-editor-title"
+  (cancel)="onEditorCancel($event)"
+>
+
+  <form
+    class="alert-editor-form"
+    (ngSubmit)="save()"
+  >
+
+    <!-- FIXED POPUP HEADER -->
+
+    <header class="alert-editor-header">
+      <div>
+        <span class="alert-editor-eyebrow">
+          MAKKAL VALIMAI NEWSROOM
+        </span>
+
+        <h2 id="alert-editor-title">
+          {{
+            isEditingSavedAlert
+              ? 'Edit Public Alert'
+              : 'Create Public Alert'
+          }}
+        </h2>
+
+        <p>
+          {{
+            isEditingSavedAlert
+              ? 'Update the saved alert details.'
+              : 'Complete the details and publish when ready.'
+          }}
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="alert-dialog-close"
+        (click)="closeEditor()"
+        [disabled]="busy"
+        aria-label="Close alert form"
+      >
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </header>
+
+    <!-- SCROLLABLE POPUP CONTENT -->
+
+    <div class="alert-editor-body">
+
+      <p *ngIf="error" class="form-error" role="alert">
+        {{ error }}
+      </p>
+
+      <p *ngIf="message" class="success-message" role="status">
+        {{ message }}
+      </p>
+
+      <!-- NOTICE DETAILS -->
+
+      <section class="alert-form-section">
+        <h3>Notice Details</h3>
+
+        <div class="form-grid">
+
+          <label>
+            Tamil Heading *
+
+            <input
+              #tamilHeading
+              type="text"
+              name="ta"
+              [(ngModel)]="draft.title.ta"
+              required
+              placeholder="தமிழ் அறிவிப்பு தலைப்பு"
+              [disabled]="busy"
+            />
+          </label>
+
+          <label>
+            English Heading *
+
+            <input
+              type="text"
+              name="en"
+              [(ngModel)]="draft.title.en"
+              required
+              placeholder="Public notice heading"
+              [disabled]="busy"
+            />
+          </label>
+
+          <label>
+            தமிழ் அறிவிப்பு *
+
+            <textarea
+              name="bodyta"
+              [(ngModel)]="draft.body.ta"
+              rows="4"
+              required
+              placeholder="அறிவிப்பின் முழு விவரங்கள்"
+              [disabled]="busy"
+            ></textarea>
+          </label>
+
+          <label>
+            English Notice *
+
+            <textarea
+              name="bodyen"
+              [(ngModel)]="draft.body.en"
+              rows="4"
+              required
+              placeholder="Complete public notice"
+              [disabled]="busy"
+            ></textarea>
+          </label>
+
+        </div>
+      </section>
+
+      <!-- AREA AND DATES -->
+
+      <section class="alert-form-section">
+        <h3>Area and Schedule</h3>
+
+        <div class="form-grid">
+
+          <label>
+            Alert Type *
+
+            <select
+              name="type"
+              [(ngModel)]="draft.type"
+              required
+              [disabled]="busy"
+            >
+              <option value="water">Water Supply</option>
+              <option value="electricity">Electricity</option>
+              <option value="traffic">Traffic</option>
+              <option value="rain">Rain / Weather</option>
+              <option value="other">Other</option>
+            </select>
+          </label>
+
+          <label>
+            Area / Location *
+
+            <input
+              type="text"
+              name="area"
+              [(ngModel)]="draft.area"
+              required
+              placeholder="Madurai district"
+              [disabled]="busy"
+            />
+          </label>
+
+          <label>
+            Effective Date *
+
+            <input
+              type="date"
+              name="effective"
+              [(ngModel)]="draft.effectiveDate"
+              required
+              [disabled]="busy"
+            />
+          </label>
+
+          <label>
+            Expires On *
+
+            <input
+              type="date"
+              name="expiry"
+              [(ngModel)]="draft.expiresAt"
+              required
+              [disabled]="busy"
+            />
+          </label>
+
+        </div>
+
+        <label class="alert-source-field">
+          Official Source / Verification *
+
+          <input
+            type="text"
+            name="source"
+            [(ngModel)]="draft.source"
+            required
+            placeholder="Official notice, department or verified source"
+            [disabled]="busy"
+          />
+        </label>
+
+        <p class="alert-form-hint">
+          Verify the source and date range before publishing.
+        </p>
+      </section>
+
+      <!-- AUDIO RECORDINGS -->
+
+      <section class="alert-form-section">
+
+        <h3>
+          Voice Recordings <span>(Optional)</span>
+        </h3>
+
+        <p class="alert-form-hint">
+          Record your voice or upload an existing MP3.
+          Then save the alert to attach it.
+        </p>
+
+        <div class="form-grid alert-voice-grid">
+
+          <!-- TAMIL AUDIO -->
+
+          <section class="alert-audio-section">
+
+            <h4>Tamil Voice / தமிழ் ஒலி</h4>
+
+            <app-audio-recorder
+              language="ta"
+              [maxSizeMb]="20"
+              [disabled]="
+                saving ||
+                deleting ||
+                recorderWorkingStatus('en')
+              "
+              (workingChange)="onRecorderWorking('ta', $event)"
+              (uploaded)="onRecordedAudio('ta', $event)"
+            >
+            </app-audio-recorder>
+
+            <div
+              *ngIf="draft.audio?.ta"
+              class="alert-saved-audio"
+            >
+              <p>Attached Tamil recording</p>
+
+              <app-audio-player
+                [src]="draft.audio!.ta"
+              />
+
+              <button
+                type="button"
+                class="btn outline small danger"
+                (click)="removeAudio('ta')"
+                [disabled]="busy"
+              >
+                Remove Tamil Audio
+              </button>
+            </div>
+
+          </section>
+
+          <!-- ENGLISH AUDIO -->
+
+          <section class="alert-audio-section">
+
+            <h4>English Voice</h4>
+
+            <app-audio-recorder
+              language="en"
+              [maxSizeMb]="20"
+              [disabled]="
+                saving ||
+                deleting ||
+                recorderWorkingStatus('ta')
+              "
+              (workingChange)="onRecorderWorking('en', $event)"
+              (uploaded)="onRecordedAudio('en', $event)"
+            >
+            </app-audio-recorder>
+
+            <div
+              *ngIf="draft.audio?.en"
+              class="alert-saved-audio"
+            >
+              <p>Attached English recording</p>
+
+              <app-audio-player
+                [src]="draft.audio!.en"
+              />
+
+              <button
+                type="button"
+                class="btn outline small danger"
+                (click)="removeAudio('en')"
+                [disabled]="busy"
+              >
+                Remove English Audio
+              </button>
+            </div>
+
+          </section>
+        </div>
+
+        <p
+          *ngIf="uploadingAudio"
+          class="alert-form-hint"
+          role="status"
+        >
+          Recording, converting or uploading audio.
+          Save is unavailable until complete.
+        </p>
+
+      </section>
+
+      <!-- PUBLISH -->
+
+      <section class="alert-publish-section">
+
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            name="published"
+            [(ngModel)]="draft.published"
+            [disabled]="busy"
+          />
+          <span>Publish Alert</span>
+        </label>
+
+        <p>
+          {{
+            draft.published
+              ? 'This alert will be published when saved, subject to its effective and expiry dates.'
+              : 'This alert will remain a draft.'
+          }}
+        </p>
+
+      </section>
+
+    </div>
+
+    <!-- FIXED POPUP FOOTER -->
+
+    <footer class="alert-editor-footer">
+
+      <span class="alert-save-hint">
+        * Required fields
+      </span>
+
+      <div class="alert-editor-buttons">
+
+        <button
+          type="button"
+          class="btn outline"
+          (click)="closeEditor()"
+          [disabled]="busy"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn-red"
+          [disabled]="busy"
+        >
+          <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+
+          {{
+            saving
+              ? 'Saving...'
+              : isEditingSavedAlert
+                ? 'Update Alert'
+                : draft.published
+                  ? 'Save & Publish'
+                  : 'Save Draft'
+          }}
+        </button>
+
+      </div>
+    </footer>
+
+  </form>
+</dialog>

@@ -1,6 +1,6 @@
 
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, OnDestroy, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -26,6 +26,7 @@ import { MobileBottomNavComponent } from '../mobile-bottom-nav/mobile-bottom-nav
 
 const READ_KEY = 'mv-read-alerts-v2';
 const SOUND_KEY = 'mv-alert-sound-enabled-v2';
+const SOUND_PROMPT_KEY = 'mv-sound-choice-v1';
 const WELCOME_KEY = 'mv-onboarding-hint-seen-v2';
 
 interface HeaderNavItem {
@@ -60,7 +61,9 @@ export class SiteHeaderComponent implements OnInit, OnDestroy {
   nav = NAV;
   more = MORE;
   allNav = SECTIONS;
-
+showSoundPrompt = false;
+soundPromptError = '';
+soundEnabling = false;
   // ==========================================
   // DYNAMIC NEWS NAVIGATION
   // ==========================================
@@ -158,7 +161,7 @@ export class SiteHeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.tick();
-
+this.initializeSoundChoice();
     this.clockTimer = setInterval(
       () => this.tick(),
       30000
@@ -368,13 +371,33 @@ export class SiteHeaderComponent implements OnInit, OnDestroy {
       .slice(0, 6);
   }
 
-  toggleNotifications(): void {
-    this.notificationOpen = !this.notificationOpen;
-    this.mobileOpen = false;
-    this.moreOpen = false;
-    this.aboutOpen = false;
-    this.dismissWelcome();
+
+toggleNotifications(): void {
+
+  this.notificationOpen = !this.notificationOpen;
+
+  this.mobileOpen = false;
+  this.moreOpen = false;
+  this.aboutOpen = false;
+
+  this.dismissWelcome();
+
+  // A direct bell click can help reactivate
+  // audio after a browser refresh.
+  if (this.soundEnabled()) {
+
+    try {
+
+      this.soundContext ??= new AudioContext();
+
+      void this.soundContext.resume().catch(
+        () => {}
+      );
+
+    } catch {}
+
   }
+}
 
   markRead(id: string): void {
     if (this.readIds().includes(id)) {
@@ -415,53 +438,164 @@ export class SiteHeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleSound(): void {
-    const next = !this.soundEnabled();
 
-    this.soundEnabled.set(next);
 
+  // ==========================================
+  // FIRST VISIT SOUND CHOICE
+  // ==========================================
+
+  private initializeSoundChoice(): void {
     try {
-      localStorage.setItem(
-        SOUND_KEY,
-        String(next)
-      );
-    } catch {
-      /* optional */
-    }
+      const previousChoice =
+        localStorage.getItem(SOUND_PROMPT_KEY);
 
-    // AudioContext is only activated
-    // on a visitor's explicit tap.
-    if (next) {
-      try {
-        this.soundContext ??= new AudioContext();
-        void this.soundContext.resume();
-      } catch {
+      // Ask only if this browser has not answered.
+      this.showSoundPrompt = previousChoice === null;
+
+      if (this.showSoundPrompt) {
         this.soundEnabled.set(false);
       }
+    } catch {
+      this.showSoundPrompt = false;
+      this.soundEnabled.set(false);
     }
   }
 
-  async checkNewAlerts(): Promise<void> {
-    const before = new Set(
-      this.store.alerts().map(a => a.id)
-    );
+  // ==========================================
+  // ALLOW NOTIFICATION SOUND
+  // ==========================================
+
+  async allowNotificationSound(): Promise<void> {
+    if (this.soundEnabling) return;
+
+    this.soundEnabling = true;
+    this.soundPromptError = '';
 
     try {
-      await this.store.refreshFromBackend();
+      // The visitor's click allows us to start audio.
+      this.soundContext ??= new AudioContext();
 
-      const newlyPublished = this.store.alerts().some(
-        a => !before.has(a.id)
-      );
+      await this.soundContext.resume();
 
-      if (newlyPublished && this.soundEnabled()) {
-        this.playSound();
+      if (this.soundContext.state !== 'running') {
+        throw new Error('Browser audio could not start.');
       }
 
-    } catch {
-      // Leave the current page usable
-      // if the network is offline.
+      this.soundEnabled.set(true);
+      this.showSoundPrompt = false;
+
+      try {
+        localStorage.setItem(SOUND_KEY, 'true');
+        localStorage.setItem(SOUND_PROMPT_KEY, 'allowed');
+      } catch {}
+
+      // Reuse the EXISTING bell sound.
+      this.playSound();
+
+    } catch (error) {
+      this.soundEnabled.set(false);
+
+      this.soundPromptError =
+        'Unable to play sound. Please check browser and device audio settings.';
+
+      console.warn('Notification audio:', error);
+    } finally {
+      this.soundEnabling = false;
     }
   }
+
+  // ==========================================
+  // NOT NOW
+  // ==========================================
+
+  declineNotificationSound(): void {
+    this.soundEnabled.set(false);
+    this.showSoundPrompt = false;
+    this.soundPromptError = '';
+
+    try {
+      localStorage.setItem(SOUND_KEY, 'false');
+      localStorage.setItem(SOUND_PROMPT_KEY, 'declined');
+    } catch {}
+  }
+
+  // ==========================================
+  // EXISTING BELL SOUND CONTROL
+  // ==========================================
+
+  async toggleSound(): Promise<void> {
+    if (this.soundEnabled()) {
+      this.soundEnabled.set(false);
+
+      try {
+        localStorage.setItem(SOUND_KEY, 'false');
+      } catch {}
+
+      return;
+    }
+
+    await this.allowNotificationSound();
+  }
+
+  // ==========================================
+  // RESTORE AUDIO AFTER RELOAD AND USER CLICK
+  // ==========================================
+
+  @HostListener('document:pointerdown')
+  onVisitorInteraction(): void {
+    if (!this.soundEnabled()) return;
+
+    try {
+      this.soundContext ??= new AudioContext();
+
+      if (this.soundContext.state !== 'running') {
+        void this.soundContext.resume().catch(() => {});
+      }
+    } catch {}
+  }
+
+
+async checkNewAlerts(): Promise<void> {
+
+  const previousIds = new Set(
+    this.store.alerts().map(alert => alert.id)
+  );
+
+  try {
+
+    // Fetch latest public alerts.
+    await this.store.refreshFromBackend();
+
+    // Detect newly added alerts.
+    const newAlertFound = this.store.alerts().some(
+      alert => !previousIds.has(alert.id)
+    );
+
+    if (!newAlertFound || !this.soundEnabled()) {
+      return;
+    }
+
+    // Resume audio if browser has suspended it.
+    if (this.soundContext?.state === 'suspended') {
+
+      try {
+        await this.soundContext.resume();
+      } catch {}
+
+    }
+
+    // Play sound only if new alert is detected.
+    this.playSound();
+
+  } catch (error) {
+
+    console.warn(
+      'Public alerts refresh failed:',
+      error
+    );
+  }
+}
+
 
   private playSound(): void {
     // Browsers require a previous user gesture
