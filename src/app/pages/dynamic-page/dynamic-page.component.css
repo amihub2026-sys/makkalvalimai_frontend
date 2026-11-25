@@ -811,3 +811,28 @@
   outline: 3px solid #1764ad;
   outline-offset: 3px;
 }
+
+/* ==========================================
+   MAKKAL VALIMAI - RESPONSIVE BACKGROUND
+========================================== */
+
+@media (max-width: 768px) {
+
+  .mv-dynamic-page {
+    background-color: #073c72;
+
+    background-image:
+      linear-gradient(
+        rgba(3, 35, 75, 0.25),
+        rgba(3, 35, 75, 0.35)
+      ),
+      url('/assets/images/makkal-valimai-home-bg.png');
+
+    background-position: center top;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+
+    min-height: 100vh;
+  }
+}
