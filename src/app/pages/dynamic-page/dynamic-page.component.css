@@ -23,12 +23,34 @@
    PAGE LAYOUT
 ========================================== */
 
+
+
 .mv-dynamic-page {
   width: 100%;
   min-height: 65vh;
-  background: var(--mv-background);
+
+  background-color: #073c72;
+  background-image:
+    linear-gradient(
+      rgba(3, 35, 75, 0.25),
+      rgba(3, 35, 75, 0.35)
+    ),
+    url('/assets/images/makkal-valimai-home-bg.png');
+
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
   color: var(--mv-text);
 }
+
+@media (max-width: 768px) {
+  .mv-dynamic-page {
+    background-attachment: scroll;
+  }
+}
+
 
 .mv-dynamic-container {
   width: min(100% - 40px, 1160px);
